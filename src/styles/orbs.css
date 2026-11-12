@@ -1,0 +1,90 @@
+/*
+ * Orbes aprovados 01 / 03 / 07 / 09 — receitas NORMATIVAS do kit (seção 5),
+ * copiadas sem alteração. Materiais protegidos: não mudam com o tema.
+ *
+ * Uso: <Orb variant={9} size={29}/> desenha o disco de 72 unidades escalado
+ * como um conjunto (k = size / 72), preservando bordas, reflexos e sombras.
+ * Estados interativos vêm do elemento pai com a classe .orb-host.
+ */
+
+.variant-orb {
+  box-sizing: border-box;
+  position: relative;
+  display: block;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  transition: transform var(--orb-motion) ease;
+  isolation: isolate;
+  color: #fff;
+}
+.variant-orb::before,
+.variant-orb::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+}
+
+.v1{border:1px solid #9ce8ff;background:radial-gradient(ellipse at 50% 105%,#86ffff,transparent 52%),linear-gradient(#71cfff 0%,#1681d8 48%,#004391 51%,#0071bf);box-shadow:inset 0 0 0 2px #003f7480,inset 0 -5px 10px #003568,0 5px 12px #0007,0 0 15px #45cfff55}
+.v1::after{inset:4px 7px auto;height:32px;border-radius:50% 50% 42% 42%;background:linear-gradient(#fffffff0,#ffffff12)}
+.v3{border:1px solid #d0ffac;background:radial-gradient(ellipse at 50% 110%,#dbff31,transparent 60%),linear-gradient(#96dd30,#458e08 50%,#174c00 51%,#6bb913);box-shadow:inset 0 0 0 2px #e4ffb844,0 5px 12px #0008,0 0 18px #7eff2726}
+.v3::before{inset:5px 8px auto;height:28px;background:linear-gradient(#ffffffe8,#ffffff15);border-radius:50% 50% 40% 40%;transform:rotate(-8deg)}
+.v3::after{bottom:5px;left:20%;width:60%;height:11px;border-radius:50%;background:radial-gradient(ellipse,#e5ff8faa,transparent)}
+.v7{border:1px solid #ffdea0;background:radial-gradient(ellipse at 50% 108%,#fff36a,transparent 55%),linear-gradient(#ffc94f,#e37e0c 48%,#a63b02 51%,#ed9309);box-shadow:inset 0 0 0 2px #81460955,inset 0 -3px 8px #a64a0b,0 5px 12px #0007,0 0 15px #ffaa2826}
+.v7::after{top:5px;left:10px;right:10px;height:29px;border-radius:50% 50% 35% 35%;background:linear-gradient(#ffffffe6,#ffffff20)}
+.v9{border:1px solid #bdedff;background:radial-gradient(ellipse at 50% 115%,#45e5ff,transparent 55%),linear-gradient(#486a8a,#172e4c 48%,#061120 51%,#154b6b);box-shadow:inset 0 0 0 3px #b0d7e366,inset 0 0 0 4px #0009,0 5px 12px #0008}
+.v9::before{inset:7px 10px auto;height:26px;border-radius:50% 50% 35% 35%;background:linear-gradient(#e8f9ffcf,#ffffff08)}
+.v9::after{inset:5px;border-radius:50%;border-bottom:1px solid #a1efff99}
+
+/* ---------- Escala do conjunto completo ---------- */
+.orb-fit {
+  position: relative;
+  display: inline-block;
+  flex: none;
+  pointer-events: none;
+}
+.orb-fit > .variant-orb {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -36px 0 0 -36px;
+  transform: scale(var(--orb-scale, 1));
+}
+
+/* Símbolo opcional: acima dos reflexos (seção 5 / 7D). */
+.orb-glyph {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  filter: drop-shadow(0 1px 1px rgba(0, 20, 40, 0.7));
+}
+.orb-glyph svg {
+  width: 32px;
+  height: 32px;
+}
+
+/* ---------- Estados (seção 5): hover -3/1,07; pressionado 0,94; desabilitado 0,38 ---------- */
+@media (hover: hover) {
+  .orb-host:hover:not(:disabled) .orb-fit > .variant-orb {
+    transform: scale(var(--orb-scale, 1)) translateY(var(--orb-hover-lift)) scale(var(--orb-hover-scale));
+  }
+}
+.orb-host:active:not(:disabled) .orb-fit > .variant-orb {
+  transform: scale(var(--orb-scale, 1)) scale(var(--orb-pressed-scale));
+}
+.orb-host:disabled .orb-fit {
+  opacity: var(--orb-disabled-opacity);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .variant-orb {
+    transition: none;
+  }
+  .orb-host:hover:not(:disabled) .orb-fit > .variant-orb,
+  .orb-host:active:not(:disabled) .orb-fit > .variant-orb {
+    transform: scale(var(--orb-scale, 1));
+  }
+}

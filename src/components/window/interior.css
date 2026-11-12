@@ -1,0 +1,317 @@
+/* ==========================================================================
+   Interior Explorer (kit 7F) — segue o tema. Sem barra de status no rodapé.
+   ========================================================================== */
+
+/* ---------- Pesquisa na faixa de localização ---------- */
+.search-box {
+  position: relative;
+  flex: 0 1 260px;
+  min-width: 11rem;
+}
+.search-box__input {
+  min-height: 32px;
+  padding-right: 36px;
+  font-size: var(--text-small);
+}
+.search-box__input::-webkit-search-cancel-button {
+  margin-right: 2px;
+}
+.search-box__submit {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  bottom: 2px;
+  width: 30px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: var(--text-secondary);
+  background: transparent;
+  border: 0;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.search-box__submit svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+@media (hover: hover) {
+  .search-box__submit:hover {
+    color: var(--focus);
+    background: var(--hover);
+  }
+}
+
+/* ---------- Barra de comandos ---------- */
+.command-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  min-height: 38px;
+  padding: 3px 10px;
+  background: linear-gradient(var(--toolbar-top), var(--toolbar-bottom));
+  border-bottom: 1px solid var(--divider);
+}
+.command-bar__group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  min-width: 0;
+}
+.command-bar__group--end {
+  margin-left: auto;
+}
+.command-bar .aero-icon {
+  flex: none;
+}
+
+/* ---------- Corpo: navegação + área principal ---------- */
+.window-layout {
+  flex: 1;
+  display: grid;
+  grid-template-columns: clamp(176px, 12.25rem, 260px) minmax(0, 1fr);
+  min-height: 0;
+}
+
+.side-nav {
+  padding: var(--space-3) var(--space-2);
+  background: var(--sidebar);
+  border-right: 1px solid var(--divider);
+}
+.side-nav__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.side-nav__list--nested {
+  margin: 2px 0 6px;
+  padding-left: 18px;
+}
+.side-nav__link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  padding: 4px 8px;
+  font-size: var(--text-small);
+  color: var(--text);
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: var(--interior-radius);
+}
+.side-nav__link--nested {
+  min-height: 28px;
+  font-size: 0.8125rem;
+}
+@media (hover: hover) {
+  .side-nav__link:hover {
+    background: var(--hover);
+    border-color: var(--hover-border);
+  }
+}
+.side-nav__link.is-selected {
+  background: linear-gradient(var(--selection-top), var(--selection-bottom));
+  border-color: var(--selection-border);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+[data-theme='dark'] .side-nav__link.is-selected {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.side-nav__link:focus-visible {
+  outline-offset: -1px;
+}
+
+.window-main {
+  /* Contêiner de consulta: seções se adaptam ao espaço real ao lado do painel. */
+  container: main / inline-size;
+  min-width: 0;
+  padding: var(--space-5) var(--gutter-wide) var(--space-6);
+  background: var(--surface);
+}
+.window-main:focus {
+  outline: none;
+}
+
+@media (pointer: coarse) {
+  .side-nav__link,
+  .side-nav__link--nested {
+    min-height: 44px;
+  }
+  .search-box__input {
+    min-height: 44px;
+  }
+  .search-box__submit {
+    width: 42px;
+  }
+  .search-box__input {
+    padding-right: 46px;
+  }
+}
+
+/* ---------- Diálogo como mini janela Aero ---------- */
+.aero-dialog {
+  width: min(520px, calc(100vw - 24px));
+  max-height: calc(100dvh - 24px);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+  color: var(--text);
+}
+.aero-dialog::backdrop {
+  background: rgba(4, 22, 36, 0.4);
+}
+.aero-window--dialog {
+  width: 100%;
+  max-height: calc(100dvh - 24px);
+}
+.aero-window--dialog .aero-titlebar {
+  align-items: flex-start;
+}
+.aero-dialog__title {
+  padding-top: 8px;
+}
+.aero-dialog__body {
+  overflow: auto;
+  padding: var(--space-4) var(--space-5) var(--space-5);
+  background: var(--dialog-bg);
+}
+.aero-dialog__body p {
+  margin: 0 0 var(--space-3);
+}
+.aero-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+.dialog-meta {
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+}
+
+/* Fechar REAL: material vermelho do kit, com hover e pressão (seção 4). */
+.dialog-close {
+  flex: none;
+  min-width: 44px;
+  min-height: 21px;
+  padding: 0 0 2px;
+  font-size: 15px;
+  line-height: 1;
+  color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-top: 0;
+  border-radius: 0 0 var(--control-radius) var(--control-radius);
+  background: linear-gradient(#e0a197, #cf796a 25% 50%, #d54f36 50%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.98),
+    1px 0 0 rgba(255, 255, 255, 0.98),
+    -1px 0 0 rgba(255, 255, 255, 0.98);
+  cursor: pointer;
+  transition: box-shadow var(--control-transition);
+}
+@media (hover: hover) {
+  .dialog-close:hover {
+    background: radial-gradient(circle at bottom, #ff8a7a, transparent 65%), linear-gradient(#ffbdb3 50%, #d40000 50%);
+    box-shadow:
+      0 0 7px 3px #ff5030,
+      inset 0 0 0 1px rgba(255, 255, 255, 0.98);
+  }
+}
+.dialog-close:active {
+  background: linear-gradient(#d45050 50%, #8b0000 50%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.98);
+}
+.dialog-close:focus-visible {
+  outline-color: #003a5c;
+}
+@media (pointer: coarse) {
+  .dialog-close {
+    min-height: 36px;
+    min-width: 48px;
+  }
+}
+
+/* ---------- Telas estreitas (base; refinado no Grupo 4) ---------- */
+.command-bar {
+  flex-wrap: wrap;
+}
+/* Até ~768 px a pesquisa ganha linha própria: o caminho não fica espremido. */
+@media (max-width: 47.99em) {
+  .location-bar {
+    flex-wrap: wrap;
+  }
+  .location-path {
+    flex-basis: 0;
+  }
+  .search-box {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+}
+@media (max-width: 56.24em) {
+  .window-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .side-nav {
+    padding: 6px 8px;
+    border-right: 0;
+    border-bottom: 1px solid var(--divider);
+  }
+  .side-nav__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+  }
+  .side-nav__list > li {
+    display: flex;
+  }
+  .side-nav__list--nested {
+    display: none;
+  }
+  .side-nav__link {
+    white-space: nowrap;
+  }
+  .window-main {
+    padding: var(--space-5) var(--gutter-medium) var(--space-6);
+  }
+}
+@media (max-width: 37.49em) {
+  .window-main {
+    padding: var(--space-4) var(--gutter-compact) var(--space-5);
+  }
+}
+
+/* Celular: ação global da barra de comandos vira só ícone (nome acessível mantido). */
+@media (max-width: 37.49em) {
+  .command-bar__group--end .command-button__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .command-bar__group--end .command-button {
+    min-width: var(--target-touch);
+    justify-content: center;
+  }
+  .command-bar {
+    align-items: flex-start;
+  }
+}
+@media (max-width: 37.49em) {
+  /* As ações quebram dentro do próprio grupo; o ícone global fica no canto. */
+  .command-bar {
+    flex-wrap: nowrap;
+  }
+  .command-bar__group:first-child {
+    flex: 1;
+  }
+}

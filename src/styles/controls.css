@@ -1,0 +1,264 @@
+/* ==========================================================================
+   Controles convencionais [EXT] derivados do kit — seguem o tema do interior.
+   ========================================================================== */
+
+/* ---------- Campo Aero (kit 5A) ---------- */
+.aero-input {
+  width: 100%;
+  min-height: var(--control-height);
+  padding: 4px 8px;
+  font-size: var(--text-body);
+  color: var(--input-text);
+  background: linear-gradient(var(--input-fill-top), var(--input-fill-mid) 40%, var(--input-fill-bottom));
+  border: 1px solid var(--input-border);
+  border-radius: var(--input-radius);
+  box-shadow: var(--input-shadow);
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease;
+}
+.aero-input:hover:not(:disabled):not(:focus) {
+  border-color: var(--input-border-hover);
+}
+.aero-input:focus {
+  outline: var(--focus-ring-width) solid var(--focus);
+  outline-offset: var(--focus-ring-offset);
+  border-color: var(--input-focus-border);
+  box-shadow: var(--input-focus-shadow);
+}
+.aero-input::placeholder {
+  color: var(--input-placeholder);
+  opacity: 1;
+}
+.aero-input:disabled {
+  color: var(--input-disabled-text);
+  background: var(--input-disabled-bg);
+  cursor: not-allowed;
+}
+.aero-input[readonly] {
+  background: var(--input-readonly-bg);
+}
+.aero-input[aria-invalid='true'] {
+  border-color: var(--input-error);
+}
+
+/* ---------- Botão convencional Aero ---------- */
+.aero-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 4px 14px;
+  font-size: var(--text-small);
+  line-height: 1.2;
+  text-decoration: none;
+  color: var(--button-text);
+  background: linear-gradient(var(--button-top), var(--button-top) 45%, var(--button-bottom) 50%, var(--button-bottom));
+  border: 1px solid var(--button-border);
+  border-radius: 3px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 1px 2px rgba(17, 51, 68, 0.12);
+  cursor: pointer;
+  transition:
+    border-color 120ms var(--ease),
+    box-shadow 120ms var(--ease);
+}
+@media (hover: hover) {
+  .aero-button:hover {
+    border-color: #3c9fd6;
+    background: linear-gradient(#f2fbff, #e4f5fe 45%, #c6e8fa 50%, #b7e0f6);
+    box-shadow:
+      inset 0 1px 0 #fff,
+      0 0 5px rgba(60, 170, 230, 0.45);
+  }
+  [data-theme='dark'] .aero-button:hover {
+    border-color: #84caff;
+    background: linear-gradient(#45607a, #3a5570 45%, #2d4560 50%, #2a405a);
+  }
+}
+.aero-button:active {
+  background: linear-gradient(#cfe9f8, #bfe1f5 45%, #a6d4ef 50%, #9dcdeb);
+  box-shadow: inset 0 1px 3px rgba(20, 60, 90, 0.35);
+}
+[data-theme='dark'] .aero-button {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 1px 2px rgba(0, 0, 0, 0.3);
+}
+[data-theme='dark'] .aero-button:active {
+  background: linear-gradient(#253548, #2a3d52);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+.aero-button--primary {
+  font-weight: var(--font-bold);
+}
+.aero-button--small {
+  min-height: 28px;
+  padding: 2px 10px;
+  font-size: var(--text-caption);
+}
+.aero-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* ---------- Botão de comando (barra de comandos do Explorer) ---------- */
+.command-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 3px 10px;
+  font-size: var(--text-small);
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .command-button:hover:not(:disabled) {
+    border-color: var(--selection-border);
+    background: linear-gradient(
+      rgba(255, 255, 255, 0.85),
+      rgba(255, 255, 255, 0.4) 48%,
+      rgba(190, 225, 250, 0.45) 50%,
+      rgba(220, 240, 255, 0.6)
+    );
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+  }
+  [data-theme='dark'] .command-button:hover:not(:disabled) {
+    background: linear-gradient(#3a5068, #2e445a 48%, #263b50 50%, #2b4157);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+}
+.command-button:active:not(:disabled) {
+  background: var(--selection-bottom);
+  box-shadow: inset 0 1px 2px rgba(0, 40, 80, 0.25);
+}
+.command-button[aria-current='page'] {
+  border-color: var(--selection-border);
+  background: linear-gradient(var(--selection-top), var(--selection-bottom));
+}
+.command-button:disabled {
+  color: var(--text-secondary);
+  cursor: not-allowed;
+}
+
+/* ---------- Ação com orbe + rótulo ---------- */
+.orb-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: var(--target-touch);
+  padding: 2px 14px 2px 2px;
+  font-size: var(--text-body);
+  color: var(--text);
+  text-decoration: none;
+  border-radius: 28px;
+}
+.orb-action__label {
+  border-bottom: 1px solid transparent;
+}
+@media (hover: hover) {
+  .orb-action:hover .orb-action__label {
+    border-bottom-color: currentColor;
+  }
+}
+.orb-action:focus-visible {
+  outline-offset: 3px;
+}
+
+/* ---------- Chips, selos ---------- */
+.chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.chip {
+  padding: 2px 9px;
+  font-size: var(--text-caption);
+  color: var(--text);
+  background: linear-gradient(var(--selection-top), var(--selection-bottom));
+  border: 1px solid var(--selection-border);
+  border-radius: 3px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 1px 7px;
+  font-size: var(--text-caption);
+  font-weight: var(--font-bold);
+  border: 1px solid;
+  border-radius: 3px;
+}
+.badge--profissional {
+  color: #0d4f86;
+  background: #e3f1ff;
+  border-color: #9ec5ee;
+}
+.badge--academico {
+  color: #235c2c;
+  background: #e6f6e3;
+  border-color: #9fcf96;
+}
+.badge--pessoal {
+  color: #7a4a0b;
+  background: #fff3dc;
+  border-color: #e7bf74;
+}
+.badge--status {
+  font-weight: var(--font-regular);
+  color: var(--text-secondary);
+  background: transparent;
+  border-color: var(--divider);
+}
+[data-theme='dark'] .badge--profissional {
+  color: #bfe0ff;
+  background: #1f3a55;
+  border-color: #4c7aa6;
+}
+[data-theme='dark'] .badge--academico {
+  color: #c4ecc0;
+  background: #1f3a2a;
+  border-color: #4f8a5a;
+}
+[data-theme='dark'] .badge--pessoal {
+  color: #ffe0ae;
+  background: #3e2f1a;
+  border-color: #a07a3e;
+}
+
+@media (pointer: coarse) {
+  .aero-button,
+  .command-button {
+    min-height: 44px;
+  }
+}
+
+/* Atualizando: continua focável (aria-disabled), com o ícone girando. */
+.command-button.is-busy {
+  color: var(--text-secondary);
+  cursor: progress;
+}
+.command-button__spin {
+  display: inline-grid;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .command-button.is-busy .command-button__spin {
+    animation: command-spin 0.9s linear infinite;
+  }
+}
+@keyframes command-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

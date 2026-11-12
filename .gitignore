@@ -1,0 +1,9 @@
+node_modules/
+dist/
+*.local
+.DS_Store
+Thumbs.db
+
+# Originais pesados e documentos pessoais (não vão para o repositório)
+*.CR2
+docs/*.docx

@@ -1,0 +1,94 @@
+/* ==========================================================================
+   Ícones da área de trabalho [EXT] — coluna à esquerda, estilo Windows 7.
+   Fixos como o papel de parede; a janela abre espaço para eles (app.css).
+   ========================================================================== */
+
+:root {
+  --desktop-icons-width: 92px;
+}
+
+.desktop-icons {
+  position: fixed;
+  top: 0;
+  left: max(6px, env(safe-area-inset-left, 0px));
+  bottom: calc(var(--taskbar-height) + env(safe-area-inset-bottom, 0px));
+  z-index: 0;
+  width: var(--desktop-icons-width);
+  padding: 10px 0;
+  overflow: hidden;
+  user-select: none;
+}
+.desktop-icons__list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.desktop-icon {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  padding: 6px 4px 5px;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  cursor: default;
+}
+.desktop-icon__image {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 2px rgba(0, 10, 30, 0.45));
+  -webkit-user-drag: none;
+}
+/* Rótulo branco com sombra, como no Windows 7 (legível sobre qualquer fundo). */
+.desktop-icon__label {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  max-width: 100%;
+  font-size: var(--text-caption);
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  /* Texto "seco", sem suavização: sombra dura de 1 px (sem blur), como no
+     Windows 7, e antialiasing desligado onde o navegador permite (macOS).
+     No Windows a suavização é do sistema e não pode ser desligada por CSS. */
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  font-smooth: never;
+  text-rendering: optimizeSpeed;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.85);
+}
+
+/* Só ícones com destino reagem: realce de vidro azul do Windows 7. */
+.desktop-icon--link {
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .desktop-icon--link:hover {
+    border-color: rgba(170, 215, 255, 0.55);
+    background: linear-gradient(rgba(150, 200, 255, 0.32), rgba(110, 170, 240, 0.22));
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+  }
+}
+.desktop-icon--link:active {
+  border-color: rgba(170, 215, 255, 0.8);
+  background: linear-gradient(rgba(120, 180, 250, 0.45), rgba(90, 150, 230, 0.35));
+}
+.desktop-icon--link:focus-visible {
+  outline: 2px solid #b8f8ff;
+  outline-offset: 0;
+}
+
+/* Abaixo de 1024 px não há espaço ao lado da janela: os ícones saem. */
+@media (max-width: 63.99em) {
+  .desktop-icons {
+    display: none;
+  }
+}

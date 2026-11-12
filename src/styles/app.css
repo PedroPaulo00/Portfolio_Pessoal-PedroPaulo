@@ -1,0 +1,51 @@
+/* Palco: janela centralizada sobre o cenário; rolagem única da página. */
+.desktop-stage {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: clamp(16px, 5vh, 56px) clamp(12px, 4vw, 48px)
+    calc(var(--taskbar-height) + env(safe-area-inset-bottom, 0px) + clamp(20px, 5vh, 48px));
+}
+
+.desktop-stage > .aero-window {
+  min-height: min(760px, calc(100dvh - var(--taskbar-height) - 96px));
+}
+
+@media (max-width: 37.49em) {
+  .desktop-stage {
+    padding-inline: 8px;
+  }
+}
+
+/* Safe areas laterais (paisagem em aparelhos com recorte). */
+.desktop-stage {
+  padding-left: max(clamp(12px, 4vw, 48px), env(safe-area-inset-left, 0px));
+  padding-right: max(clamp(12px, 4vw, 48px), env(safe-area-inset-right, 0px));
+}
+@media (max-width: 37.49em) {
+  .desktop-stage {
+    padding-left: max(8px, env(safe-area-inset-left, 0px));
+    padding-right: max(8px, env(safe-area-inset-right, 0px));
+  }
+}
+
+/* Com ícones na área de trabalho (≥ 1024 px): a janela não os cobre. Margem
+   simétrica para continuar centralizada. */
+@media (min-width: 64em) {
+  .desktop-stage--with-icons {
+    padding-left: max(clamp(12px, 4vw, 48px), calc(var(--desktop-icons-width) + 20px));
+    padding-right: max(clamp(12px, 4vw, 48px), calc(var(--desktop-icons-width) + 20px));
+  }
+}
+
+/* Telas baixas (celular em paisagem): menos respiro vertical, janela sem altura mínima. */
+@media (max-height: 31.25em) {
+  .desktop-stage {
+    padding-top: 8px;
+  }
+  .desktop-stage > .aero-window {
+    min-height: 0;
+  }
+}

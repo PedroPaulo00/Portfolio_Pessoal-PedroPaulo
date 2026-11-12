@@ -1,0 +1,24 @@
+/*
+ * Frutiger Regular 400 e Bold 700, carregadas dos arquivos reais do kit (seção 5B).
+ * Não há itálico, pesos intermediários nem fonte variável.
+ * Licença de redistribuição ainda não confirmada: verificar antes de publicar.
+ */
+@font-face {
+  font-family: 'Frutiger';
+  src:
+    url('../../aero-ui-kit/fonts/Frutiger.woff2') format('woff2'),
+    url('../../aero-ui-kit/fonts/Frutiger.woff') format('woff');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Frutiger';
+  src:
+    url('../../aero-ui-kit/fonts/Frutiger-Bold.woff2') format('woff2'),
+    url('../../aero-ui-kit/fonts/Frutiger-Bold.woff') format('woff');
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}

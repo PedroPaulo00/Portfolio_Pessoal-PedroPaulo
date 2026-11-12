@@ -1,0 +1,155 @@
+/* ==========================================================================
+   Microinterações [EXT] — discretas, só como feedback. Nada contínuo.
+   Com prefers-reduced-motion: reduce, base.css zera durações e as entradas
+   abaixo só existem em no-preference.
+   ========================================================================== */
+
+:root {
+  --motion-fast: 120ms;
+  --motion-base: 180ms;
+}
+
+/* Seleção de texto no azul do Windows 7. */
+::selection {
+  color: #fff;
+  background: #3399ff;
+}
+
+/* ---------- Entrada de vista (troca de seção) ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .view {
+    animation: view-in 220ms var(--ease) both;
+  }
+}
+@keyframes view-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+
+/* ---------- Diálogo: escala sem opacidade na moldura, para não
+   interromper o backdrop-filter do vidro durante a animação ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .aero-dialog[open] .aero-window--dialog {
+    animation: dialog-in var(--motion-base) var(--ease);
+  }
+  .aero-dialog[open]::backdrop {
+    animation: backdrop-in var(--motion-base) ease-out;
+  }
+}
+@keyframes dialog-in {
+  from {
+    transform: translateY(8px) scale(0.97);
+  }
+}
+@keyframes backdrop-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ---------- Itens do Explorer: transição de realce e estado pressionado ---------- */
+.side-nav__link,
+.library-item,
+.contact-item,
+.location-path__crumb,
+.command-button,
+.start-menu__item,
+.start-menu__side-link,
+.search-box__submit {
+  transition:
+    background-color var(--motion-fast) var(--ease),
+    border-color var(--motion-fast) var(--ease),
+    box-shadow var(--motion-fast) var(--ease),
+    color var(--motion-fast) var(--ease);
+}
+
+.side-nav__link:active,
+.library-item:active,
+a.contact-item:active,
+.location-path__crumb:active {
+  background: var(--selection-bottom);
+  border-color: var(--selection-border);
+  box-shadow: inset 0 1px 2px rgba(0, 40, 80, 0.18);
+}
+.start-menu__item:active {
+  box-shadow: inset 0 1px 3px rgba(120, 70, 0, 0.3);
+}
+.start-menu__side-link:active {
+  background: rgba(255, 255, 255, 0.24);
+}
+
+/* Faixa de localização: borda reage como o campo de pesquisa. */
+.location-path {
+  transition: border-color var(--motion-fast) var(--ease);
+}
+@media (hover: hover) {
+  .location-path:hover {
+    border-color: var(--input-border-hover);
+  }
+}
+
+/* ---------- Ícones do Explorer: leve elevação no realce ---------- */
+.library-item .aero-icon,
+.contact-item .aero-icon,
+.start-menu__item .aero-icon {
+  transition: transform var(--motion-base) var(--ease);
+}
+@media (hover: hover) {
+  .library-item:hover .aero-icon,
+  a.contact-item:hover .aero-icon,
+  .start-menu__item:hover .aero-icon {
+    transform: translateY(-1px) scale(1.06);
+  }
+}
+
+/* ---------- Cards de projeto ---------- */
+.project-card {
+  transition:
+    border-color var(--motion-base) var(--ease),
+    box-shadow var(--motion-base) var(--ease),
+    transform var(--motion-base) var(--ease);
+}
+.project-thumb__icon {
+  transition: transform 240ms var(--ease);
+}
+/* Reflexo diagonal estático que aparece no realce (não animado em loop). */
+.project-thumb--placeholder .project-thumb__sheen {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.28) 45%, transparent 60%);
+  opacity: 0;
+  transition: opacity 240ms var(--ease);
+  pointer-events: none;
+}
+@media (hover: hover) {
+  .project-card:hover {
+    transform: translateY(-2px);
+  }
+  .project-card:hover .project-thumb__icon {
+    transform: translateY(-3px) scale(1.06);
+  }
+  .project-card:hover .project-thumb__sheen {
+    opacity: 1;
+  }
+}
+
+/* ---------- Barras de rolagem internas discretas ---------- */
+.start-menu__main,
+.aero-dialog__body {
+  scrollbar-width: thin;
+  scrollbar-color: var(--selection-border) transparent;
+}
+
+/* Movimento reduzido: sem deslocamentos/escala no realce (feedback só por cor e borda). */
+@media (prefers-reduced-motion: reduce) {
+  .project-card:hover,
+  .project-card:hover .project-thumb__icon,
+  .library-item:hover .aero-icon,
+  a.contact-item:hover .aero-icon,
+  .start-menu__item:hover .aero-icon {
+    transform: none;
+  }
+}

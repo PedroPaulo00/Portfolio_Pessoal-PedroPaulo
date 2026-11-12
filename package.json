@@ -1,0 +1,44 @@
+{
+  "name": "portfolio-aero",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Portfólio pessoal apresentado dentro de uma janela Aero (Windows 7 / Vista), construído sobre o aero-ui-kit.",
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run typecheck && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "npm run lint && npm run i18n:check && npm run format:check && npm run build",
+    "i18n:check": "node scripts/i18n-check.mjs",
+    "placeholders": "node scripts/placeholders.mjs",
+    "spotify:auth": "node scripts/spotify-auth.mjs",
+    "images": "python -I scripts/optimize-images.py",
+    "tech-icons": "node scripts/tech-icons.mjs"
+  },
+  "dependencies": {
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.19.2",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.3.0",
+    "eslint": "^10.14.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.14.0",
+    "prettier": "^3.9.10",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.2",
+    "vite": "^8.3.7"
+  },
+  "engines": {
+    "node": "^20.19.0 || >=22.12.0"
+  }
+}

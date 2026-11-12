@@ -1,0 +1,7 @@
+dist
+node_modules
+aero-ui-kit
+package-lock.json
+prompt_claude_code_portfolio_aero.md
+# Receitas normativas do kit copiadas sem alteração (comparáveis linha a linha).
+src/styles/orbs.css

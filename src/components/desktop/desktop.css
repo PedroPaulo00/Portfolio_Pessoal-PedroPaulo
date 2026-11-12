@@ -1,0 +1,431 @@
+/* ==========================================================================
+   Área de trabalho [EXT] — papel de parede + barra de tarefas.
+   Invariável ao tema (o cenário é moldura externa, como o vidro).
+   ========================================================================== */
+
+:root {
+  --taskbar-height: 40px;
+}
+
+.desktop-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  background: #0b4fc4; /* cor média do papel de parede, enquanto a imagem carrega */
+}
+.desktop-backdrop__image {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: center 35%;
+}
+/* Vinheta leve: dá profundidade e separa a janela do fundo claro do mar. */
+.desktop-backdrop__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 85% 75% at 50% 45%, transparent 55%, rgba(2, 16, 40, 0.42));
+}
+
+/* ==========================================================================
+   Barra de tarefas
+   ========================================================================== */
+
+.taskbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  height: calc(var(--taskbar-height) + env(safe-area-inset-bottom, 0px));
+  padding: 0 env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: default;
+  user-select: none;
+}
+
+/* Vidro da barra: segue o modo de vidro escolhido, como a moldura. */
+.taskbar__glass {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-top: 1px solid rgba(0, 0, 0, 0.75);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+  background:
+    linear-gradient(
+      rgba(255, 255, 255, 0.2),
+      rgba(255, 255, 255, 0.06) 48%,
+      rgba(0, 0, 0, 0.12) 50%,
+      rgba(0, 0, 0, 0.28)
+    ),
+    rgba(18, 52, 72, 0.55);
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur) * 3));
+  backdrop-filter: blur(calc(var(--glass-blur) * 3));
+}
+[data-glass='opaque'] .taskbar__glass {
+  background:
+    linear-gradient(
+      rgba(255, 255, 255, 0.2),
+      rgba(255, 255, 255, 0.06) 48%,
+      rgba(0, 0, 0, 0.12) 50%,
+      rgba(0, 0, 0, 0.28)
+    ),
+    #1d4a63;
+}
+
+.taskbar__start {
+  position: relative;
+  width: 62px;
+  height: 100%;
+  flex: none;
+}
+
+/* Item da janela aberta (decorativo). */
+.taskbar__items {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  min-width: 0;
+}
+.taskbar__item {
+  max-width: 13.5rem;
+  height: calc(var(--taskbar-height) - 4px);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 12px 0 8px;
+  border-radius: 3px;
+}
+.taskbar__item .brand-mark {
+  flex: none;
+}
+/* Nome do app ao lado do ícone, com o mesmo texto "seco" dos ícones da área de
+   trabalho (sombra dura, sem suavização onde o navegador permite). */
+.taskbar__item-label {
+  min-width: 0;
+  overflow: hidden;
+  font-size: var(--text-caption);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #fff;
+  -webkit-font-smoothing: none;
+  -moz-osx-font-smoothing: unset;
+  font-smooth: never;
+  text-rendering: optimizeSpeed;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.85);
+}
+.taskbar__item--active {
+  border: 1px solid rgba(0, 0, 0, 0.55);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.45),
+    inset 0 -6px 12px rgba(120, 220, 255, 0.35);
+  background: linear-gradient(
+    rgba(255, 255, 255, 0.32),
+    rgba(255, 255, 255, 0.1) 48%,
+    rgba(255, 255, 255, 0.02) 50%,
+    rgba(255, 255, 255, 0.12)
+  );
+}
+
+/* ---------- Bandeja: ícones decorativos, volume e relógio ---------- */
+.taskbar__tray {
+  margin-left: auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 8px 0 12px;
+  border-left: 1px solid rgba(0, 0, 0, 0.35);
+  box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.14);
+}
+.taskbar__tray-decor {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-right: 4px;
+}
+.taskbar__tray-chevron {
+  width: 7px;
+  height: 7px;
+  border-left: 2px solid rgba(255, 255, 255, 0.8);
+  border-top: 2px solid rgba(255, 255, 255, 0.8);
+  transform: translateY(2px) rotate(45deg);
+}
+.taskbar__tray-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+}
+.taskbar__tray-bars i {
+  width: 3px;
+  background: linear-gradient(#ffffff, #b9e6ff);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.4);
+}
+.taskbar__tray-bars i:nth-child(1) {
+  height: 4px;
+}
+.taskbar__tray-bars i:nth-child(2) {
+  height: 7px;
+}
+.taskbar__tray-bars i:nth-child(3) {
+  height: 10px;
+}
+.taskbar__tray-bars i:nth-child(4) {
+  height: 14px;
+  opacity: 0.45;
+}
+
+/* Relógio: hh:mm:ss com dígitos de largura fixa (não "pula" a cada segundo). */
+.taskbar__clock {
+  min-width: 8.5ch;
+  padding: 0 6px;
+  font-size: var(--text-caption);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--taskbar-height);
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  white-space: nowrap;
+}
+
+/* Botões da bandeja: realce de vidro como no Windows 7. */
+.volume {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+.volume__button {
+  width: 32px;
+  height: calc(var(--taskbar-height) - 6px);
+  display: grid;
+  place-items: center;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .volume__button:hover {
+    border-color: rgba(255, 255, 255, 0.35);
+    background: linear-gradient(rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.08));
+  }
+}
+.volume__button[aria-expanded='true'] {
+  border-color: rgba(255, 255, 255, 0.45);
+  background: linear-gradient(rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.04));
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+.volume__button:focus-visible,
+.volume__mute:focus-visible,
+.volume__slider:focus-visible {
+  outline-color: #b8f8ff;
+}
+.volume__icon {
+  width: 20px;
+  height: 20px;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
+}
+
+/* Painel de volume: vidro escuro do lançador (kit 7H), acima da barra. */
+.volume__panel {
+  position: absolute;
+  right: -6px;
+  bottom: calc(100% + 8px);
+  width: 76px;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+  padding: 12px 8px 10px;
+  color: #fff;
+  border: 1px solid var(--launcher-edge);
+  border-radius: 6px;
+  background:
+    linear-gradient(110deg, rgba(255, 255, 255, 0.08), transparent 45%),
+    linear-gradient(170deg, #448ea7, #12374b 60%, #285d77);
+  box-shadow:
+    inset 0 0 0 1px rgba(165, 217, 233, 0.5),
+    0 8px 24px rgba(0, 0, 0, 0.45);
+  cursor: default;
+}
+.volume__value {
+  font-size: var(--text-small);
+  font-weight: var(--font-bold);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+.volume__slider {
+  width: 28px;
+  height: 120px;
+  margin: 0;
+  writing-mode: vertical-lr;
+  direction: rtl;
+  accent-color: #45c8ff;
+  cursor: pointer;
+}
+.volume__mute {
+  width: 40px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 3px;
+  background: linear-gradient(rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.06) 50%, rgba(0, 0, 0, 0.12) 51%);
+  cursor: pointer;
+}
+.volume__mute[aria-pressed='true'] {
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.2);
+}
+.volume__hint {
+  margin: 0;
+  font-size: 0.6875rem;
+  line-height: 1.3;
+  text-align: center;
+  color: #e3f4ff;
+}
+
+/* "Mostrar área de trabalho": faixa de vidro decorativa, sem função. */
+.taskbar__peek {
+  width: 14px;
+  height: 100%;
+  flex: none;
+  border-left: 1px solid rgba(0, 0, 0, 0.45);
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.06));
+  box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.25);
+}
+
+/* ---------- Botão Iniciar: orbe de vidro com o logo do Windows ---------- */
+.start-button {
+  position: absolute;
+  left: 8px;
+  bottom: 0;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.start-button__orb {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 20, 40, 0.75);
+  background:
+    radial-gradient(ellipse at 50% 110%, rgba(110, 230, 255, 0.75), transparent 60%),
+    radial-gradient(circle at 50% 40%, #2d7bb8, #0f3d6e 62%, #071f3b);
+  box-shadow:
+    inset 0 0 0 1px rgba(170, 225, 255, 0.55),
+    0 2px 6px rgba(0, 0, 0, 0.55);
+  transition:
+    box-shadow 160ms var(--ease),
+    transform 160ms var(--ease);
+}
+/* Reflexo superior da esfera, acima do logo. */
+.start-button__orb::after {
+  content: '';
+  position: absolute;
+  inset: 2px 6px auto;
+  height: 46%;
+  border-radius: 50% 50% 45% 45%;
+  background: linear-gradient(rgba(255, 255, 255, 0.55), rgba(255, 255, 255, 0.04));
+  pointer-events: none;
+}
+.start-button__logo {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.45));
+}
+@media (hover: hover) {
+  .start-button:hover .start-button__orb {
+    box-shadow:
+      inset 0 0 0 1px rgba(200, 240, 255, 0.8),
+      0 0 12px 3px rgba(120, 220, 255, 0.75),
+      0 2px 6px rgba(0, 0, 0, 0.55);
+  }
+}
+.start-button[aria-expanded='true'] .start-button__orb {
+  box-shadow:
+    inset 0 0 0 1px rgba(200, 240, 255, 0.8),
+    0 0 12px 3px rgba(120, 220, 255, 0.75),
+    0 2px 6px rgba(0, 0, 0, 0.55);
+}
+.start-button:active .start-button__orb {
+  transform: scale(0.94);
+}
+.start-button:focus-visible {
+  outline-color: #b8f8ff;
+}
+
+@media (pointer: coarse) {
+  .volume__button {
+    width: 44px;
+  }
+}
+
+/* Celular: some só a decoração da bandeja (volume e relógio continuam). A barra
+   fica sobre o conteúdo ao rolar; vidro mais denso para não misturar com o texto. */
+@media (max-width: 37.49em) {
+  .taskbar__tray-decor,
+  .taskbar__items {
+    display: none;
+  }
+  .taskbar__glass {
+    background:
+      linear-gradient(
+        rgba(255, 255, 255, 0.2),
+        rgba(255, 255, 255, 0.06) 48%,
+        rgba(0, 0, 0, 0.12) 50%,
+        rgba(0, 0, 0, 0.28)
+      ),
+      rgba(16, 44, 62, 0.86);
+  }
+}
+
+/* Indicador de idioma (PT/EN), como a barra de idiomas do Windows 7: troca o
+   idioma do site a cada clique. */
+.language-button {
+  min-width: 30px;
+  height: calc(var(--taskbar-height) - 10px);
+  padding: 0 5px;
+  font-size: var(--text-caption);
+  font-weight: var(--font-bold);
+  letter-spacing: 0.04em;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .language-button:hover {
+    border-color: rgba(255, 255, 255, 0.35);
+    background: linear-gradient(rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.08));
+  }
+}
+.language-button:focus-visible {
+  outline-color: #b8f8ff;
+}
+@media (pointer: coarse) {
+  .language-button {
+    min-width: 44px;
+  }
+}

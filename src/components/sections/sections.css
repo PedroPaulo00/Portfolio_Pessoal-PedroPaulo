@@ -1,0 +1,532 @@
+/* ==========================================================================
+   Seções do portfólio — superfície de leitura estável (kit 7E).
+   ========================================================================== */
+
+.section-header {
+  margin-bottom: var(--space-5);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--divider);
+}
+.section-header__title {
+  margin: 0;
+  font-size: var(--text-title);
+  font-weight: var(--font-regular);
+  color: var(--heading);
+}
+.section-header__title:focus,
+.hero__name:focus {
+  outline: none;
+}
+.section-header__description {
+  margin: 4px 0 0;
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+}
+
+.group-title {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-body);
+  font-weight: var(--font-bold);
+  color: var(--text);
+}
+
+/* ---------- Início ---------- */
+.hero__intro {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-5);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--divider);
+}
+.hero__mark {
+  flex: none;
+  padding: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(140, 220, 255, 0.35), transparent 70%);
+}
+/* Foto + status, empilhados à esquerda do nome. */
+.hero__avatar {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Moldura de avatar do MSN (msn-frame.svg, calibrada contra exemplo_MSN.png).
+   Unidade = 1 px do exemplo; a foto ocupa 88 unidades. As margens negativas
+   descontam a folga da sombra, para a caixa coincidir com a moldura visível.
+   Invariável ao tema, como a moldura da janela. */
+.msn-frame {
+  --msn-photo: 120px;
+  --msn-u: calc(var(--msn-photo) / 88);
+  position: relative;
+  width: calc(116 * var(--msn-u));
+  height: calc(116 * var(--msn-u));
+  margin: calc(-3.8 * var(--msn-u)) calc(-5.6 * var(--msn-u)) calc(-5.6 * var(--msn-u)) calc(-3.8 * var(--msn-u));
+}
+/* A foto passa meia unidade sob o filete interno (opaco): sem fresta ao escalar. */
+.msn-frame__photo {
+  position: absolute;
+  left: calc(12.5 * var(--msn-u));
+  top: calc(12.5 * var(--msn-u));
+  width: calc(89 * var(--msn-u));
+  height: calc(89 * var(--msn-u));
+  object-fit: cover;
+}
+.msn-frame__art {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Status "Online" do MSN: bolinha verde com brilho + texto verde com halo claro.
+   O verde do texto é um pouco mais escuro que o original para ter contraste AA. */
+.presence {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.2;
+  color: #467f5e;
+  text-shadow: 0 0 3px rgba(205, 255, 228, 0.9);
+}
+.presence__dot {
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 42% 36%, #a8fc72, #8ef056 38%, #76d841 72%, #66c63a);
+  box-shadow:
+    0 0 1px 1px rgba(130, 225, 95, 0.55),
+    0 0 4px 2px rgba(165, 238, 150, 0.45);
+}
+[data-theme='dark'] .presence {
+  color: #8fd6a6;
+  text-shadow: none;
+}
+
+.hero__name {
+  margin: 0;
+  font-size: var(--text-display);
+  font-weight: var(--font-regular);
+  color: var(--heading);
+}
+.hero__role {
+  margin: 4px 0 var(--space-3);
+  font-size: var(--text-subtitle);
+}
+.hero__tagline {
+  max-width: var(--reading-width);
+  margin: 0 0 var(--space-5);
+  color: var(--text-secondary);
+}
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+}
+.hero__shortcuts {
+  padding-top: var(--space-5);
+}
+
+/* Itens de biblioteca: ícone grande + título + metadado (EXEMPLO_WIN7). */
+.library-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  gap: var(--space-2) var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.library-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  color: var(--text);
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: var(--interior-radius);
+}
+@media (hover: hover) {
+  .library-item:hover {
+    background: var(--hover);
+    border-color: var(--hover-border);
+  }
+}
+.library-item:focus-visible {
+  background: linear-gradient(var(--selection-top), var(--selection-bottom));
+  border-color: var(--selection-border);
+}
+.library-item .aero-icon {
+  flex: none;
+}
+.library-item__text {
+  display: grid;
+  min-width: 0;
+}
+.library-item__title {
+  font-size: var(--text-body);
+}
+.library-item__meta {
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+}
+
+/* ---------- Projetos ---------- */
+.search-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  padding: 8px 12px;
+  font-size: var(--text-small);
+  background: linear-gradient(var(--selection-top), var(--selection-bottom));
+  border: 1px solid var(--selection-border);
+  border-radius: var(--interior-radius);
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.project-grid > li {
+  display: flex;
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--divider);
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(20, 50, 80, 0.08);
+  transition:
+    border-color 150ms var(--ease),
+    box-shadow 150ms var(--ease);
+}
+.project-card:hover,
+.project-card:focus-within {
+  border-color: var(--selection-border);
+  box-shadow: 0 2px 8px rgba(30, 100, 160, 0.16);
+}
+[data-theme='dark'] .project-card {
+  background: var(--sidebar);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.project-thumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 260px;
+  object-fit: cover;
+  border-bottom: 1px solid var(--divider);
+}
+.project-thumb--placeholder {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+.project-thumb--placeholder::before {
+  content: '';
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  top: 58%;
+  height: 120%;
+  border-top: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.16);
+  transform: rotate(-8deg);
+}
+.project-thumb--placeholder::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 50%;
+  background: linear-gradient(rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.05));
+}
+.project-thumb--profissional {
+  background:
+    radial-gradient(ellipse at 30% 0%, #d2f3ff, transparent 60%), linear-gradient(150deg, #7cc6ec, #1f6fae 70%, #18548a);
+}
+.project-thumb--academico {
+  background:
+    radial-gradient(ellipse at 30% 0%, #e6ffd0, transparent 60%), linear-gradient(150deg, #9ad884, #3f8f4c 70%, #2c6e3c);
+}
+.project-thumb--pessoal {
+  background:
+    radial-gradient(ellipse at 30% 0%, #fff4cf, transparent 60%), linear-gradient(150deg, #f3cd7a, #c27f2a 70%, #9c5f1b);
+}
+.project-thumb__icon {
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 3px 4px rgba(0, 30, 60, 0.35));
+}
+.project-thumb__note {
+  position: absolute;
+  z-index: 1;
+  right: 8px;
+  bottom: 6px;
+  font-size: 0.6875rem;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+
+.project-card__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4) var(--space-4);
+}
+.project-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.project-card__title {
+  margin: 2px 0 0;
+  font-size: 1.125rem;
+  font-weight: var(--font-bold);
+}
+.project-card__summary {
+  margin: 0;
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+}
+.project-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-2);
+}
+
+.empty-state {
+  padding: var(--space-6) var(--space-4);
+  text-align: center;
+  color: var(--text-secondary);
+}
+.empty-state__title {
+  margin: 0 0 4px;
+  font-size: var(--text-subtitle);
+  color: var(--text);
+}
+
+/* ---------- Sobre ---------- */
+.about__layout {
+  display: grid;
+  grid-template-columns: minmax(0, var(--reading-width)) minmax(14rem, 19rem);
+  gap: var(--space-6);
+  align-items: start;
+}
+.about__text p {
+  margin: 0 0 var(--space-4);
+}
+.about__highlights {
+  margin-top: var(--space-5);
+}
+.about__list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 1.25em;
+}
+.about__list--plain {
+  padding-left: 0;
+  list-style: none;
+}
+.about__aside {
+  display: grid;
+  gap: var(--space-4);
+}
+.about__course {
+  margin: 0;
+}
+.about__stage {
+  margin: 4px 0 0;
+  color: var(--text-secondary);
+}
+.info-panel {
+  padding: var(--space-4);
+  background: linear-gradient(var(--toolbar-top), var(--toolbar-bottom));
+  border: 1px solid var(--divider);
+  border-radius: 4px;
+}
+
+/* ---------- Tecnologias ---------- */
+.skills__groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17.5rem), 1fr));
+  gap: var(--space-5) var(--space-6);
+}
+.skill-group .group-title {
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--divider);
+}
+.skill-group__items {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.skill-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px; /* mesma altura com ou sem ícone (ladrilho de 28 px) */
+  padding: 5px 8px;
+  font-size: var(--text-small);
+  border: 1px solid transparent;
+  border-radius: var(--interior-radius);
+}
+/* Sem ícone: losango. O espaço lateral alinha o texto com os itens que têm ícone. */
+.skill-item::before {
+  content: '';
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin: 0 10px;
+  transform: rotate(45deg);
+  background: linear-gradient(135deg, #9fe2ff, #1d86d6);
+  border: 1px solid #0d5aa6;
+}
+.skill-item--icon::before {
+  content: none;
+}
+/* Ladrilho de vidro claro nos dois temas: logos escuros (GitHub) seguem legíveis. */
+.skill-item__tile {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(13, 90, 166, 0.28);
+  border-radius: 5px;
+  background: linear-gradient(#ffffff, #eef5fb 50%, #e1ecf6 51%, #f4f9fd);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 1px 2px rgba(0, 40, 80, 0.12);
+}
+.skill-item__tile img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+/* ---------- Contato ---------- */
+.contact__intro {
+  max-width: var(--reading-width);
+  margin: 0 0 var(--space-5);
+}
+.contact-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17.5rem), 1fr));
+  gap: var(--space-2) var(--space-5);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 8px 10px;
+  color: var(--text);
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: var(--interior-radius);
+}
+a.contact-item:hover {
+  background: var(--hover);
+  border-color: var(--hover-border);
+}
+.contact-item--disabled {
+  cursor: not-allowed;
+}
+.contact-item--disabled .aero-icon {
+  filter: grayscale(1);
+  opacity: 0.55;
+}
+.contact-item__text {
+  display: grid;
+  min-width: 0;
+}
+.contact-item__label {
+  font-weight: var(--font-bold);
+}
+.contact-item__value {
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+  overflow-wrap: anywhere;
+}
+
+/* Quebras pela largura do CONTEÚDO (container "main"), não da tela. */
+@container main (max-width: 28rem) {
+  .hero__intro {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  .hero__mark .brand-mark {
+    width: 64px;
+    height: 64px;
+  }
+  .msn-frame {
+    --msn-photo: 88px;
+  }
+  .hero__name {
+    font-size: 1.75rem;
+  }
+}
+@container main (max-width: 46rem) {
+  .about__layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+  }
+}
+
+/* ---------- Galeria da janela Detalhes ---------- */
+.project-gallery {
+  display: grid;
+  gap: var(--space-3);
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.project-gallery__link {
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  background: linear-gradient(var(--toolbar-top), var(--toolbar-bottom));
+  border: 1px solid var(--divider);
+  border-radius: 4px;
+}
+@media (hover: hover) {
+  .project-gallery__link:hover {
+    border-color: var(--selection-border);
+  }
+}
+.project-gallery__link img {
+  display: block;
+  max-width: 100%;
+  max-height: 20rem;
+  width: auto;
+  height: auto;
+  border-radius: 2px;
+  box-shadow: 0 1px 4px rgba(0, 30, 60, 0.25);
+}
