@@ -8,7 +8,7 @@
  * - URLs opcionais ausentes = botão/link não exibido (nunca "#").
  * - Imagens: coloque arquivos em src/assets/ e importe-os aqui.
  */
-import somFundo from '../assets/audio/som-fundo.mp3';
+import somFundo from '../assets/audio/som_fundo_novo.mp3';
 import logo from '../assets/brands/logo.png';
 import arquivosIcon from '../assets/desktop/arquivos.png';
 import computadorIcon from '../assets/desktop/computador.png';
@@ -422,11 +422,11 @@ export const portfolio: PortfolioData<'source'> = {
     showFollowers: false,
   },
 
-  // Som de fundo (som-fundo.mp3, arquivo inteiro em loop). O loop começa em 0,14 s
-  // para pular o silêncio que o codificador MP3 põe no início (sem pausa a cada volta).
+  // Som de fundo (som_fundo_novo.mp3). Toca e repete sem fim só o trecho de
+  // 1:20 a 3:23 (em segundos: 80 a 203); começa direto em 1:20.
   sound: {
     src: somFundo,
-    loop: [0.14, 98.35],
+    loop: [80, 203],
     defaultVolume: 50,
   },
 

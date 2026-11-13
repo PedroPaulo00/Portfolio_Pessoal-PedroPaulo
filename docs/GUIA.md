@@ -89,11 +89,11 @@ import thumbMeuApp from '../assets/projetos/meu-app.webp';
 
 ### 6. Som de fundo
 
-- **Arquivo atual:** `src/assets/audio/ambient-template.mp3`, um loop ambiente original (ondas + pad), gerado por `scripts/generate-ambient.py`.
+- **Arquivo atual:** `src/assets/audio/som_fundo_novo.mp3` (3:25). O site toca só o trecho de **1:20 a 3:23** (`loop: [80, 203]`), em repetição sem fim e sem pausa entre as voltas. Os antigos `som-fundo.mp3` e `ambient-template.mp3` continuam na pasta, mas não entram no site (só arquivos importados em `portfolio.ts` são publicados).
 - **Para trocar:**
   1. Coloque o seu arquivo (MP3 ou M4A) em `src/assets/audio/`.
-  2. Troque o `import ambientTemplate …` em `portfolio.ts`.
-  3. Ajuste `sound.loop`: `[início, fim]` em segundos do trecho que se repete. Remova `loop` para repetir o arquivo inteiro.
+  2. Troque o `import somFundo …` em `portfolio.ts`.
+  3. Ajuste `sound.loop`: `[início, fim]` em segundos do trecho que se repete (1:20 = 80). O som já começa no início do trecho. Remova `loop` para repetir o arquivo inteiro.
 - **Volume inicial:** `sound.defaultVolume` (0–100). O visitante ajusta no ícone de alto-falante da barra de tarefas, e a escolha fica salva no navegador.
 - **Início automático:** o site tenta tocar ao abrir. Os navegadores bloqueiam som antes da primeira interação do visitante (clique, toque ou tecla); nesse caso, ele começa nessa primeira interação. Isso é regra do navegador e não pode ser contornado.
 - **Acessibilidade:** o 2º Tab mostra **"Silenciar som de fundo"** (WCAG 1.4.2).
