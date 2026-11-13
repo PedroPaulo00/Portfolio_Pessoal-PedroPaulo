@@ -38,7 +38,7 @@ Em `profile`, troque `name`, `role` e `tagline`. O nome aparece no título da ja
 ### 2. Logo e foto
 
 - **Logo:** o original é `src/assets/originais/brands/AFL_logo.png`. `npm run images` gera `src/assets/brands/logo.png`, usado na barra de título, no menu e na barra de tarefas, e os favicons `public/favicon.png` e `public/apple-touch-icon.png`. Sem `logo` em `profile`, aparece a marca provisória com as iniciais.
-- **Foto:** aparece no Início, numa moldura no estilo do avatar do MSN, com o status "Online" logo abaixo. A moldura é o SVG `src/assets/profile/msn-frame.svg`, calibrado pixel a pixel contra `src/assets/originais/referencias/exemplo_MSN.png`; o tamanho na tela vem de `--msn-photo` em `sections.css`. O original é `src/assets/originais/profile/minha_foto_atual.jpg` (nome em `PHOTO` no [`scripts/optimize-images.py`](../scripts/optimize-images.py)); `npm run images` gera `src/assets/profile/foto.webp`. Com `PHOTO_CROP = None` a imagem vai inteira, centralizada num quadrado; para recortar uma parte, informe a caixa (esquerda, topo, direita, base). A foto anterior (`minha_foto.jpg`) continua na pasta. Sem `photo` em `profile`, o Início mostra o logo.
+- **Foto:** aparece no Início, numa moldura no estilo do avatar do MSN, com o status "Online" logo abaixo. A moldura é o SVG `src/assets/profile/msn-frame.svg`, calibrado pixel a pixel contra `src/assets/originais/referencias/exemplo_MSN.png`; o tamanho na tela vem de `--msn-photo` em `sections.css`. O original é `src/assets/originais/profile/foto.png` (nome em `PHOTO` no [`scripts/optimize-images.py`](../scripts/optimize-images.py)); `npm run images` gera `src/assets/profile/foto.webp`. Com `PHOTO_CROP = None` a imagem vai inteira, centralizada num quadrado; para recortar uma parte, informe a caixa (esquerda, topo, direita, base). As fotos anteriores (`minha_foto.jpg`, `minha_foto_atual.jpg`) continuam na pasta. Sem `photo` em `profile`, o Início mostra o logo.
 
 ### 3. Projetos
 
@@ -154,6 +154,20 @@ Para remover a integração, use `spotify.enabled: false`.
 - **Novas funcionalidades:** `npm run check` roda `npm run i18n:check`, que acusa texto escrito direto no código (fora de `ui.ts`/`portfolio.ts`): texto solto no JSX, `aria-label`/`title`/`alt`/`placeholder` fixos e qualquer string com acentos do português. Assim, nada novo entra no site numa língua só. Para um caso legítimo (ex.: o nome "Português" no seletor), ponha o comentário `i18n-exempt` antes da declaração.
 - **Datas e números** (relógio, "há 2 horas", seguidores) usam o formato do idioma atual.
 - As rotas continuam em português (`#projetos`, `#sobre`) nas duas línguas.
+
+### Prévias de link, buscadores e ícones
+
+- **Imagem de prévia** (LinkedIn, WhatsApp etc.): `public/og-image.jpg`, 1200×630, uma captura do Início. As tags `og:*` e `twitter:*` ficam em [`index.html`](../index.html).
+- **Buscadores:** `public/robots.txt` (bloqueia só `/api/`) e `public/sitemap.xml` (página única).
+- **Ícones:** `favicon.ico`, `favicon.png`, `apple-touch-icon.png` e `icon-192/512.png` saem do logo via `npm run images`; o manifesto é `public/site.webmanifest`.
+- **Se o domínio mudar:** troque `https://portfolio-pedropaulo.vercel.app` no `index.html`, no `robots.txt` e no `sitemap.xml`.
+- **Limite do Spotify:** a função busca no Spotify no máximo uma vez a cada 10 s por instância (as outras chamadas recebem a última resposta) e, se o Spotify falhar, devolve a última resposta boa dos 10 min anteriores (`MIN_INTERVAL_MS` e `STALE_MS` em [`server/spotify.ts`](../server/spotify.ts)).
+
+### Página 404, privacidade e estatísticas
+
+- **Página 404:** `public/404.html`, no estilo da tela azul do Windows, em português e inglês (segue o idioma salvo pelo site). A Vercel a serve para qualquer endereço inexistente. É independente do React; o azul é `#0070CC` (um pouco mais escuro que o original, para o contraste do texto passar no mínimo de acessibilidade).
+- **Política de privacidade:** rota `#privacidade`, com texto em `privacy` no [`portfolio.ts`](../src/data/portfolio.ts). Os links ficam no fim do Contato e no menu Iniciar. Revise o texto e a data se o site passar a coletar algo novo (ex.: um formulário).
+- **Estatísticas:** Vercel Web Analytics (`@vercel/analytics`), sem cookies. A contagem automática está desligada; o App registra cada seção como um caminho (`/projetos`, `/projetos/academico`…), já que a rota fica no `#`. Para os dados aparecerem, ative **Analytics** no painel do projeto na Vercel.
 
 ### 9. Conferir antes de publicar
 

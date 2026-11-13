@@ -207,6 +207,18 @@ export function StartMenu(props: StartMenuProps) {
             <Icon name="configuracoes" size={20} />
             {t.appearance}
           </button>
+          <button
+            type="button"
+            className="start-menu__side-link"
+            onClick={() => {
+              closedByNavigation.current = true;
+              onNavigate('privacidade');
+              onClose();
+            }}
+          >
+            <Icon name="privacidade" size={20} />
+            {t.privacy}
+          </button>
           <button type="button" className="start-menu__close" onClick={() => dialogRef.current?.close()}>
             {t.closeMenu}
           </button>

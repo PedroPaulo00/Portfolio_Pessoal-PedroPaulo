@@ -23,8 +23,9 @@ PUBLIC = ROOT.parent.parent / "public"
 # Foto de perfil e recorte (esquerda, topo, direita, base). None = imagem inteira,
 # centralizada num quadrado. A foto anterior (minha_foto.jpg, extraída de
 # minha_foto.CR2) usava o recorte (1320, 308, 3300, 2288).
-PHOTO = "minha_foto_atual.jpg"
-PHOTO_CROP = None
+PHOTO = "foto.png"
+# Enquadra você e o alienígena (a foto tem 1371×1148). As anteriores continuam na pasta.
+PHOTO_CROP = (60, 0, 1208, 1148)
 
 # Logos dos projetos (originais/projetos/logos/) → projetos/logos/, 2× de 64 px.
 # Projeto sem logo próprio usa o template gerado aqui (projetos/logos/template.png).
@@ -193,10 +194,18 @@ def main() -> None:
     logo = square(Image.open(SRC / "brands" / "AFL_logo.png"))
     save(logo.resize((128, 128), Image.LANCZOS), "brands/logo.png", optimize=True)
     PUBLIC.mkdir(exist_ok=True)
-    for size, name in ((64, "favicon.png"), (180, "apple-touch-icon.png")):
+    # Favicons: PNG, ícone do iPhone e ícones do manifesto (Android / "Adicionar à tela inicial").
+    for size, name in ((64, "favicon.png"), (180, "apple-touch-icon.png"), (192, "icon-192.png"), (512, "icon-512.png")):
         out = PUBLIC / name
-        logo.resize((size, size), Image.LANCZOS).save(out, optimize=True)
+        icon = logo.resize((size, size), Image.LANCZOS)
+        if size >= 180:  # 256 cores: ícones grandes ficam ~5× menores, sem diferença visível
+            icon = icon.quantize(256, method=Image.Quantize.FASTOCTREE)
+        icon.save(out, optimize=True)
         print(f"public/{name:27} {out.stat().st_size // 1024:>4} KB")
+    # favicon.ico com 16, 32 e 48 px (navegadores e ferramentas que só procuram /favicon.ico).
+    ico = PUBLIC / "favicon.ico"
+    logo.resize((48, 48), Image.LANCZOS).save(ico, sizes=[(16, 16), (32, 32), (48, 48)])
+    print(f"public/{'favicon.ico':27} {ico.stat().st_size // 1024:>4} KB")
 
     # Foto de perfil (moldura do Início): quadrado, 2× de 120 px.
     photo = Image.open(SRC / "profile" / PHOTO).convert("RGB")

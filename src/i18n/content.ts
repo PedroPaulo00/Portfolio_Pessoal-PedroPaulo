@@ -63,5 +63,13 @@ export function localize(data: PortfolioData<'source'>, locale: Locale): Portfol
       links: data.contact.links.map((link) => ({ ...link, label: name(link.label) })),
     },
     desktopIcons: data.desktopIcons.map((icon) => ({ ...icon, label: name(icon.label) })),
+    privacy: {
+      updated: data.privacy.updated,
+      intro: text(data.privacy.intro),
+      sections: data.privacy.sections.map((item) => ({
+        title: text(item.title),
+        paragraphs: item.paragraphs.map(text),
+      })),
+    },
   };
 }

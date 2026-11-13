@@ -20,6 +20,7 @@
     "tech-icons": "node scripts/tech-icons.mjs"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },

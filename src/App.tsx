@@ -8,6 +8,7 @@ import { StartMenu } from './components/launcher/StartMenu';
 import { AboutSection } from './components/sections/AboutSection';
 import { ContactSection } from './components/sections/ContactSection';
 import { HeroSection } from './components/sections/HeroSection';
+import { PrivacySection } from './components/sections/PrivacySection';
 import { ProjectsSection } from './components/sections/ProjectsSection';
 import { SkillsSection } from './components/sections/SkillsSection';
 import { SpotifySection } from './components/spotify/SpotifySection';
@@ -34,6 +35,7 @@ import {
   type Theme,
 } from './lib/preferences';
 import { routeHref, useRouter, type Route } from './lib/router';
+import { pageview } from '@vercel/analytics';
 import { SpotifyProvider, useSpotify, useSpotifyRefresh } from './lib/spotify';
 import type { Section } from './types/portfolio';
 import './styles/controls.css';
@@ -78,7 +80,18 @@ export function App() {
   const firstRender = useRef(true);
   const keepFocusOnce = useRef(false);
 
-  const section: Section = sections.find((item) => item.id === route.section) ?? sections[0]!;
+  // A política de privacidade é uma vista fora da navegação principal.
+  const privacySection: Section = { id: 'privacidade', label: t.privacy, description: t.privacyDescription };
+  const section: Section =
+    route.section === 'privacidade'
+      ? privacySection
+      : (sections.find((item) => item.id === route.section) ?? sections[0]!);
+
+  // Estatísticas (Vercel Web Analytics): cada seção conta como um caminho
+  // (/projetos, /projetos/academico…), já que a rota fica no # da URL.
+  useEffect(() => {
+    pageview({ route: routeHref(route).replace('#', '/'), path: routeHref(route).replace('#', '/') });
+  }, [route]);
 
   // Título do documento: muda com o destino e com o idioma.
   useEffect(() => {
@@ -240,6 +253,9 @@ export function App() {
                     <SpotifySection section={section} showPlaylists={portfolio.spotify.showPlaylists} />
                   ) : null}
                   {route.section === 'contato' ? <ContactSection section={section} contact={contact} /> : null}
+                  {route.section === 'privacidade' ? (
+                    <PrivacySection section={section} privacy={content.privacy} />
+                  ) : null}
                 </div>
               </main>
             </div>
@@ -361,6 +377,13 @@ function SectionCommands({ route, hasEmail, copied, onCopyEmail }: SectionComman
       );
     case 'spotify':
       return <SpotifyCommands />;
+    case 'privacidade':
+      return (
+        <RouteLink to={{ section: 'contato' }} className="command-button">
+          <Icon name="contato" size={16} />
+          {t.contact}
+        </RouteLink>
+      );
     case 'contato':
       return (
         <button

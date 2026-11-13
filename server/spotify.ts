@@ -191,15 +191,46 @@ export function isConfigured(env: SpotifyEnv): env is SpotifyEnv & SpotifyCreden
   return Boolean(env.SPOTIFY_CLIENT_ID && env.SPOTIFY_CLIENT_SECRET && env.SPOTIFY_REFRESH_TOKEN);
 }
 
+/* ---------------------- limite de chamadas ao Spotify --------------------- */
+
+/**
+ * O botão "Atualizar" fura o cache da borda (`?fresh=`), então qualquer um poderia
+ * disparar chamadas sem parar até o Spotify bloquear a conta (HTTP 429). Por
+ * instância da função: no máximo uma busca a cada MIN_INTERVAL_MS (as demais
+ * recebem a última resposta), chamadas simultâneas compartilham a mesma busca e,
+ * se o Spotify falhar, serve-se a última resposta boa de até STALE_MS atrás.
+ */
+const MIN_INTERVAL_MS = 10_000;
+const STALE_MS = 10 * 60_000;
+let lastGood: { readonly body: string; readonly at: number } | null = null;
+let inFlight: Promise<string> | null = null;
+
+function snapshotBody(env: SpotifyCredentials): Promise<string> {
+  if (lastGood && Date.now() - lastGood.at < MIN_INTERVAL_MS) return Promise.resolve(lastGood.body);
+  inFlight ??= getSpotifySnapshot(env)
+    .then((snapshot) => {
+      const body = JSON.stringify(snapshot);
+      lastGood = { body, at: Date.now() };
+      return body;
+    })
+    .finally(() => {
+      inFlight = null;
+    });
+  return inFlight;
+}
+
 export async function handleSpotifyRequest(env: SpotifyEnv): Promise<Response> {
   if (!isConfigured(env)) {
     return new Response(JSON.stringify({ error: 'not-configured' }), { status: 503, headers: HEADERS });
   }
   try {
-    return new Response(JSON.stringify(await getSpotifySnapshot(env)), { status: 200, headers: HEADERS });
+    return new Response(await snapshotBody(env), { status: 200, headers: HEADERS });
   } catch (error) {
     cachedToken = null;
     console.error('[spotify]', error);
+    if (lastGood && Date.now() - lastGood.at < STALE_MS) {
+      return new Response(lastGood.body, { status: 200, headers: { ...HEADERS, 'Cache-Control': 'no-store' } });
+    }
     return new Response(JSON.stringify({ error: 'upstream' }), {
       status: 502,
       headers: { ...HEADERS, 'Cache-Control': 'no-store' },

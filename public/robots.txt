@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+
+Sitemap: https://portfolio-pedropaulo.vercel.app/sitemap.xml

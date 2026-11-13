@@ -16,7 +16,15 @@ export interface Route {
   readonly category?: ProjectCategory;
 }
 
-const SECTIONS: readonly SectionId[] = ['inicio', 'projetos', 'sobre', 'tecnologias', 'spotify', 'contato'];
+const SECTIONS: readonly SectionId[] = [
+  'inicio',
+  'projetos',
+  'sobre',
+  'tecnologias',
+  'spotify',
+  'contato',
+  'privacidade',
+];
 const MAX_KEY = 'portfolio-aero:history-max';
 
 export function parseHash(hash: string): Route {

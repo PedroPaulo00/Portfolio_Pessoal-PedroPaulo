@@ -22,7 +22,7 @@ export type Mode = 'source' | 'view';
 export type Prose<M extends Mode> = M extends 'source' ? Localized : string;
 export type Name<M extends Mode> = M extends 'source' ? string | Localized : string;
 
-export type SectionId = 'inicio' | 'projetos' | 'sobre' | 'tecnologias' | 'spotify' | 'contato';
+export type SectionId = 'inicio' | 'projetos' | 'sobre' | 'tecnologias' | 'spotify' | 'contato' | 'privacidade';
 
 export interface Section<M extends Mode = 'view'> {
   readonly id: SectionId;
@@ -110,6 +110,13 @@ export interface Contact<M extends Mode = 'view'> {
   readonly links: readonly ContactLink<M>[];
 }
 
+export interface PrivacyPolicy<M extends Mode = 'view'> {
+  /** Data da última revisão (AAAA-MM-DD). */
+  readonly updated: string;
+  readonly intro: Prose<M>;
+  readonly sections: readonly { readonly title: Prose<M>; readonly paragraphs: readonly Prose<M>[] }[];
+}
+
 export interface SpotifyConfig {
   /** false oculta o cartão do Início e a aba Spotify. */
   readonly enabled: boolean;
@@ -161,4 +168,6 @@ export interface PortfolioData<M extends Mode = 'view'> {
   readonly sound: SoundConfig;
   /** Ícones da área de trabalho, de cima para baixo (só em telas ≥ 1024 px). */
   readonly desktopIcons: readonly DesktopIcon<M>[];
+  /** Política de privacidade (rota #privacidade, fora da navegação principal). */
+  readonly privacy: PrivacyPolicy<M>;
 }

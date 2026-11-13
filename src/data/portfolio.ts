@@ -443,4 +443,70 @@ export const portfolio: PortfolioData<'source'> = {
     { id: 'cs-16', label: 'CS 1.6', kind: 'template', image: cs16Icon },
     { id: 'minecraft', label: 'Minecraft', kind: 'template', image: minecraftIcon },
   ],
+
+  // Política de privacidade (rota #privacidade). Revise se algo mudar no site
+  // (ex.: um formulário de contato ou outra ferramenta de estatísticas).
+  privacy: {
+    updated: '2026-11-12',
+    intro: {
+      pt: 'Este portfólio foi feito para ser visitado sem que você precise entregar dados pessoais. Esta página explica o que é guardado, por quem e por quê, de acordo com a Lei Geral de Proteção de Dados (LGPD).',
+      en: 'This portfolio is designed so you can visit it without handing over personal data. This page explains what is stored, by whom and why, in line with Brazil’s General Data Protection Law (LGPD).',
+    },
+    sections: [
+      {
+        title: { pt: 'O que fica no seu navegador', en: 'What stays in your browser' },
+        paragraphs: [
+          {
+            pt: 'O site guarda no armazenamento local do seu navegador apenas preferências: tema, modo do vidro, idioma, volume do som de fundo e o histórico de navegação entre as seções. Esses dados não saem do seu aparelho, e você pode apagá-los limpando os dados do site no navegador. Não usamos cookies.',
+            en: 'The site keeps only preferences in your browser’s local storage: theme, glass mode, language, background sound volume and the navigation history between sections. This data never leaves your device, and you can delete it by clearing the site data in your browser. We do not use cookies.',
+          },
+        ],
+      },
+      {
+        title: { pt: 'Estatísticas de visitas', en: 'Visit statistics' },
+        paragraphs: [
+          {
+            pt: 'Usamos o Vercel Web Analytics para contar visitas e saber quais seções são vistas. Ele não usa cookies, não identifica você e não acompanha sua navegação em outros sites: registra, de forma agregada, a seção visitada, o país, o tipo de navegador e de aparelho e o site de onde você veio.',
+            en: 'We use Vercel Web Analytics to count visits and see which sections are viewed. It uses no cookies, does not identify you and does not follow you across other sites: it records, in aggregate, the section visited, the country, the browser and device type, and the referring site.',
+          },
+        ],
+      },
+      {
+        title: { pt: 'Hospedagem', en: 'Hosting' },
+        paragraphs: [
+          {
+            pt: 'O site é hospedado pela Vercel. Como em qualquer servidor, ela recebe dados técnicos das requisições, como endereço IP e navegador, para entregar as páginas e protegê-las contra abusos, conforme a política de privacidade da própria Vercel.',
+            en: 'The site is hosted by Vercel. As with any server, it receives technical request data, such as IP address and browser, to deliver the pages and protect them against abuse, under Vercel’s own privacy policy.',
+          },
+        ],
+      },
+      {
+        title: { pt: 'Spotify', en: 'Spotify' },
+        paragraphs: [
+          {
+            pt: 'A seção Spotify mostra dados públicos da minha própria conta, como perfil e músicas ouvidas. Nenhum dado seu é enviado ao Spotify pelo site, mas as capas dos álbuns são carregadas diretamente dos servidores do Spotify, que recebem os dados técnicos dessa requisição.',
+            en: 'The Spotify section shows public data from my own account, such as my profile and the songs I listened to. The site sends none of your data to Spotify, but album covers are loaded directly from Spotify’s servers, which receive the technical data of that request.',
+          },
+        ],
+      },
+      {
+        title: { pt: 'Links externos', en: 'External links' },
+        paragraphs: [
+          {
+            pt: 'Os links para GitHub, Instagram, demonstrações de projetos e outros serviços levam a sites de terceiros, que têm políticas de privacidade próprias.',
+            en: 'Links to GitHub, Instagram, project demos and other services lead to third-party sites, which have their own privacy policies.',
+          },
+        ],
+      },
+      {
+        title: { pt: 'Contato', en: 'Contact' },
+        paragraphs: [
+          {
+            pt: 'Para dúvidas sobre esta política ou sobre seus dados, escreva para pppedro95@gmail.com.',
+            en: 'For questions about this policy or about your data, write to pppedro95@gmail.com.',
+          },
+        ],
+      },
+    ],
+  },
 };

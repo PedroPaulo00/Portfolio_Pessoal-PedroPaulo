@@ -3,6 +3,7 @@ import gmailLogo from '../../assets/contato/gmail.png';
 import hotmailLogo from '../../assets/contato/hotmail.png';
 import instagramLogo from '../../assets/contato/instagram.png';
 import { useI18n } from '../../i18n/I18n';
+import { RouteLink } from '../../lib/navigation';
 import type { Contact, Section } from '../../types/portfolio';
 import { Icon, type IconName } from '../ui/Icon';
 import { SectionHeader } from './SectionHeader';
@@ -112,6 +113,12 @@ export function ContactSection({ section, contact }: ContactSectionProps) {
           </li>
         ))}
       </ul>
+      <p className="contact__privacy">
+        <RouteLink to={{ section: 'privacidade' }} className="text-link">
+          <Icon name="privacidade" size={16} />
+          {t.privacyPolicy}
+        </RouteLink>
+      </p>
     </div>
   );
 }

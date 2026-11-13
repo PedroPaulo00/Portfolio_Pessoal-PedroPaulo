@@ -123,6 +123,12 @@ const pt = {
   languages: 'Idiomas',
   highlights: 'Experiências e conquistas',
 
+  // Privacidade
+  privacy: 'Privacidade',
+  privacyDescription: 'Como este site trata os seus dados.',
+  privacyPolicy: 'Política de privacidade',
+  lastUpdated: (date: string) => `Última atualização: ${date}`,
+
   // Contato
   email: 'E-mail',
   secondaryEmail: 'E-mail alternativo',
@@ -279,6 +285,11 @@ const en: UiStrings = {
   interests: 'Interests',
   languages: 'Languages',
   highlights: 'Experience and achievements',
+
+  privacy: 'Privacy',
+  privacyDescription: 'How this site handles your data.',
+  privacyPolicy: 'Privacy policy',
+  lastUpdated: (date) => `Last updated: ${date}`,
 
   email: 'Email',
   secondaryEmail: 'Alternate email',

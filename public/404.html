@@ -1,0 +1,204 @@
+<!doctype html>
+<!--
+  Página 404 no estilo da "tela azul" do Windows. A Vercel serve este arquivo para
+  qualquer endereço que não existe. Independente do React: HTML, CSS e um script
+  pequeno (idioma, endereço digitado e o contador "% concluído").
+-->
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#0070cc" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="icon" type="image/png" href="/favicon.png" sizes="64x64" />
+    <title>Página não encontrada (404) — Pedro Paulo de Lima</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        min-height: 100%;
+        margin: 0;
+      }
+      body {
+        display: flex;
+        align-items: center;
+        background: #0070cc;
+        color: #fff;
+        font-family:
+          'Segoe UI',
+          'Segoe UI Web (West European)',
+          system-ui,
+          -apple-system,
+          Roboto,
+          Arial,
+          sans-serif;
+        font-weight: 300;
+      }
+      main {
+        width: min(100%, 1100px);
+        padding: 48px clamp(20px, 10vw, 130px);
+      }
+      .face {
+        margin: 0 0 0.25em;
+        font-size: clamp(6rem, 18vw, 10rem);
+        line-height: 1;
+        font-weight: 300;
+      }
+      h1 {
+        max-width: 31em;
+        margin: 0 0 1.2em;
+        font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+        font-weight: 300;
+        line-height: 1.45;
+      }
+      .progress {
+        margin: 0 0 2.2em;
+        font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+      }
+      .details {
+        display: flex;
+        gap: 22px;
+        align-items: flex-start;
+        font-size: 0.9375rem;
+        line-height: 1.5;
+      }
+      .code {
+        flex: none;
+        width: 92px;
+        height: 92px;
+        display: grid;
+        place-items: center;
+        background: #fff;
+      }
+      .code img {
+        width: 76px;
+        height: 76px;
+        object-fit: contain;
+      }
+      .details p {
+        margin: 0 0 1em;
+      }
+      .details p:last-child {
+        margin: 0;
+      }
+      a {
+        color: #fff;
+      }
+      a:focus-visible,
+      .home:focus-visible {
+        outline: 3px solid #fff;
+        outline-offset: 3px;
+      }
+      .home {
+        display: inline-block;
+        margin-top: 0.4em;
+        padding: 0.45em 1.1em;
+        font: inherit;
+        font-weight: 400;
+        color: #0070cc;
+        background: #fff;
+        border-radius: 2px;
+        text-decoration: none;
+      }
+      .home:hover {
+        background: #dbeeff;
+      }
+      .path {
+        word-break: break-all;
+      }
+      /* Só o idioma ativo aparece (o script escolhe; sem script, português). */
+      [lang='en'] .pt,
+      [lang='pt-BR'] .en {
+        display: none;
+      }
+      @media (max-width: 34em) {
+        .details {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="face" aria-hidden="true">:(</p>
+
+      <h1>
+        <span class="pt"
+          >Seu navegador encontrou um problema: esta página não existe. Estamos reunindo algumas informações sobre o
+          erro e, quando terminar, você pode voltar ao início.</span
+        >
+        <span class="en"
+          >Your browser ran into a problem: this page doesn't exist. We're just collecting some error info, and then you
+          can head back home.</span
+        >
+      </h1>
+
+      <p class="progress">
+        <span id="percent">0</span><span class="pt">% concluído</span><span class="en">% complete</span>
+      </p>
+
+      <div class="details">
+        <a class="code" href="/" tabindex="-1" aria-hidden="true">
+          <img src="/icon-192.png" alt="" width="76" height="76" />
+        </a>
+        <div>
+          <p>
+            <span class="pt">Para mais informações sobre este problema e possíveis soluções, visite </span>
+            <span class="en">For more information about this issue and possible fixes, visit </span>
+            <a href="/">portfolio-pedropaulo.vercel.app</a>
+          </p>
+          <p>
+            <span class="pt">Se você ligar para o suporte, informe:</span>
+            <span class="en">If you call a support person, give them this info:</span>
+          </p>
+          <p>
+            <span class="pt">Código de parada:</span><span class="en">Stop code:</span> PAGE_NOT_FOUND (404)<br />
+            <span class="pt">Endereço:</span><span class="en">Address:</span> <span class="path" id="path"></span>
+          </p>
+          <p>
+            <a class="home" href="/"><span class="pt">Voltar ao início</span><span class="en">Back to home</span></a>
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <script>
+      (function () {
+        // Mesmo idioma do site: escolha salva ou idioma do navegador.
+        var lang = 'pt';
+        try {
+          var saved = localStorage.getItem('portfolio-aero:lang');
+          if (saved === 'pt' || saved === 'en') lang = saved;
+          else lang = (navigator.language || 'pt').toLowerCase().indexOf('pt') === 0 ? 'pt' : 'en';
+        } catch (e) {
+          lang = (navigator.language || 'pt').toLowerCase().indexOf('pt') === 0 ? 'pt' : 'en';
+        }
+        document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
+        if (lang === 'en') document.title = 'Page not found (404) — Pedro Paulo de Lima';
+
+        document.getElementById('path').textContent = location.pathname + location.search;
+
+        // "% concluído": sobe até 100 e para. Sem redirecionar sozinho (quem lê devagar
+        // ou usa leitor de tela decide quando voltar). Com movimento reduzido, vai direto a 100.
+        var el = document.getElementById('percent');
+        var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reduce) {
+          el.textContent = '100';
+          return;
+        }
+        var value = 0;
+        var timer = setInterval(function () {
+          value = Math.min(100, value + Math.ceil(Math.random() * 12));
+          el.textContent = String(value);
+          if (value >= 100) clearInterval(timer);
+        }, 450);
+      })();
+    </script>
+  </body>
+</html>

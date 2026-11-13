@@ -11,6 +11,7 @@ export type IconName =
   | 'sobre'
   | 'tecnologias'
   | 'contato'
+  | 'privacidade'
   | 'configuracoes'
   | 'profissional'
   | 'academico'
@@ -129,6 +130,26 @@ const SHAPES: Record<Exclude<IconName, 'spotify'>, (g: Paint) => JSX.Element> = 
       />
       <path d="M4 5h16v3.4H4Z" fill={g('gloss')} opacity="0.55" />
       <path d="M9 17h6l1 3H8Z" fill={g('steel')} stroke="#46627c" strokeWidth="0.7" strokeLinejoin="round" />
+    </>
+  ),
+  privacidade: (g) => (
+    <>
+      <path
+        d="M12 2.6 4.5 5.4v5.8c0 4.7 3.2 8.6 7.5 10.2 4.3-1.6 7.5-5.5 7.5-10.2V5.4Z"
+        fill={g('blue')}
+        stroke="#0b4a85"
+        strokeWidth="0.9"
+        strokeLinejoin="round"
+      />
+      <path
+        d="m8.4 12.1 2.6 2.6 4.8-5"
+        fill="none"
+        stroke="#fff"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M12 3.6 5.5 6v3.4c2-1.4 4.2-2.1 6.5-2.1s4.5.7 6.5 2.1V6Z" fill={g('gloss')} opacity="0.7" />
     </>
   ),
   contato: (g) => (
