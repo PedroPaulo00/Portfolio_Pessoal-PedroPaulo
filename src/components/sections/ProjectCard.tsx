@@ -22,11 +22,20 @@ export function ProjectCard({ project, onShowDetails }: ProjectCardProps) {
       <div className="project-card__body">
         <div className="project-card__meta">
           <span className={`badge badge--${project.category}`}>{t.category[project.category].singular}</span>
-          {project.status ? <span className="badge badge--status">{t.projectStatus[project.status]}</span> : null}
+          {project.status ? (
+            <span className={`badge badge--status badge--status-${project.status}`}>
+              {t.projectStatus[project.status]}
+            </span>
+          ) : null}
         </div>
-        <h2 id={titleId} className="project-card__title">
-          {project.name}
-        </h2>
+        <div className="project-card__heading">
+          {project.logo ? (
+            <img className="project-logo" src={project.logo} alt="" width={40} height={40} loading="lazy" />
+          ) : null}
+          <h2 id={titleId} className="project-card__title">
+            {project.name}
+          </h2>
+        </div>
         <p className="project-card__summary">{project.summary}</p>
         {project.stack.length > 0 ? (
           <ul className="chip-list" aria-label={t.technologiesUsed}>

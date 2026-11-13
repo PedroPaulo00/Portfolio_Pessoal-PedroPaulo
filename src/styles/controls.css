@@ -215,11 +215,50 @@
   background: #fff3dc;
   border-color: #e7bf74;
 }
+/* Estado: contorno + bolinha colorida (fundo transparente, para não se confundir
+   com os selos de categoria, que são preenchidos). */
 .badge--status {
+  --status: var(--text-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   font-weight: var(--font-regular);
-  color: var(--text-secondary);
+  color: var(--status);
   background: transparent;
-  border-color: var(--divider);
+  border-color: color-mix(in srgb, var(--status) 55%, transparent);
+}
+.badge--status::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--status);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--status) 30%, transparent);
+}
+.badge--status-concluido {
+  --status: #1f7a32;
+}
+.badge--status-em-andamento {
+  --status: #9a5b00;
+}
+.badge--status-planejado {
+  --status: #3d5f86;
+}
+.badge--status-pausado {
+  --status: #5f6b76;
+}
+[data-theme='dark'] .badge--status-concluido {
+  --status: #7fdc8f;
+}
+[data-theme='dark'] .badge--status-em-andamento {
+  --status: #ffc469;
+}
+[data-theme='dark'] .badge--status-planejado {
+  --status: #9cc4f0;
+}
+[data-theme='dark'] .badge--status-pausado {
+  --status: #b4bec8;
 }
 [data-theme='dark'] .badge--profissional {
   color: #bfe0ff;

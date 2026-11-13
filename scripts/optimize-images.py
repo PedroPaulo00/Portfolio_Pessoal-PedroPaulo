@@ -20,9 +20,15 @@ ROOT = Path(__file__).resolve().parent.parent / "src" / "assets"
 SRC = ROOT / "originais"
 PUBLIC = ROOT.parent.parent / "public"
 
-# Recorte da foto (esquerda, topo, direita, base) em minha_foto.jpg, que é o
-# JPEG em tamanho cheio extraído de profile/minha_foto.CR2. Ajuste se trocar a foto.
-PHOTO_CROP = (1320, 308, 3300, 2288)
+# Foto de perfil e recorte (esquerda, topo, direita, base). None = imagem inteira,
+# centralizada num quadrado. A foto anterior (minha_foto.jpg, extraída de
+# minha_foto.CR2) usava o recorte (1320, 308, 3300, 2288).
+PHOTO = "minha_foto_atual.jpg"
+PHOTO_CROP = None
+
+# Logos dos projetos (originais/projetos/logos/) → projetos/logos/, 2× de 64 px.
+# Projeto sem logo próprio usa o template gerado aqui (projetos/logos/template.png).
+PROJECT_LOGOS = ("aquanauta", "sistrafa", "diara", "foldaero")
 
 # Ícones da área de trabalho: original → saída 96×96 (2× de 48 px).
 ICONS = {
@@ -41,6 +47,15 @@ TECH = {
     "tech/chatgpt.png": "tech/chatgpt.png",
     "tech/openai.png": "tech/openai.png",
     "tech/localstorage.png": "tech/localstorage.png",
+}
+
+# Logos dos canais de Contato (originais/contato/). Gmail e Hotmail vêm com o nome
+# escrito; o recorte (esquerda, topo, direita, base) isola só o símbolo.
+CONTACT = {
+    "github_logo.png": ("contato/github.png", None),
+    "gmail_logo.png": ("contato/gmail.png", (1240, 440, 2070, 1070)),
+    "hotmail_logo.png": ("contato/hotmail.png", (80, 640, 1300, 1530)),
+    "instagram_logo.png": ("contato/instagram.png", None),
 }
 
 # Capturas dos projetos (originais/projetos/): galeria da janela Detalhes.
@@ -131,6 +146,34 @@ def phones(shots: list[Image.Image], background: str = "#0b2a1c", glow: str = "#
         x += img.width + gap
     return base
 
+def logo_template() -> Image.Image:
+    """Logo provisório (128 px): flor branca num ladrilho de vidro azul-esverdeado."""
+    size, scale = 128, 4
+    big = size * scale
+    img = Image.new("RGBA", (big, big), (0, 0, 0, 0))
+    mask = Image.new("L", (big, big), 0)
+    ImageDraw.Draw(mask).rounded_rectangle((8, 8, big - 8, big - 8), 96, fill=255)
+    tile = Image.new("RGBA", (big, big))
+    draw = ImageDraw.Draw(tile)
+    top, bottom = (120, 214, 236), (18, 112, 150)
+    for y in range(big):
+        k = y / big
+        draw.line([(0, y), (big, y)], fill=tuple(round(a + (b - a) * k) for a, b in zip(top, bottom)) + (255,))
+    img.paste(tile, (0, 0), mask)
+    draw = ImageDraw.Draw(img)
+    gloss = Image.new("L", (big, big), 0)
+    ImageDraw.Draw(gloss).ellipse((40, -170, big - 40, big // 2), fill=90)
+    img.paste(Image.new("RGBA", (big, big), (255, 255, 255, 255)), (0, 0), Image.composite(gloss, Image.new("L", (big, big), 0), mask))
+    cx, cy, r = big // 2, big // 2 + 10, 64
+    import math
+    for i in range(5):
+        a = math.radians(i * 72 - 90)
+        px, py = cx + math.cos(a) * r, cy + math.sin(a) * r
+        draw.ellipse((px - 58, py - 58, px + 58, py + 58), fill=(255, 255, 255, 235))
+    draw.ellipse((cx - 38, cy - 38, cx + 38, cy + 38), fill=(255, 200, 70, 255))
+    draw.rounded_rectangle((8, 8, big - 8, big - 8), 96, outline=(10, 70, 100, 200), width=6)
+    return img.resize((size, size), Image.LANCZOS)
+
 def save(image: Image.Image, relative: str, **options) -> None:
     out = ROOT / relative
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -140,7 +183,7 @@ def save(image: Image.Image, relative: str, **options) -> None:
 
 def main() -> None:
     # Papel de parede: WebP 1920 (desktop) e 1280 (celular).
-    wallpaper = Image.open(SRC / "wallpaper" / "Wallpaper_fundo.png").convert("RGB")
+    wallpaper = Image.open(SRC / "wallpaper" / "wallpaper_xp.png").convert("RGB")
     save(wallpaper.resize((1920, round(1920 * wallpaper.height / wallpaper.width)), Image.LANCZOS),
          "wallpaper/wallpaper-1920.webp", format="WEBP", quality=80, method=6)
     save(wallpaper.resize((1280, round(1280 * wallpaper.height / wallpaper.width)), Image.LANCZOS),
@@ -155,8 +198,9 @@ def main() -> None:
         logo.resize((size, size), Image.LANCZOS).save(out, optimize=True)
         print(f"public/{name:27} {out.stat().st_size // 1024:>4} KB")
 
-    # Foto de perfil (moldura do Início): recorte quadrado no rosto, 2× de 120 px.
-    photo = Image.open(SRC / "profile" / "minha_foto.jpg").convert("RGB").crop(PHOTO_CROP)
+    # Foto de perfil (moldura do Início): quadrado, 2× de 120 px.
+    photo = Image.open(SRC / "profile" / PHOTO).convert("RGB")
+    photo = photo.crop(PHOTO_CROP) if PHOTO_CROP else cover(photo, (min(photo.size), min(photo.size)))
     save(photo.resize((240, 240), Image.LANCZOS), "profile/foto.webp", format="WEBP", quality=86, method=6)
 
     # Botão Iniciar.
@@ -187,6 +231,19 @@ def main() -> None:
     # Ícones de tecnologias (ladrilho de 20 px → 64 px para telas densas).
     for source, target in TECH.items():
         save(square(Image.open(SRC / source)).resize((64, 64), Image.LANCZOS), target, optimize=True)
+
+    # Logos de contato (36 px na tela → 72 px).
+    for source, (target, crop) in CONTACT.items():
+        img = Image.open(SRC / "contato" / source).convert("RGBA")
+        if crop:
+            img = img.crop(crop)
+        save(square(img).resize((72, 72), Image.LANCZOS), target, optimize=True)
+
+    # Logos dos projetos e o template para quem ainda não tem.
+    for name in PROJECT_LOGOS:
+        logo_img = square(Image.open(SRC / "projetos" / "logos" / f"{name}.png"))
+        save(logo_img.resize((128, 128), Image.LANCZOS), f"projetos/logos/{name}.png", optimize=True)
+    save(logo_template(), "projetos/logos/template.png", optimize=True)
 
     # Projetos: galeria (até 1200 px de largura) e miniaturas 16:9 dos cards.
     shots = {name: Image.open(SRC / "projetos" / name) for name in GALLERY}

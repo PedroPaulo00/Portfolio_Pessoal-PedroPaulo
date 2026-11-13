@@ -27,7 +27,11 @@ export function ProjectThumbnail({ project }: { readonly project: Project }) {
       aria-label={t.placeholderThumb(t.category[project.category].singular)}
     >
       <span className="project-thumb__icon">
-        <Icon name={project.category} size={56} />
+        {project.logo ? (
+          <img className="project-thumb__logo" src={project.logo} alt="" width={96} height={96} />
+        ) : (
+          <Icon name={project.category} size={56} />
+        )}
       </span>
       <span className="project-thumb__sheen" aria-hidden="true" />
       <span className="project-thumb__note" aria-hidden="true">

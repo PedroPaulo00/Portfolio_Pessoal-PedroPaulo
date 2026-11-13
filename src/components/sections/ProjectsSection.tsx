@@ -84,6 +84,9 @@ export function ProjectsSection({ section, projects, category, query, onClearQue
       <AeroDialog open={detailed !== null} title={detailed?.name ?? ''} onClose={() => setDetailed(null)}>
         {detailed ? (
           <>
+            {detailed.logo ? (
+              <img className="project-logo project-logo--dialog" src={detailed.logo} alt="" width={64} height={64} />
+            ) : null}
             <p className="dialog-meta">
               {t.category[detailed.category].singular}
               {detailed.status ? ` · ${t.projectStatus[detailed.status]}` : ''}

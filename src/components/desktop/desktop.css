@@ -14,7 +14,7 @@
   overflow: hidden;
   pointer-events: none;
   user-select: none;
-  background: #0b4fc4; /* cor média do papel de parede, enquanto a imagem carrega */
+  background: #4f86cf; /* tom do céu do papel de parede, enquanto a imagem carrega */
 }
 .desktop-backdrop__image {
   width: 100%;

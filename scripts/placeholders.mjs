@@ -43,6 +43,7 @@ if (!/\blogo:\s*\{/.test(data)) missing.push('profile.logo (usando marca provis�
 if (!/\burl:\s*'/.test(data)) missing.push('contact.links[].url');
 if (!/\bthumbnail:\s*\{/.test(data)) missing.push('projects[].thumbnail (miniaturas provisórias)');
 if (/ambient-template/.test(data)) missing.push('sound.src (som de fundo ainda é o template)');
+if (data.includes('logos/template.png')) missing.push('projects[].logo (Flor Digital ainda usa o logo template)');
 if (/kind: 'template' \}/.test(data)) missing.push('desktopIcons (atalhos template na área de trabalho)');
 
 if (missing.length) {

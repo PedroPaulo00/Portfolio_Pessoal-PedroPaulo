@@ -25,6 +25,12 @@ import florDigital1 from '../assets/projetos/flor-digital-1.webp';
 import florDigital2 from '../assets/projetos/flor-digital-2.webp';
 import florDigitalThumb from '../assets/projetos/flor-digital-thumb.webp';
 import photo from '../assets/profile/foto.webp';
+import aquanautaLogo from '../assets/projetos/logos/aquanauta.png';
+import diaraLogo from '../assets/projetos/logos/diara.png';
+import foldaeroLogo from '../assets/projetos/logos/foldaero.png';
+import sistrafaLogo from '../assets/projetos/logos/sistrafa.png';
+// TEMPLATE: logo provisório até o Flor Digital ter o seu (troque o import).
+import florDigitalLogo from '../assets/projetos/logos/template.png';
 import sistrafa1 from '../assets/projetos/sistrafa-1.webp';
 import sistrafa2 from '../assets/projetos/sistrafa-2.webp';
 import sistrafa3 from '../assets/projetos/sistrafa-3.webp';
@@ -102,6 +108,7 @@ export const portfolio: PortfolioData<'source'> = {
   projects: [
     {
       id: 'aquanauta',
+      logo: aquanautaLogo,
       name: { pt: 'Aquanauta (TCC)', en: 'Aquanauta (Undergraduate thesis)' },
       category: 'academico',
       summary: {
@@ -149,7 +156,8 @@ export const portfolio: PortfolioData<'source'> = {
     },
     {
       id: 'sistrafa',
-      name: 'SISTRAFA',
+      logo: sistrafaLogo,
+      name: { pt: 'SISTRAFA (Estágio-Pesquisa)', en: 'SISTRAFA (Research internship)' },
       category: 'academico',
       summary: {
         pt: 'Aplicação web progressiva (PWA) do meu estágio-pesquisa para apoiar policiais e bombeiros no atendimento a ocorrências com fauna silvestre: triagem de risco passo a passo, orientações de manejo justificadas, registro fotográfico e relatório em PDF, tudo funcionando sem internet.',
@@ -218,7 +226,8 @@ export const portfolio: PortfolioData<'source'> = {
     },
     {
       id: 'diara',
-      name: 'Diara',
+      logo: diaraLogo,
+      name: 'Diara (PET-Saúde Digital - GT04)',
       category: 'academico',
       summary: {
         pt: 'Aplicativo para monitoramento e controle da glicose e do diabetes, desenvolvido em equipe no PET-Saúde Digital (GT 04). Reúne o registro de medições, refeições e medicamentos, gráficos e lembretes para acompanhar o tratamento no dia a dia.',
@@ -241,6 +250,7 @@ export const portfolio: PortfolioData<'source'> = {
     },
     {
       id: 'foldaero',
+      logo: foldaeroLogo,
       name: 'FoldAero',
       category: 'pessoal',
       summary: {
@@ -265,6 +275,7 @@ export const portfolio: PortfolioData<'source'> = {
     },
     {
       id: 'flordigital',
+      logo: florDigitalLogo,
       name: 'Flor Digital',
       category: 'pessoal',
       summary: {

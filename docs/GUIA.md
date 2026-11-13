@@ -38,7 +38,7 @@ Em `profile`, troque `name`, `role` e `tagline`. O nome aparece no título da ja
 ### 2. Logo e foto
 
 - **Logo:** o original é `src/assets/originais/brands/AFL_logo.png`. `npm run images` gera `src/assets/brands/logo.png`, usado na barra de título, no menu e na barra de tarefas, e os favicons `public/favicon.png` e `public/apple-touch-icon.png`. Sem `logo` em `profile`, aparece a marca provisória com as iniciais.
-- **Foto:** aparece no Início, numa moldura no estilo do avatar do MSN, com o status "Online" logo abaixo. A moldura é o SVG `src/assets/profile/msn-frame.svg`, calibrado pixel a pixel contra `src/assets/originais/referencias/exemplo_MSN.png`; o tamanho na tela vem de `--msn-photo` em `sections.css`. O original é `src/assets/originais/profile/minha_foto.jpg`, o JPEG em tamanho cheio extraído de `minha_foto.CR2` (mesma pasta, fora do git por ser grande). `npm run images` recorta um quadrado no rosto (`PHOTO_CROP` em [`scripts/optimize-images.py`](../scripts/optimize-images.py)) e gera `src/assets/profile/foto.webp`. Para trocar a foto, substitua o original (JPEG ou PNG), ajuste `PHOTO_CROP` e rode o comando. Sem `photo` em `profile`, o Início mostra o logo.
+- **Foto:** aparece no Início, numa moldura no estilo do avatar do MSN, com o status "Online" logo abaixo. A moldura é o SVG `src/assets/profile/msn-frame.svg`, calibrado pixel a pixel contra `src/assets/originais/referencias/exemplo_MSN.png`; o tamanho na tela vem de `--msn-photo` em `sections.css`. O original é `src/assets/originais/profile/minha_foto_atual.jpg` (nome em `PHOTO` no [`scripts/optimize-images.py`](../scripts/optimize-images.py)); `npm run images` gera `src/assets/profile/foto.webp`. Com `PHOTO_CROP = None` a imagem vai inteira, centralizada num quadrado; para recortar uma parte, informe a caixa (esquerda, topo, direita, base). A foto anterior (`minha_foto.jpg`) continua na pasta. Sem `photo` em `profile`, o Início mostra o logo.
 
 ### 3. Projetos
 
@@ -66,6 +66,7 @@ import thumbMeuApp from '../assets/projetos/meu-app.webp';
 - `gallery` (opcional) lista capturas de qualquer formato, exibidas na janela **Detalhes**; cada uma abre em tamanho cheio numa nova aba.
 - **Imagens dos projetos:** coloque os originais em `src/assets/originais/projetos/` e registre-os em `GALLERY` em [`scripts/optimize-images.py`](../scripts/optimize-images.py); `npm run images` gera as capturas (WebP, até 1200 px) e as miniaturas 16:9 dos cards em `src/assets/projetos/`. O Aquanauta usa uma composição das três capturas; o Flor Digital, um recorte da primeira.
 - Categorias sem projetos somem da navegação e dos atalhos.
+- **Logo do projeto** (`logo`): aparece ao lado do nome no card, no topo da janela Detalhes e, sem `thumbnail`, no centro da miniatura provisória. Coloque o original em `src/assets/originais/projetos/logos/<nome>.png`, inclua o nome em `PROJECT_LOGOS` no `optimize-images.py` e rode `npm run images`. Hoje o Flor Digital usa o logo provisório `projetos/logos/template.png`.
 
 ### 4. Sobre, Tecnologias e Contato
 
@@ -101,7 +102,7 @@ import thumbMeuApp from '../assets/projetos/meu-app.webp';
 
 - **Imagens originais:** ficam em `src/assets/originais/`, separadas por tipo: `brands/` (logos AFL, Windows e Spotify), `desktop/` (ícones da área de trabalho), `profile/` (foto), `projetos/` (capturas), `tech/` (ícones de tecnologias enviados em imagem), `wallpaper/` e `referencias/` (modelos visuais, como o `exemplo_MSN.png`). Elas não entram no site publicado. O site usa versões otimizadas, geradas por `npm run images` (requer Python + Pillow).
 - **Para trocar uma imagem:** substitua o arquivo em `originais/` mantendo o nome e rode `npm run images`. A relação entre cada original e a versão que o site usa está no início de [`scripts/optimize-images.py`](../scripts/optimize-images.py).
-- **Papel de parede:** o site usa `src/assets/wallpaper/wallpaper-1920.webp` e `wallpaper-1280.webp`, para celular.
+- **Papel de parede:** o original é `src/assets/originais/wallpaper/wallpaper_xp.png` (o anterior, `Wallpaper_fundo.png`, continua na pasta). O site usa `src/assets/wallpaper/wallpaper-1920.webp` e `wallpaper-1280.webp`, para celular. Para trocar, mude o nome do arquivo em `optimize-images.py` e rode `npm run images`.
 - **Botão Iniciar:** o site usa `src/assets/brands/start-logo.png`.
 - **Ícones da área de trabalho:** ficam em `desktopIcons`, em `portfolio.ts`, na ordem de cima para baixo. Hoje são Lixeira, Meu computador, Arquivos, MSN, The Sims 2, CS 1.6 e Minecraft, todos com imagens próprias. Cada ícone aceita:
   - `label`: o texto embaixo do ícone;

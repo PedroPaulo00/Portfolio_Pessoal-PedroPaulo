@@ -52,7 +52,9 @@ export interface Project<M extends Mode = 'view'> {
   readonly category: ProjectCategory;
   readonly summary: Prose<M>;
   readonly stack: readonly Name<M>[];
-  /** Sem imagem, o card exibe uma miniatura gerada no estilo Aero. */
+  /** Logo do projeto (decorativo: o nome aparece ao lado). Importado de src/assets/projetos/logos/. */
+  readonly logo?: string;
+  /** Sem imagem, o card exibe uma miniatura gerada no estilo Aero (com o logo, se houver). */
   readonly thumbnail?: ProjectImage<M>;
   readonly status?: ProjectStatus;
   /** Sem URL, o botão correspondente não é exibido. */
