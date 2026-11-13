@@ -4,7 +4,7 @@ import { Icon } from '../ui/Icon';
 
 /**
  * Miniatura do card. Com `project.thumbnail`, mostra a imagem real; sem ela,
- * desenha uma miniatura temporária no estilo Aero (cor e ícone da categoria).
+ * desenha uma miniatura temporária no estilo Aero (cor e ícone da categoria; Diara e FoldAero têm cor própria em sections.css).
  */
 export function ProjectThumbnail({ project }: { readonly project: Project }) {
   const { t } = useI18n();
@@ -22,7 +22,7 @@ export function ProjectThumbnail({ project }: { readonly project: Project }) {
 
   return (
     <div
-      className={`project-thumb project-thumb--placeholder project-thumb--${project.category}`}
+      className={`project-thumb project-thumb--placeholder project-thumb--${project.category} project-thumb--${project.id}`}
       role="img"
       aria-label={t.placeholderThumb(t.category[project.category].singular)}
     >
