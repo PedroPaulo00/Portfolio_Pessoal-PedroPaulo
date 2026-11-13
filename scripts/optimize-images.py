@@ -50,6 +50,11 @@ GALLERY = {
     "aquanauta_print3.png": "projetos/aquanauta-3.webp",
     "flor_digital_print1.png": "projetos/flor-digital-1.webp",
     "flor_digital_print2.png": "projetos/flor-digital-2.webp",
+    "sistrafa_inicio.png": "projetos/sistrafa-1.webp",
+    "sistrafa_pergunta.png": "projetos/sistrafa-2.webp",
+    "sistrafa_checklist.png": "projetos/sistrafa-3.webp",
+    "sistrafa_especie.png": "projetos/sistrafa-4.webp",
+    "sistrafa_revisao.png": "projetos/sistrafa-5.webp",
 }
 THUMB = (800, 450)  # miniatura do card, 16:9 (2× de ~400 px)
 
@@ -100,6 +105,30 @@ def showcase(shots: list[Image.Image]) -> Image.Image:
     place(shots[0], (60, 40, 600, 860))
     place(shots[1], (650, 40, 1540, 560))
     place(shots[2], (650, 600, 1540, 860))
+    return base
+
+def phones(shots: list[Image.Image], background: str = "#0b2a1c", glow: str = "#1f6b45") -> Image.Image:
+    """Miniatura 16:9 com telas de celular lado a lado, sobre fundo com brilho."""
+    w, h = 1600, 900
+    base = Image.new("RGB", (w, h), background)
+    light = Image.new("L", (w, h), 0)
+    ImageDraw.Draw(light).ellipse((200, -250, 1400, 750), fill=255)
+    base.paste(Image.new("RGB", (w, h), glow), (0, 0), light.filter(ImageFilter.GaussianBlur(200)))
+    gap = 36
+    # Altura que cabe na largura (margem de 70 px de cada lado), no máximo 800.
+    height = min(800, round((w - 140 - gap * (len(shots) - 1)) / sum(s.width / s.height for s in shots)))
+    imgs = [s.convert("RGB").resize((round(s.width * height / s.height), height), Image.LANCZOS) for s in shots]
+    total = sum(i.width for i in imgs) + gap * (len(imgs) - 1)
+    x = (w - total) // 2
+    y = (h - height) // 2
+    for img in imgs:
+        shadow = Image.new("L", (img.width + 80, img.height + 80), 0)
+        ImageDraw.Draw(shadow).rounded_rectangle((40, 50, img.width + 40, img.height + 50), 24, fill=180)
+        base.paste(Image.new("RGB", shadow.size, "#000"), (x - 40, y - 40), shadow.filter(ImageFilter.GaussianBlur(18)))
+        mask = Image.new("L", img.size, 0)
+        ImageDraw.Draw(mask).rounded_rectangle((0, 0, img.width - 1, img.height - 1), 22, fill=255)
+        base.paste(img, (x, y), mask)
+        x += img.width + gap
     return base
 
 def save(image: Image.Image, relative: str, **options) -> None:
@@ -169,6 +198,8 @@ def main() -> None:
     aquanauta = [shots[f"aquanauta_print{i}.png"] for i in (1, 2, 3)]
     save(showcase(aquanauta).resize(THUMB, Image.LANCZOS), "projetos/aquanauta-thumb.webp", format="WEBP", quality=84, method=6)
     save(cover(shots["flor_digital_print1.png"], THUMB, x_anchor=0.3), "projetos/flor-digital-thumb.webp", format="WEBP", quality=84, method=6)
+    sistrafa = [shots[f"sistrafa_{n}.png"] for n in ("inicio", "pergunta", "checklist", "especie")]
+    save(phones(sistrafa).resize(THUMB, Image.LANCZOS), "projetos/sistrafa-thumb.webp", format="WEBP", quality=84, method=6)
 
 
 if __name__ == "__main__":

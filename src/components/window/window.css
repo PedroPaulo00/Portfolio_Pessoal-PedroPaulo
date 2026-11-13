@@ -120,7 +120,7 @@
   outline-color: #003a5c;
 }
 
-/* Título: preto com oito halos brancos (seção 3). */
+/* Título: preto, sem o halo branco do kit (removido a pedido). */
 .aero-titlebar__title {
   margin: 0;
   min-width: 0;
@@ -131,15 +131,6 @@
   font-weight: var(--font-regular);
   line-height: 1.1; /* kit: 15 a 12–13 px; proporcional para escalar com o texto */
   color: #000;
-  text-shadow:
-    0 0 10px #fff,
-    0 0 10px #fff,
-    0 0 10px #fff,
-    0 0 10px #fff,
-    0 0 10px #fff,
-    0 0 10px #fff,
-    0 0 10px #fff,
-    0 0 10px #fff;
 }
 
 /* ---------- Controles de janela: material do kit, sem função na V1 ----------

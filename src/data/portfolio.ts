@@ -25,6 +25,12 @@ import florDigital1 from '../assets/projetos/flor-digital-1.webp';
 import florDigital2 from '../assets/projetos/flor-digital-2.webp';
 import florDigitalThumb from '../assets/projetos/flor-digital-thumb.webp';
 import photo from '../assets/profile/foto.webp';
+import sistrafa1 from '../assets/projetos/sistrafa-1.webp';
+import sistrafa2 from '../assets/projetos/sistrafa-2.webp';
+import sistrafa3 from '../assets/projetos/sistrafa-3.webp';
+import sistrafa4 from '../assets/projetos/sistrafa-4.webp';
+import sistrafa5 from '../assets/projetos/sistrafa-5.webp';
+import sistrafaThumb from '../assets/projetos/sistrafa-thumb.webp';
 import type { PortfolioData } from '../types/portfolio';
 
 const florAlt1 = {
@@ -139,6 +145,98 @@ export const portfolio: PortfolioData<'source'> = {
       details: {
         pt: 'Projeto de TCC em Ciência da Computação na UNICENTRO, desenvolvido com arquitetura Electron e módulos JavaScript independentes. Integra monitoramento de atividade, notificações contextuais, Pomodoro configurável, agenda, controle de medicamentos e mascote interativa. A interface utiliza gradientes, transparências e animações inspirados no Frutiger Aero e no Windows Vista/7. Os dados são mantidos localmente, sem depender de conexão. O desenvolvimento foi incremental e incluiu testes manuais e uma inspeção heurística individual baseada nas dez heurísticas de Nielsen; testes com usuários reais ficaram como possibilidade futura.',
         en: 'Undergraduate thesis project in Computer Science at UNICENTRO, built on an Electron architecture with independent JavaScript modules. It brings together activity monitoring, contextual notifications, a configurable Pomodoro timer, a planner, medication tracking and an interactive mascot. The interface uses gradients, transparency and animations inspired by Frutiger Aero and Windows Vista/7. All data is stored locally, with no need for a connection. Development was incremental and included manual testing and an individual heuristic evaluation based on Nielsen’s ten heuristics; testing with real users was left as future work.',
+      },
+    },
+    {
+      id: 'sistrafa',
+      name: 'SISTRAFA',
+      category: 'academico',
+      summary: {
+        pt: 'Aplicação web progressiva (PWA) do meu estágio-pesquisa para apoiar policiais e bombeiros no atendimento a ocorrências com fauna silvestre: triagem de risco passo a passo, orientações de manejo justificadas, registro fotográfico e relatório em PDF, tudo funcionando sem internet.',
+        en: 'A progressive web app (PWA) from my research internship that supports police officers and firefighters handling wildlife incidents: step-by-step risk triage, justified handling guidance, photo records and a PDF report, all working offline.',
+      },
+      stack: [
+        'HTML5',
+        'CSS3',
+        'JavaScript',
+        'PWA',
+        'Service Worker',
+        'IndexedDB',
+        'localStorage',
+        'jsPDF',
+        { pt: 'API do iNaturalist', en: 'iNaturalist API' },
+      ],
+      status: 'em-andamento',
+      thumbnail: {
+        src: sistrafaThumb,
+        alt: {
+          pt: 'Telas do SISTRAFA: início, pergunta da avaliação de risco, checklist operacional e ficha da jararaca no guia de fauna.',
+          en: 'SISTRAFA screens: home, a risk-assessment question, the operational checklist and the jararaca entry in the wildlife guide.',
+        },
+      },
+      gallery: [
+        {
+          src: sistrafa1,
+          alt: {
+            pt: 'Tela inicial com o atalho "Situação de risco", o botão "Nova ocorrência" e os acessos ao guia, contatos e perfil.',
+            en: 'Home screen with the "Risk situation" shortcut, the "New incident" button and links to the guide, contacts and profile.',
+          },
+        },
+        {
+          src: sistrafa2,
+          alt: {
+            pt: 'Avaliação de risco: uma pergunta por vez, com orientação de segurança destacada conforme a resposta.',
+            en: 'Risk assessment: one question at a time, with safety guidance highlighted according to the answer.',
+          },
+        },
+        {
+          src: sistrafa3,
+          alt: {
+            pt: 'Checklist operacional da avaliação inicial e da segurança da equipe, baseado em protocolo de atuação policial.',
+            en: 'Operational checklist for the initial assessment and team safety, based on a police field protocol.',
+          },
+        },
+        {
+          src: sistrafa4,
+          alt: {
+            pt: 'Ficha da jararaca no guia de fauna, com nível de risco, como reconhecer e cuidados no manejo.',
+            en: 'Jararaca (lancehead viper) entry in the wildlife guide, with risk level, identification tips and handling precautions.',
+          },
+        },
+        {
+          src: sistrafa5,
+          alt: {
+            pt: 'Orientações apresentadas na revisão da ocorrência, cada uma com a justificativa ("Por quê").',
+            en: 'Guidance shown when reviewing the incident, each with its justification ("Why").',
+          },
+        },
+      ],
+      details: {
+        pt: 'Estágio-pesquisa do curso de Ciência da Computação da UNICENTRO, em parceria com o Laboratório de Anatomia Patológica Veterinária. Ocorrências com animais silvestres costumam ser atendidas por agentes sem formação em manejo de fauna, muitas vezes em locais sem conexão. O SISTRAFA organiza o atendimento em oito etapas, com perguntas condicionais apresentadas uma por vez, um checklist baseado em protocolo de atuação policial e 22 regras que geram orientações acompanhadas de justificativa. Permite cadastrar animais individuais ou em lotes, registrar fotografias com metadados Exif, código SHA-256 e histórico de alterações (preservando o arquivo original), consultar um guia de 29 espécies complementado pela API do iNaturalist e gerar o relatório em PDF no próprio aparelho. Foi feito em HTML, CSS e JavaScript puros, sem servidor de dados, com Service Worker, localStorage e IndexedDB para funcionar sem internet. A avaliação usou testes automatizados no Chrome, Edge e Firefox (persistência, uso sem conexão, relatórios, leiaute em oito tamanhos de tela e contraste); a validação do conteúdo por especialistas e os testes em campo são as próximas etapas. O trabalho resultou em um artigo científico.',
+        en: 'Research internship in the Computer Science program at UNICENTRO, in partnership with the Veterinary Pathology Laboratory. Wildlife incidents are often handled by officers with no training in animal handling, frequently in places without a connection. SISTRAFA organizes each incident into eight steps, with conditional questions shown one at a time, a checklist based on a police field protocol and 22 rules that produce guidance together with its justification. It records individual animals or batches, stores photos with Exif metadata, a SHA-256 hash and a change history (keeping the original file), includes a guide to 29 species complemented by the iNaturalist API, and generates the PDF report on the device. It is built with plain HTML, CSS and JavaScript, with no data server, using a Service Worker, localStorage and IndexedDB to work offline. Evaluation used automated tests in Chrome, Edge and Firefox (persistence, offline use, reports, layout at eight screen sizes and contrast); content validation by specialists and field testing are the next steps. The work resulted in a scientific paper.',
+      },
+    },
+    {
+      id: 'diara',
+      name: 'Diara',
+      category: 'academico',
+      summary: {
+        pt: 'Aplicativo para monitoramento e controle da glicose e do diabetes, desenvolvido em equipe no PET-Saúde Digital (GT 04). Reúne o registro de medições, refeições e medicamentos, gráficos e lembretes para acompanhar o tratamento no dia a dia.',
+        en: 'An app for monitoring and managing blood glucose and diabetes, built as a team in the PET-Saúde Digital program (GT 04). It brings together glucose readings, meals and medication, charts and reminders to follow the treatment day to day.',
+      },
+      stack: [
+        'Flutter',
+        'Dart',
+        'Firebase Authentication',
+        'Cloud Firestore',
+        'fl_chart',
+        { pt: 'Notificações locais', en: 'Local notifications' },
+        { pt: 'Widget de tela inicial', en: 'Home-screen widget' },
+      ],
+      status: 'em-andamento',
+      details: {
+        pt: 'Projeto do Grupo Tutorial 04 do PET-Saúde Digital, desenvolvido em Flutter com Firebase (autenticação e Cloud Firestore). O app permite registrar medições de glicose, refeições, medicamentos e anotações; acompanhar o histórico e gráficos de evolução; configurar lembretes com notificações; e exportar os dados em CSV e PDF para compartilhar com profissionais de saúde. Minhas contribuições incluem o widget de tela inicial com a última medição de glicose, o login com Google e por SMS e a nova identidade do aplicativo, com o nome Diara e o logotipo.',
+        en: 'A project from Tutorial Group 04 of the PET-Saúde Digital program, built with Flutter and Firebase (authentication and Cloud Firestore). The app records glucose readings, meals, medication and notes; shows history and trend charts; schedules reminders with notifications; and exports data as CSV and PDF to share with health professionals. My contributions include the home-screen widget showing the latest glucose reading, sign-in with Google and by SMS, and the app’s new identity, with the Diara name and logo.',
       },
     },
     {
