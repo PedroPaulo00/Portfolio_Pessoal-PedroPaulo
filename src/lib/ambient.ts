@@ -49,6 +49,7 @@ class AmbientPlayer {
   private source: AudioBufferSourceNode | null = null;
   private loading: Promise<void> | null = null;
   private pendingGain: number | null = null;
+  private removeUnlock: (() => void) | null = null;
   private disposed = false;
 
   constructor(
@@ -61,9 +62,16 @@ class AmbientPlayer {
     if (!this.disposed) this.report(status);
   }
 
-  /** Carrega e tenta tocar. Se o navegador bloquear, aguarda a primeira interação. */
+  /**
+   * Carrega e tenta tocar. Se o navegador bloquear, toca na primeira interação.
+   *
+   * Importante: não esperar (await) `ctx.resume()` quando o autoplay está
+   * bloqueado. No Chrome essa promessa fica pendente até o som ser liberado,
+   * e quem espera por ela nunca chega a registrar o "tocar ao clicar".
+   */
   start(gain: number): Promise<void> {
     if (this.loading) return this.loading;
+    this.pendingGain = gain;
     this.onStatus('loading');
     this.loading = (async () => {
       const ctx = new AudioContext();
@@ -72,9 +80,14 @@ class AmbientPlayer {
       node.connect(ctx.destination);
       this.ctx = ctx;
       this.gain = node;
+      // Liberação do som (agora ou após um clique, mesmo durante o download).
+      ctx.addEventListener('statechange', () => this.fadeIn());
+      this.unlockOnInteraction(ctx);
 
       const response = await fetch(this.config.src);
+      if (!response.ok) throw new Error(`HTTP ${response.status} ao carregar ${this.config.src}`);
       const buffer = await ctx.decodeAudioData(await response.arrayBuffer());
+      if (this.disposed) return;
       const source = ctx.createBufferSource();
       source.buffer = buffer;
       source.loop = true;
@@ -85,14 +98,9 @@ class AmbientPlayer {
       source.start(0, loopStart);
       this.source = source;
 
-      await ctx.resume().catch(() => undefined);
-      if (ctx.state === 'running') {
-        this.fadeTo(gain, 2);
-        this.onStatus('playing');
-      } else {
-        this.onStatus('waiting-interaction');
-        this.unlockOnInteraction(gain);
-      }
+      void ctx.resume().catch(() => undefined); // autoplay permitido: começa já
+      if (ctx.state === 'running') this.fadeIn();
+      else this.onStatus('waiting-interaction');
     })().catch((error: unknown) => {
       console.warn('[som de fundo]', error);
       this.onStatus('error');
@@ -100,18 +108,25 @@ class AmbientPlayer {
     return this.loading;
   }
 
-  private unlockOnInteraction(gain: number) {
+  /** Sobe o volume quando o som estiver liberado e o áudio, carregado. */
+  private fadeIn() {
+    if (this.disposed || !this.source || this.ctx?.state !== 'running') return;
+    const gain = this.pendingGain ?? 0;
+    this.fadeTo(gain, 2);
+    this.onStatus(gain === 0 ? 'muted' : 'playing');
+  }
+
+  /** `resume()` precisa ser chamado dentro do próprio evento do visitante. */
+  private unlockOnInteraction(ctx: AudioContext) {
     const unlock = () => {
-      UNLOCK_EVENTS.forEach((type) => window.removeEventListener(type, unlock, true));
-      this.ctx
-        ?.resume()
-        .then(() => {
-          this.fadeTo(this.pendingGain ?? gain, 2);
-          this.onStatus(this.pendingGain === 0 ? 'muted' : 'playing');
-        })
-        .catch(() => this.onStatus('error'));
+      if (ctx.state === 'running' || ctx.state === 'closed') {
+        UNLOCK_EVENTS.forEach((type) => window.removeEventListener(type, unlock, true));
+        return;
+      }
+      void ctx.resume().catch(() => undefined);
     };
     UNLOCK_EVENTS.forEach((type) => window.addEventListener(type, unlock, { capture: true }));
+    this.removeUnlock = () => UNLOCK_EVENTS.forEach((type) => window.removeEventListener(type, unlock, true));
   }
 
   /** Transição suave de volume (evita estalos). */
@@ -130,6 +145,7 @@ class AmbientPlayer {
 
   dispose() {
     this.disposed = true;
+    this.removeUnlock?.();
     try {
       this.source?.stop();
     } catch {
