@@ -94,8 +94,8 @@ export const portfolio: PortfolioData<'source'> = {
       label: { pt: 'Spotify', en: 'Spotify' },
       title: { pt: 'O que estou ouvindo', en: 'What I’m listening to' },
       description: {
-        pt: 'A música faz parte do meu dia a dia. Acompanhe o que estou escutando agora!',
-        en: 'Music is part of my everyday life. See what I’m listening to right now!',
+        pt: 'Música é a minha maior paixão na vida e está presente em todos os meus dias. Acompanhe o que estou escutando agora!',
+        en: 'Music is the greatest passion of my life and is part of every single day. See what I’m listening to right now!',
       },
     },
     {
@@ -314,6 +314,10 @@ export const portfolio: PortfolioData<'source'> = {
         pt: 'Costumo desenvolver de forma iterativa: planejo a estrutura, implemento por funcionalidades, testo e refino a experiência até alcançar um resultado consistente. Valorizo organização do código, manutenção, responsividade, atenção à interface e decisões técnicas que resolvam problemas reais. Também utilizo ferramentas de IA como apoio ao desenvolvimento, mantendo o foco em compreender, revisar e validar as soluções.',
         en: 'I work iteratively: I plan the structure, build feature by feature, then test and refine the experience until the result is consistent. I value well-organized, maintainable code, responsiveness, attention to the interface and technical decisions that solve real problems. I also use AI tools to support development, while staying focused on understanding, reviewing and validating the solutions.',
       },
+      {
+        pt: 'Fora do código, minha maior paixão na vida é a música: ela me acompanha em praticamente tudo o que faço, inclusive enquanto programo. Por isso este portfólio tem uma seção mostrando o que ando ouvindo no Spotify.',
+        en: 'Outside of code, the greatest passion of my life is music: it is with me in almost everything I do, including while I program. That is why this portfolio has a section showing what I have been listening to on Spotify.',
+      },
     ],
     education: {
       course: {
@@ -343,6 +347,7 @@ export const portfolio: PortfolioData<'source'> = {
       { pt: 'Desenvolvimento mobile', en: 'Mobile development' },
       { pt: 'Aplicações desktop', en: 'Desktop applications' },
       { pt: 'Design responsivo', en: 'Responsive design' },
+      { pt: 'Música (minha maior paixão)', en: 'Music (my greatest passion)' },
       { pt: 'Inteligência artificial aplicada ao desenvolvimento', en: 'AI applied to software development' },
       {
         pt: 'Interfaces skeuomórficas, Frutiger Aero e glassmorphism',
