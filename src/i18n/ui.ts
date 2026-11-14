@@ -88,6 +88,7 @@ const pt = {
   inThisPortfolio: 'Neste portfólio',
   status: 'Status: ',
   online: 'Online',
+  visits: (count: number, formatted: string) => `${formatted} ${count === 1 ? 'visita' : 'visitas'}`,
 
   // Projetos
   resultsFor: 'Resultados para',
@@ -253,6 +254,7 @@ const en: UiStrings = {
   inThisPortfolio: 'In this portfolio',
   status: 'Status: ',
   online: 'Online',
+  visits: (count, formatted) => `${formatted} ${count === 1 ? 'visit' : 'visits'}`,
 
   resultsFor: 'Results for',
   inCategory: (categoryPlural) => ` in ${categoryPlural.toLowerCase()}`,

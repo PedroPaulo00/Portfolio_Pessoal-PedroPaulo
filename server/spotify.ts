@@ -108,23 +108,70 @@ function artist(v: unknown): SpotifyArtist {
 
 /* ------------------------------ montagem ---------------------------------- */
 
+/** O Spotify recusou por excesso de chamadas (HTTP 429) e pediu para esperar. */
+// Sem "parameter properties" (constructor(readonly x)): o Node, que carrega
+// este arquivo no servidor de desenvolvimento, não aceita essa sintaxe.
+class RateLimited extends Error {
+  readonly until: number;
+  constructor(until: number) {
+    super(`429: aguardar até ${new Date(until).toISOString()}`);
+    this.until = until;
+  }
+}
+
+/** Até quando o Spotify pediu para não chamar mais (0 = liberado). */
+let blockedUntil = 0;
+
 async function getJson(token: string, path: string): Promise<unknown> {
+  if (Date.now() < blockedUntil) throw new RateLimited(blockedUntil);
   const response = await fetch(`${API}${path}`, { headers: { Authorization: `Bearer ${token}` } });
   if (response.status === 204) return null; // nada tocando
+  if (response.status === 429) {
+    // Insistir durante o bloqueio pode prolongá-lo: respeita o Retry-After.
+    const seconds = Number(response.headers.get('retry-after'));
+    blockedUntil = Date.now() + (Number.isFinite(seconds) && seconds > 0 ? seconds : 60) * 1000;
+    throw new RateLimited(blockedUntil);
+  }
   if (!response.ok) throw new Error(`${path} ${response.status}`);
   return response.json();
 }
 
+/**
+ * Perfil, mais ouvidos e playlists mudam devagar: buscados no máximo a cada
+ * SLOW_MS. Só "tocando agora" e "últimas músicas" vão ao Spotify a cada
+ * atualização (2 chamadas em vez de 6).
+ */
+const SLOW_MS = 60 * 60_000;
+let slowCache: { readonly at: number; readonly data: readonly [unknown, unknown, unknown, unknown] } | null = null;
+
+async function slowParts(token: string): Promise<readonly [unknown, unknown, unknown, unknown]> {
+  if (slowCache && Date.now() - slowCache.at < SLOW_MS) return slowCache.data;
+  const keep = (index: number) => (error: unknown) => {
+    if (error instanceof RateLimited) throw error;
+    return slowCache?.data[index] ?? null; // falha pontual: mantém o anterior
+  };
+  const data = await Promise.all([
+    getJson(token, '/me'), // obrigatório
+    getJson(token, '/me/top/artists?limit=8&time_range=short_term').catch(keep(1)),
+    getJson(token, '/me/top/tracks?limit=10&time_range=short_term').catch(keep(2)),
+    getJson(token, '/me/playlists?limit=20').catch(keep(3)),
+  ] as const);
+  slowCache = { at: Date.now(), data };
+  return data;
+}
+
 export async function getSpotifySnapshot(env: SpotifyCredentials): Promise<SpotifySnapshot> {
+  if (Date.now() < blockedUntil) throw new RateLimited(blockedUntil);
   const token = await accessToken(env);
   // O perfil é obrigatório; as demais partes degradam para vazio se falharem.
-  const [me, current, recent, artists, tracks, playlists] = await Promise.all([
-    getJson(token, '/me'),
-    getJson(token, '/me/player/currently-playing').catch(() => null),
-    getJson(token, '/me/player/recently-played?limit=10').catch(() => null),
-    getJson(token, '/me/top/artists?limit=8&time_range=short_term').catch(() => null),
-    getJson(token, '/me/top/tracks?limit=10&time_range=short_term').catch(() => null),
-    getJson(token, '/me/playlists?limit=20').catch(() => null),
+  const ignore = (error: unknown) => {
+    if (error instanceof RateLimited) throw error;
+    return null;
+  };
+  const [[me, artists, tracks, playlists], current, recent] = await Promise.all([
+    slowParts(token),
+    getJson(token, '/me/player/currently-playing').catch(ignore),
+    getJson(token, '/me/player/recently-played?limit=10').catch(ignore),
   ]);
 
   const meObj = obj(me);
@@ -182,8 +229,9 @@ export async function getSpotifySnapshot(env: SpotifyCredentials): Promise<Spoti
 
 const HEADERS = {
   'Content-Type': 'application/json; charset=utf-8',
-  // Dados intencionalmente públicos; cache curto na borda para poupar a API.
-  'Cache-Control': 'public, max-age=0, s-maxage=30, stale-while-revalidate=60',
+  // Dados intencionalmente públicos; cache na borda (compartilhado entre todos os
+  // visitantes) para poupar a API. Se a função falhar, a borda serve a última cópia.
+  'Cache-Control': 'public, max-age=0, s-maxage=30, stale-while-revalidate=120, stale-if-error=86400',
   'Access-Control-Allow-Origin': '*',
 };
 
@@ -199,9 +247,10 @@ export function isConfigured(env: SpotifyEnv): env is SpotifyEnv & SpotifyCreden
  * instância da função: no máximo uma busca a cada MIN_INTERVAL_MS (as demais
  * recebem a última resposta), chamadas simultâneas compartilham a mesma busca e,
  * se o Spotify falhar, serve-se a última resposta boa de até STALE_MS atrás.
+ * Com HTTP 429, nenhuma chamada sai até passar o tempo pedido pelo Spotify.
  */
-const MIN_INTERVAL_MS = 10_000;
-const STALE_MS = 10 * 60_000;
+const MIN_INTERVAL_MS = 20_000;
+const STALE_MS = 6 * 60 * 60_000;
 let lastGood: { readonly body: string; readonly at: number } | null = null;
 let inFlight: Promise<string> | null = null;
 
@@ -226,8 +275,9 @@ export async function handleSpotifyRequest(env: SpotifyEnv): Promise<Response> {
   try {
     return new Response(await snapshotBody(env), { status: 200, headers: HEADERS });
   } catch (error) {
-    cachedToken = null;
-    console.error('[spotify]', error);
+    // Token inválido pode ser a causa; no 429 o token está bom e não é refeito.
+    if (!(error instanceof RateLimited)) cachedToken = null;
+    console.error('[spotify]', error instanceof RateLimited ? error.message : error);
     if (lastGood && Date.now() - lastGood.at < STALE_MS) {
       return new Response(lastGood.body, { status: 200, headers: { ...HEADERS, 'Cache-Control': 'no-store' } });
     }

@@ -1,6 +1,7 @@
 import msnFrame from '../../assets/profile/msn-frame.svg';
 import { useI18n } from '../../i18n/I18n';
 import { RouteLink } from '../../lib/navigation';
+import { useVisitCount } from '../../lib/visits';
 import type { Profile, Section } from '../../types/portfolio';
 import { SpotifyCard } from '../spotify/SpotifyCard';
 import { BrandMark } from '../ui/BrandMark';
@@ -13,7 +14,8 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ profile, sections }: HeroSectionProps) {
-  const { t } = useI18n();
+  const { t, intl } = useI18n();
+  const visits = useVisitCount();
   const shortcuts = sections.filter((section) => section.id !== 'inicio');
 
   return (
@@ -36,6 +38,30 @@ export function HeroSection({ profile, sections }: HeroSectionProps) {
               <span className="sr-only">{t.status}</span>
               {t.online}
             </p>
+            {visits !== null ? (
+              <p className="visit-counter">
+                <span className="visit-counter__icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" width="14" height="14">
+                    <circle cx="5.6" cy="5" r="2.6" fill="#5fa8e6" stroke="#1d5c94" strokeWidth="0.8" />
+                    <path
+                      d="M1.2 13.6c.3-2.9 2.1-4.6 4.4-4.6s4.1 1.7 4.4 4.6Z"
+                      fill="#5fa8e6"
+                      stroke="#1d5c94"
+                      strokeWidth="0.8"
+                    />
+                    <circle cx="11.1" cy="5.8" r="2.2" fill="#9fd36c" stroke="#3f7d2a" strokeWidth="0.8" />
+                    <path
+                      d="M8.7 13.6c.2-2.4 1-3.9 2.4-3.9 1.9 0 3.5 1.5 3.8 3.9Z"
+                      fill="#9fd36c"
+                      stroke="#3f7d2a"
+                      strokeWidth="0.8"
+                    />
+                    <ellipse cx="5" cy="4" rx="1.3" ry="0.8" fill="#fff" opacity="0.6" />
+                  </svg>
+                </span>
+                {t.visits(visits, new Intl.NumberFormat(intl).format(visits))}
+              </p>
+            ) : null}
           </div>
         ) : (
           <div className="hero__mark" aria-hidden="true">

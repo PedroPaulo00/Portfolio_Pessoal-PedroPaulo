@@ -161,13 +161,30 @@ Para remover a integração, use `spotify.enabled: false`.
 - **Buscadores:** `public/robots.txt` (bloqueia só `/api/`) e `public/sitemap.xml` (página única).
 - **Ícones:** `favicon.ico`, `favicon.png`, `apple-touch-icon.png` e `icon-192/512.png` saem do logo via `npm run images`; o manifesto é `public/site.webmanifest`.
 - **Se o domínio mudar:** troque `https://portfolio-pedropaulo.vercel.app` no `index.html`, no `robots.txt` e no `sitemap.xml`.
-- **Limite do Spotify:** a função busca no Spotify no máximo uma vez a cada 10 s por instância (as outras chamadas recebem a última resposta) e, se o Spotify falhar, devolve a última resposta boa dos 10 min anteriores (`MIN_INTERVAL_MS` e `STALE_MS` em [`server/spotify.ts`](../server/spotify.ts)).
+- **Limite do Spotify:** apps do Spotify em modo de desenvolvimento têm uma cota pequena de chamadas. Se ela estoura, o Spotify responde `429 QUOTA_EXCEEDED` e bloqueia o app por um tempo (em nov/2026, ~78 min). Para poupar a cota, a função em [`server/spotify.ts`](../server/spotify.ts):
+  - busca no Spotify no máximo uma vez a cada 20 s por instância (`MIN_INTERVAL_MS`); as outras chamadas recebem a última resposta;
+  - a cada busca, pede só "tocando agora" e "últimas músicas" (2 chamadas). Perfil, mais ouvidos e playlists são renovados no máximo a cada 1 h (`SLOW_MS`);
+  - com `429`, não chama mais nada até passar o tempo pedido pelo Spotify (`Retry-After`): insistir durante o bloqueio pode prolongá-lo;
+  - se o Spotify falhar, devolve a última resposta boa das 6 h anteriores (`STALE_MS`), e o cache da Vercel serve a última cópia por até 1 dia (`stale-if-error`).
+- **Se a seção Spotify mostrar erro:** quase sempre é esse bloqueio, e passa sozinho. Não adianta atualizar a página várias vezes.
 
 ### Página 404, privacidade e estatísticas
 
 - **Página 404:** `public/404.html`, no estilo da tela azul do Windows, em português e inglês (segue o idioma salvo pelo site). A Vercel a serve para qualquer endereço inexistente. É independente do React; o azul é `#0070CC` (um pouco mais escuro que o original, para o contraste do texto passar no mínimo de acessibilidade).
 - **Política de privacidade:** rota `#privacidade`, com texto em `privacy` no [`portfolio.ts`](../src/data/portfolio.ts). Os links ficam no fim do Contato e no menu Iniciar. Revise o texto e a data se o site passar a coletar algo novo (ex.: um formulário).
 - **Estatísticas:** Vercel Web Analytics (`@vercel/analytics`), sem cookies. A contagem automática está desligada; o App registra cada seção como um caminho (`/projetos`, `/projetos/academico`…), já que a rota fica no `#`. Para os dados aparecerem, ative **Analytics** no painel do projeto na Vercel.
+
+### Contador de visitas
+
+- **Onde aparece:** no Início, abaixo de "Online" (ex.: "1.234 visitas").
+- **Como conta:** uma vez por sessão do navegador. Recarregar ou trocar de seção não soma. No servidor, cada endereço de rede conta no máximo uma vez a cada 6 h, o que evita inflar o número; só um resumo irreversível do IP é guardado, e ele se apaga sozinho.
+- **Onde fica o total:** num banco Redis da Upstash, que é gratuito e se liga pela Vercel. O código está em [`server/visits.ts`](../server/visits.ts) e [`api/visits.ts`](../api/visits.ts).
+- **Ativar (uma vez):**
+  1. Na Vercel, abra o projeto → **Storage** → **Create Database** → **Upstash for Redis** (plano gratuito) → conecte ao projeto.
+  2. A Vercel cria sozinha as variáveis `KV_REST_API_URL` e `KV_REST_API_TOKEN`. Não copie esses valores para nenhum arquivo do repositório.
+  3. Faça um novo deploy (**Deployments** → **Redeploy**) para a função passar a ler as variáveis.
+- **Sem o banco:** o site esconde o contador, sem erro visível. Em `npm run dev`, sem as variáveis no `.env.local`, ele usa um contador de teste em memória, que zera ao reiniciar.
+- **Zerar ou ajustar o número:** no painel da Upstash, na Vercel (**Storage** → o banco → **Data Browser**), edite a chave `portfolio:visits`.
 
 ### 9. Conferir antes de publicar
 

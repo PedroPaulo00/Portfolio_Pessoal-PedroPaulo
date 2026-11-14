@@ -447,7 +447,7 @@ export const portfolio: PortfolioData<'source'> = {
   // Política de privacidade (rota #privacidade). Revise se algo mudar no site
   // (ex.: um formulário de contato ou outra ferramenta de estatísticas).
   privacy: {
-    updated: '2026-11-12',
+    updated: '2026-11-13',
     intro: {
       pt: 'Este portfólio foi feito para ser visitado sem que você precise entregar dados pessoais. Esta página explica o que é guardado, por quem e por quê, de acordo com a Lei Geral de Proteção de Dados (LGPD).',
       en: 'This portfolio is designed so you can visit it without handing over personal data. This page explains what is stored, by whom and why, in line with Brazil’s General Data Protection Law (LGPD).',
@@ -468,6 +468,10 @@ export const portfolio: PortfolioData<'source'> = {
           {
             pt: 'Usamos o Vercel Web Analytics para contar visitas e saber quais seções são vistas. Ele não usa cookies, não identifica você e não acompanha sua navegação em outros sites: registra, de forma agregada, a seção visitada, o país, o tipo de navegador e de aparelho e o site de onde você veio.',
             en: 'We use Vercel Web Analytics to count visits and see which sections are viewed. It uses no cookies, does not identify you and does not follow you across other sites: it records, in aggregate, the section visited, the country, the browser and device type, and the referring site.',
+          },
+          {
+            pt: 'O contador de visitas da página inicial guarda apenas o total. Para não contar a mesma pessoa várias vezes, o servidor guarda por até 6 horas um código gerado a partir do endereço IP (um resumo irreversível, não o endereço em si), que depois é apagado automaticamente. O banco de dados desse contador fica na Upstash.',
+            en: 'The visit counter on the home page stores only the total. To avoid counting the same person several times, the server keeps, for up to 6 hours, a code derived from the IP address (an irreversible digest, not the address itself), which is then deleted automatically. The counter’s database is hosted by Upstash.',
           },
         ],
       },

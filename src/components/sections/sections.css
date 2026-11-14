@@ -109,6 +109,27 @@
   text-shadow: none;
 }
 
+/* Contador de visitas: linha discreta sob o status, no tom do texto secundário. */
+.visit-counter {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin: 2px 0 0;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 3px rgba(255, 255, 255, 0.85);
+}
+.visit-counter__icon {
+  display: inline-flex;
+  flex: none;
+  filter: drop-shadow(0 1px 1px rgba(0, 30, 60, 0.25));
+}
+[data-theme='dark'] .visit-counter {
+  text-shadow: none;
+}
+
 .hero__name {
   margin: 0;
   font-size: var(--text-display);
