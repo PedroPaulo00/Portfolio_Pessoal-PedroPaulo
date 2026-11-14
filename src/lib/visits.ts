@@ -2,11 +2,33 @@
  * Contador de visitas (Início). Conta uma vez por sessão do navegador (a aba
  * aberta); recarregar ou navegar entre seções só lê o total. Se o servidor não
  * tiver o banco configurado ou falhar, devolve null e o contador não aparece.
+ *
+ * Aparelhos do dono: abra o site uma vez com ?naocontar no endereço
+ * (ex.: https://portfolio-pedropaulo.vercel.app/?naocontar) e aquele navegador
+ * passa a só ler o total, sem somar. Para desfazer: ?contar.
  */
 import { useEffect, useState } from 'react';
 
 const ENDPOINT = '/api/visits';
 const SESSION_KEY = 'portfolio-aero:visit-counted';
+const OWNER_KEY = 'portfolio-aero:no-count';
+
+/** Lê/aplica ?naocontar e ?contar e tira o parâmetro do endereço. */
+function isOwnerDevice(): boolean {
+  try {
+    const url = new URL(window.location.href);
+    if (url.searchParams.has('naocontar')) localStorage.setItem(OWNER_KEY, '1');
+    if (url.searchParams.has('contar')) localStorage.removeItem(OWNER_KEY);
+    if (url.searchParams.has('naocontar') || url.searchParams.has('contar')) {
+      url.searchParams.delete('naocontar');
+      url.searchParams.delete('contar');
+      window.history.replaceState(window.history.state, '', url);
+    }
+    return localStorage.getItem(OWNER_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
 
 function alreadyCounted(): boolean {
   try {
@@ -29,7 +51,7 @@ export function useVisitCount(): number | null {
 
   useEffect(() => {
     const controller = new AbortController();
-    const count = !alreadyCounted();
+    const count = !isOwnerDevice() && !alreadyCounted();
     fetch(ENDPOINT, {
       method: count ? 'POST' : 'GET',
       headers: { Accept: 'application/json' },

@@ -184,6 +184,7 @@ Para remover a integração, use `spotify.enabled: false`.
   2. A Vercel cria sozinha as variáveis `KV_REST_API_URL` e `KV_REST_API_TOKEN`. Não copie esses valores para nenhum arquivo do repositório.
   3. Faça um novo deploy (**Deployments** → **Redeploy**) para a função passar a ler as variáveis.
 - **Sem o banco:** o site esconde o contador, sem erro visível. Em `npm run dev`, sem as variáveis no `.env.local`, ele usa um contador de teste em memória, que zera ao reiniciar.
+- **Não contar as suas visitas:** em cada aparelho e navegador seu (notebook, celular), abra uma vez `https://portfolio-pedropaulo.vercel.app/?naocontar`. Daí em diante, aquele navegador só mostra o total. Para voltar a contar, abra com `?contar`. A marca fica no navegador, então limpar os dados do site ou usar aba anônima a desfaz.
 - **Zerar ou ajustar o número:** no painel da Upstash, na Vercel (**Storage** → o banco → **Data Browser**), edite a chave `portfolio:visits`.
 
 ### 9. Conferir antes de publicar
