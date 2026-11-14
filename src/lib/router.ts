@@ -7,7 +7,7 @@
  * com os botões do navegador. Cada entrada guarda seu índice em history.state para
  * saber se há destino antes/depois; um novo destino descarta o ramo "avançar".
  */
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { CATEGORY_ORDER } from '../data/labels';
 import type { ProjectCategory, SectionId } from '../types/portfolio';
 
@@ -27,8 +27,17 @@ const SECTIONS: readonly SectionId[] = [
 ];
 const MAX_KEY = 'portfolio-aero:history-max';
 
+/** Um hash malformado (ex.: "#%") não pode derrubar o site: cai no Início. */
+function safeDecode(value: string): string {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return '';
+  }
+}
+
 export function parseHash(hash: string): Route {
-  const [rawSection = '', rawCategory] = decodeURIComponent(hash.replace(/^#\/?/, '')).split('/');
+  const [rawSection = '', rawCategory] = safeDecode(hash.replace(/^#\/?/, '')).split('/');
   const section = SECTIONS.find((id) => id === rawSection) ?? 'inicio';
   const category = CATEGORY_ORDER.find((id) => id === rawCategory);
   return section === 'projetos' && category ? { section, category } : { section };
@@ -76,20 +85,29 @@ export function useRouter() {
     return { idx, max: Math.max(readMax(), idx) };
   });
 
+  // Posição atual também em ref: o popstate precisa dela fora do ciclo de render.
+  const positionRef = useRef(position);
+  useEffect(() => {
+    positionRef.current = position;
+  }, [position]);
+
   useEffect(() => {
     const onPop = () => {
       const next = parseHash(location.hash);
-      let idx = readIndex();
-      setPosition((current) => {
-        if (idx === null) {
-          // Hash editado manualmente: vira uma nova entrada no fim do histórico.
-          idx = current.idx + 1;
-          history.replaceState({ idx }, '', routeHref(next));
-          writeMax(idx);
-          return { idx, max: idx };
-        }
-        return { idx, max: Math.max(current.max, idx) };
-      });
+      const current = positionRef.current;
+      const stored = readIndex();
+      let nextPosition: { idx: number; max: number };
+      if (stored === null) {
+        // Hash editado manualmente: vira uma nova entrada no fim do histórico.
+        const idx = current.idx + 1;
+        history.replaceState({ idx }, '', routeHref(next));
+        writeMax(idx);
+        nextPosition = { idx, max: idx };
+      } else {
+        nextPosition = { idx: stored, max: Math.max(current.max, stored) };
+      }
+      positionRef.current = nextPosition;
+      setPosition(nextPosition);
       setRoute(next);
     };
     window.addEventListener('popstate', onPop);

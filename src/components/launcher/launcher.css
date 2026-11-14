@@ -34,6 +34,8 @@
     backdrop-filter: blur(calc(var(--glass-blur) * 3));
   }
 }
+/* Sem desfoque, o vidro do menu fica sólido: o texto da janela não vaza por trás. */
+[data-glass='clear'] .start-menu,
 [data-glass='opaque'] .start-menu {
   background:
     linear-gradient(110deg, rgba(255, 255, 255, 0.07), transparent 40%),

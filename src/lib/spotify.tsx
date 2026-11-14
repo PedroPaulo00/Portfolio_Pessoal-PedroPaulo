@@ -61,15 +61,21 @@ export function SpotifyProvider({
     };
 
     /** true = dados novos recebidos. `fresh` fura o cache curto da hospedagem. */
+    let busy = false;
     const load = async (fresh: boolean): Promise<boolean> => {
+      // Busca automática com outra em andamento: espera a próxima rodada (antes ela
+      // cancelava o "Atualizar" do visitante, que então anunciava erro sem haver).
+      if (busy && !fresh) return false;
       controller?.abort();
-      controller = new AbortController();
+      const own = new AbortController();
+      controller = own;
+      busy = true;
       try {
         const url = fresh ? `${config.endpoint}?fresh=${Date.now()}` : config.endpoint;
         const response = await fetch(url, {
           headers: { Accept: 'application/json' },
           cache: fresh ? 'no-store' : 'default',
-          signal: controller.signal,
+          signal: own.signal,
         });
         // 503 = credenciais ausentes; 404 = função não publicada nesta hospedagem.
         const notConfigured = response.status === 503 || response.status === 404;
@@ -90,6 +96,8 @@ export function SpotifyProvider({
         if (error instanceof DOMException && error.name === 'AbortError') return false;
         fail('error');
         return false;
+      } finally {
+        if (controller === own) busy = false;
       }
     };
     loadRef.current = load;

@@ -14,7 +14,8 @@ interface StartMenuProps {
   readonly onClose: () => void;
   readonly profile: Profile;
   readonly sections: readonly Section[];
-  readonly onNavigate: (section: SectionId) => void;
+  /** Devolve true se o destino mudou (o foco vai para o título da nova vista). */
+  readonly onNavigate: (section: SectionId) => boolean;
   readonly theme: Theme;
   readonly onThemeChange: (theme: Theme) => void;
   readonly glass: GlassMode;
@@ -34,6 +35,13 @@ const LOCALE_OPTIONS: readonly { value: Locale; label: string; lang: string }[] 
   { value: 'en', label: 'English', lang: 'en' },
 ];
 
+/** Busca sem diferenciar acentos nem maiúsculas ("inicio" acha "Início"). */
+const fold = (text: string) =>
+  text
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLowerCase();
+
 const EDGE = 12;
 const LOGO_OVERHANG = 34;
 
@@ -44,7 +52,7 @@ const LOGO_OVERHANG = 34;
  */
 export function StartMenu(props: StartMenuProps) {
   const { id, open, opener, onClose, profile, sections, onNavigate, initialView = 'main' } = props;
-  const { t, intl } = useI18n();
+  const { t } = useI18n();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [view, setView] = useState<'main' | 'settings'>('main');
   const [query, setQuery] = useState('');
@@ -120,8 +128,8 @@ export function StartMenu(props: StartMenuProps) {
     if (!inside) event.currentTarget.close();
   };
 
-  const normalized = query.trim().toLocaleLowerCase(intl);
-  const visibleSections = sections.filter((section) => section.label.toLocaleLowerCase(intl).includes(normalized));
+  const normalized = fold(query.trim());
+  const visibleSections = sections.filter((section) => fold(section.label).includes(normalized));
 
   return (
     <dialog
@@ -146,8 +154,8 @@ export function StartMenu(props: StartMenuProps) {
                     type="button"
                     className="start-menu__item"
                     onClick={() => {
-                      closedByNavigation.current = true;
-                      onNavigate(section.id);
+                      // Já está nessa seção: o foco volta a quem abriu o menu.
+                      closedByNavigation.current = onNavigate(section.id);
                       onClose();
                     }}
                   >
@@ -211,8 +219,7 @@ export function StartMenu(props: StartMenuProps) {
             type="button"
             className="start-menu__side-link"
             onClick={() => {
-              closedByNavigation.current = true;
-              onNavigate('privacidade');
+              closedByNavigation.current = onNavigate('privacidade');
               onClose();
             }}
           >

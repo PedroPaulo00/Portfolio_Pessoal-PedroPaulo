@@ -155,9 +155,13 @@
 }
 
 /* ---------- Diálogo como mini janela Aero ---------- */
+/* O diálogo fica na área útil, acima da barra de tarefas (como uma janela do
+   Windows): centralizado nesse espaço e nunca por baixo da barra. */
 .aero-dialog {
+  --dialog-room: calc(100dvh - var(--taskbar-height, 40px) - env(safe-area-inset-bottom, 0px) - 24px);
+  bottom: calc(var(--taskbar-height, 40px) + env(safe-area-inset-bottom, 0px));
   width: min(520px, calc(100vw - 24px));
-  max-height: calc(100dvh - 24px);
+  max-height: var(--dialog-room);
   padding: 0;
   border: 0;
   background: transparent;
@@ -169,7 +173,7 @@
 }
 .aero-window--dialog {
   width: 100%;
-  max-height: calc(100dvh - 24px);
+  max-height: var(--dialog-room);
 }
 .aero-window--dialog .aero-titlebar {
   align-items: flex-start;

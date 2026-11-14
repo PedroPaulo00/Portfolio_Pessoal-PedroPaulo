@@ -219,8 +219,8 @@ npm run check
 - **Voltar/avançar:** os da janela usam o histórico do navegador.
 - **Pesquisa:** filtra projetos por nome, resumo, categoria, estado e tecnologias, ignorando acentos.
 - **Menu do portfólio:** abre pelo logo da barra de título ou pelo botão na barra de tarefas. Ele leva às seções e reúne a **Aparência**.
-- **Aparência:** tema claro/escuro do conteúdo e vidro da janela (translúcido sem blur, que é o padrão; translúcido + blur; ou opaco). As duas escolhas são independentes e ficam salvas no navegador.
-- **Barra de tarefas:** funcionam o botão **Iniciar** (abre o menu), o **volume** do som de fundo e o **relógio** (hh:mm:ss, no horário do visitante; a data completa aparece ao passar o mouse).
+- **Aparência:** tema claro/escuro do conteúdo e vidro da janela (translúcido + blur, translúcido sem blur ou opaco). O padrão é com blur em computador, como o Aero do Windows 7, e sem blur em celular e tablet, que é mais leve para rolar. As duas escolhas são independentes e ficam salvas no navegador. Sem blur, a barra de tarefas e o menu Iniciar ficam com o vidro mais denso, para o texto da janela não se misturar com eles.
+- **Barra de tarefas:** funcionam o botão **Iniciar** (abre o menu), o **volume** do som de fundo e o **relógio** (hh:mm:ss e, embaixo, a data, como no Windows 7; em celular, só a hora; a data completa aparece ao passar o mouse).
 - **Elementos decorativos:** os outros ícones da bandeja, o botão da janela e os controles minimizar/maximizar/fechar são só cenário.
 
 ### Orbes por função
@@ -230,7 +230,9 @@ npm run check
 
 ### Responsividade
 
-- **Rolagem:** existe uma só, a da página. A janela cresce com o conteúdo, e o fundo e a barra de tarefas ficam fixos.
+- **Rolagem:** existe uma só, a da página. A janela cresce com o conteúdo, e o fundo e a barra de tarefas ficam fixos. Com mouse, as barras de rolagem têm o desenho do Windows 7 (`src/styles/motion.css`); em telas de toque, valem as do navegador.
+- **Diálogos** (detalhes de projeto): abrem na área útil, acima da barra de tarefas.
+- **Entre 1024 e 1279 px:** a janela deixa de ser centralizada e ocupa a largura que sobra ao lado dos ícones.
 - **≥ 900 px:** painel lateral do Explorer.
 - **< 900 px:** a navegação vira uma faixa de seções que quebra em linhas.
 - **< 600 px:**

@@ -303,7 +303,11 @@ export function App() {
           onClose={() => setMenu((current) => ({ ...current, open: false }))}
           profile={profile}
           sections={sections}
-          onNavigate={(id) => navigate({ section: id })}
+          onNavigate={(id) => {
+            const changed = route.section !== id || route.category !== undefined;
+            navigate({ section: id });
+            return changed;
+          }}
           theme={theme}
           onThemeChange={changeTheme}
           glass={glass}

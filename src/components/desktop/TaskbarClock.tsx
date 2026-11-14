@@ -23,13 +23,13 @@ function useNow(): Date {
 }
 
 /**
- * Relógio da bandeja (hh:mm:ss). Sem aria-live de propósito: anunciar a hora a
+ * Relógio da bandeja: hh:mm:ss e, abaixo, a data (só a hora em telas estreitas). Sem aria-live de propósito: anunciar a hora a
  * cada segundo atrapalharia leitores de tela. A data completa fica no title.
  */
 export function TaskbarClock() {
   const now = useNow();
   const { intl } = useI18n();
-  const { timeFormat, dateFormat } = useMemo(
+  const { timeFormat, dateFormat, shortDateFormat } = useMemo(
     () => ({
       // 24 h nas duas línguas: o relógio tem largura fixa (hh:mm:ss).
       timeFormat: new Intl.DateTimeFormat(intl, {
@@ -39,12 +39,15 @@ export function TaskbarClock() {
         hour12: false,
       }),
       dateFormat: new Intl.DateTimeFormat(intl, { dateStyle: 'full' }),
+      // Segunda linha, como no Windows 7: 13/11/2026 (pt) · 11/13/2026 (en).
+      shortDateFormat: new Intl.DateTimeFormat(intl, { day: '2-digit', month: '2-digit', year: 'numeric' }),
     }),
     [intl],
   );
   return (
     <time className="taskbar__clock" dateTime={now.toISOString()} title={dateFormat.format(now)}>
-      {timeFormat.format(now)}
+      <span className="taskbar__clock-time">{timeFormat.format(now)}</span>
+      <span className="taskbar__clock-date">{shortDateFormat.format(now)}</span>
     </time>
   );
 }

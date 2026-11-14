@@ -40,6 +40,14 @@
   }
 }
 
+/* Entre 1024 e 1279 px sobra pouca largura: só a esquerda abre espaço para os
+   ícones, e a janela usa o resto (centralizar deixaria uma faixa vazia à direita). */
+@media (min-width: 64em) and (max-width: 79.99em) {
+  .desktop-stage--with-icons {
+    padding-right: max(clamp(12px, 2vw, 24px), env(safe-area-inset-right, 0px));
+  }
+}
+
 /* Telas baixas (celular em paisagem): menos respiro vertical, janela sem altura mínima. */
 @media (max-height: 31.25em) {
   .desktop-stage {

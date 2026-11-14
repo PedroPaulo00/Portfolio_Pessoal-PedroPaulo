@@ -37,7 +37,17 @@ export function getTheme(): Theme {
   return pick(read(THEME_KEY), THEMES, 'light');
 }
 
-export function getGlassMode(fallback: GlassMode = 'clear'): GlassMode {
+/**
+ * Vidro padrão (sem escolha salva): com desfoque, como o Aero do Windows 7, em
+ * telas de computador; em celular/tablet, translúcido sem desfoque, que é mais
+ * leve para rolar. O visitante pode trocar em Aparência.
+ */
+function defaultGlassMode(): GlassMode {
+  const desktop = typeof window !== 'undefined' && window.matchMedia('(min-width: 64em) and (hover: hover)').matches;
+  return desktop && supportsBackdropBlur() ? 'blur' : 'clear';
+}
+
+export function getGlassMode(fallback: GlassMode = defaultGlassMode()): GlassMode {
   const stored = pick(read(GLASS_KEY), GLASS_MODES, fallback);
   // Sem suporte a backdrop-filter, "blur" degrada para translúcido sem blur (seção 6).
   return stored === 'blur' && !supportsBackdropBlur() ? 'clear' : stored;
