@@ -46,12 +46,18 @@ function markCounted(): void {
   }
 }
 
-export function useVisitCount(): number | null {
+/**
+ * `count`: total de visitas (null = contador indisponível). `owner`: este
+ * navegador está marcado com ?naocontar (o site mostra um aviso só para o dono).
+ */
+export function useVisitCount(): { readonly count: number | null; readonly owner: boolean } {
   const [count, setCount] = useState<number | null>(null);
+  // Lido uma vez, ao montar (também aplica ?naocontar / ?contar do endereço).
+  const [owner] = useState(isOwnerDevice);
 
   useEffect(() => {
     const controller = new AbortController();
-    const count = !isOwnerDevice() && !alreadyCounted();
+    const count = !owner && !alreadyCounted();
     fetch(ENDPOINT, {
       method: count ? 'POST' : 'GET',
       headers: { Accept: 'application/json' },
@@ -66,7 +72,7 @@ export function useVisitCount(): number | null {
       })
       .catch(() => undefined);
     return () => controller.abort();
-  }, []);
+  }, [owner]);
 
-  return count;
+  return { count, owner };
 }

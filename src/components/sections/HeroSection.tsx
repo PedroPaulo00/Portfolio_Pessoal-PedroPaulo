@@ -15,7 +15,7 @@ interface HeroSectionProps {
 
 export function HeroSection({ profile, sections }: HeroSectionProps) {
   const { t, intl } = useI18n();
-  const visits = useVisitCount();
+  const { count: visits, owner } = useVisitCount();
   const shortcuts = sections.filter((section) => section.id !== 'inicio');
 
   return (
@@ -61,6 +61,8 @@ export function HeroSection({ profile, sections }: HeroSectionProps) {
                     </svg>
                   </span>
                   {t.visits(visits, new Intl.NumberFormat(intl).format(visits))}
+                  {/* Só no navegador do dono (?naocontar): confirma que a marca continua lá. */}
+                  {owner ? <span className="visit-counter__owner">{t.visitsNotCounted}</span> : null}
                 </p>
               ) : null}
             </div>

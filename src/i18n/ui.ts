@@ -117,6 +117,7 @@ const pt = {
   status: 'Status: ',
   online: 'Online',
   visits: (count: number, formatted: string) => `${formatted} ${count === 1 ? 'visita' : 'visitas'}`,
+  visitsNotCounted: '(você não conta)',
 
   // Projetos
   resultsFor: 'Resultados para',
@@ -328,6 +329,7 @@ const en: UiStrings = {
   status: 'Status: ',
   online: 'Online',
   visits: (count, formatted) => `${formatted} ${count === 1 ? 'visit' : 'visits'}`,
+  visitsNotCounted: '(you are not counted)',
 
   resultsFor: 'Results for',
   inCategory: (categoryPlural) => ` in ${categoryPlural.toLowerCase()}`,
