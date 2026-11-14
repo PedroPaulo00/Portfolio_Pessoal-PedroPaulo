@@ -342,3 +342,108 @@
     flex: 1;
   }
 }
+
+/* ---------- Menu "Visualizar" (modo de exibição dos projetos) ----------
+   Como o do Explorer do Windows 7: lista de modos e controle deslizante à esquerda. */
+.view-menu {
+  position: relative;
+  display: flex;
+}
+.view-glyph {
+  flex: none;
+}
+.view-menu__caret {
+  margin-left: 1px;
+  border-left: 3.5px solid transparent;
+  border-right: 3.5px solid transparent;
+  border-top: 4px solid currentColor;
+  opacity: 0.7;
+}
+.view-menu__panel {
+  --view-row: 30px;
+  position: absolute;
+  top: calc(100% + 3px);
+  right: 0;
+  z-index: 5;
+  display: flex;
+  align-items: stretch;
+  gap: 2px;
+  padding: 3px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid #979797;
+  box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+}
+[data-theme='dark'] .view-menu__panel {
+  background: var(--dialog-bg);
+  border-color: var(--button-border);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .view-menu__panel {
+    animation: view-in 120ms var(--ease) both;
+  }
+}
+/* Controle vertical: em cima, o maior. Altura = da primeira à última linha. */
+.view-menu__slider {
+  flex: none;
+  width: 24px;
+  height: calc(var(--view-row) * 7 + 18px);
+  margin: calc(var(--view-row) / 2 - 9px) 0;
+  writing-mode: vertical-lr;
+  direction: rtl;
+  accent-color: #1681d8;
+  cursor: pointer;
+}
+.view-menu__list {
+  display: grid;
+  border-left: 1px solid var(--divider);
+  padding-left: 3px;
+}
+.view-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 12.5rem;
+  height: var(--view-row);
+  padding: 0 14px 0 8px;
+  font: inherit;
+  font-size: var(--text-small);
+  color: inherit;
+  text-align: left;
+  white-space: nowrap;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--interior-radius);
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .view-menu__item:hover {
+    background: var(--hover);
+    border-color: var(--hover-border);
+  }
+}
+.view-menu__item[aria-checked='true'] {
+  background: linear-gradient(var(--selection-top), var(--selection-bottom));
+  border-color: var(--selection-border);
+}
+.view-menu__item:focus-visible,
+.view-menu__slider:focus-visible {
+  outline-offset: -2px;
+}
+@media (pointer: coarse) {
+  .view-menu__panel {
+    --view-row: 44px;
+  }
+}
+/* Celular, em Projetos: com o "Visualizar" na barra, os filtros ficam só com o
+   texto e os dois botões da direita encolhem, para tudo caber numa linha. */
+@media (max-width: 37.49em) {
+  .command-bar:has(.view-menu) .command-bar__group:first-child .aero-icon,
+  .view-menu__caret {
+    display: none;
+  }
+  .command-bar:has(.view-menu) .command-bar__group--end .command-button {
+    min-width: 40px;
+    padding-inline: 6px;
+  }
+}

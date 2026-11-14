@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import startLogo from './assets/brands/start-logo.png';
+import portfolioIcon from './assets/desktop/portfolio.png';
 import { DecorativeTaskbar } from './components/desktop/DecorativeTaskbar';
 import { DesktopBackdrop } from './components/desktop/DesktopBackdrop';
-import { DesktopIcons } from './components/desktop/DesktopIcons';
+import { DesktopIcons, PortfolioShortcut } from './components/desktop/DesktopIcons';
 import { VolumeControl } from './components/desktop/VolumeControl';
 import { StartMenu } from './components/launcher/StartMenu';
 import { AboutSection } from './components/sections/AboutSection';
@@ -13,11 +14,12 @@ import { ProjectsSection } from './components/sections/ProjectsSection';
 import { SkillsSection } from './components/sections/SkillsSection';
 import { SpotifySection } from './components/spotify/SpotifySection';
 import { Icon } from './components/ui/Icon';
-import { AeroWindow } from './components/window/AeroWindow';
+import { AeroWindow, type WindowState } from './components/window/AeroWindow';
 import { CommandBar } from './components/window/CommandBar';
 import { LocationBar, type Crumb } from './components/window/LocationBar';
 import { PortfolioNavigation } from './components/window/PortfolioNavigation';
 import { SearchBox } from './components/window/SearchBox';
+import { ViewMenu } from './components/window/ViewMenu';
 import { WindowTitleBar } from './components/window/WindowTitleBar';
 import { PROJECT_CATEGORIES } from './data/labels';
 import { portfolio } from './data/portfolio';
@@ -34,6 +36,7 @@ import {
   type GlassMode,
   type Theme,
 } from './lib/preferences';
+import { getProjectView, saveProjectView, type ProjectView } from './lib/projectView';
 import { routeHref, useRouter, type Route } from './lib/router';
 import { pageview } from '@vercel/analytics';
 import { SpotifyProvider, useSpotify, useSpotifyRefresh } from './lib/spotify';
@@ -72,14 +75,21 @@ export function App() {
   });
   const [status, setStatus] = useState('');
   const [copied, setCopied] = useState(false);
-  // Janela minimizada pelo botão da barra de tarefas (só a área de trabalho à vista).
-  const [minimized, setMinimized] = useState(false);
-  // Ir para outro destino (menu, ícone, voltar/avançar) restaura a janela.
+  // Janela aberta, minimizada (volta pela barra de tarefas) ou fechada (volta pelo
+  // ícone "Portfólio"). Fora de cena, só a área de trabalho fica à vista.
+  const [windowState, setWindowState] = useState<WindowState>('open');
+  // Ir para outro destino (menu, ícone, voltar/avançar) traz a janela de volta.
   const [shownRoute, setShownRoute] = useState(route);
   if (shownRoute !== route) {
     setShownRoute(route);
-    if (minimized) setMinimized(false);
+    if (windowState !== 'open') setWindowState('open');
   }
+  // Modo de exibição dos projetos ("Visualizar"), salvo no navegador.
+  const [projectView, setProjectView] = useState<ProjectView>(getProjectView);
+  const changeProjectView = (view: ProjectView) => {
+    saveProjectView(view);
+    setProjectView(view);
+  };
 
   const titleLogoRef = useRef<HTMLButtonElement>(null);
   const startButtonRef = useRef<HTMLButtonElement>(null);
@@ -87,6 +97,7 @@ export function App() {
   const mainRef = useRef<HTMLElement>(null);
   const windowRef = useRef<HTMLDivElement>(null);
   const windowButtonRef = useRef<HTMLButtonElement>(null);
+  const shortcutRef = useRef<HTMLButtonElement>(null);
   const firstRender = useRef(true);
   const keepFocusOnce = useRef(false);
 
@@ -126,27 +137,60 @@ export function App() {
     main?.querySelector<HTMLElement>('[data-view-heading]')?.focus({ preventScroll: true });
   }, [route]);
 
-  // Sem a janela, a área de trabalho não rola (e a barra de rolagem some).
+  // Sem a janela, a área de trabalho não rola (a barra de rolagem some) e, no
+  // celular, os ícones de cenário aparecem (desktop-icons.css).
   useEffect(() => {
-    document.documentElement.classList.toggle('window-minimized', minimized);
-    return () => document.documentElement.classList.remove('window-minimized');
-  }, [minimized]);
+    document.documentElement.classList.toggle('window-away', windowState !== 'open');
+    return () => document.documentElement.classList.remove('window-away');
+  }, [windowState]);
+
+  // Janela fechada: o foco vai para o ícone "Portfólio", que a abre de novo.
+  useEffect(() => {
+    if (windowState === 'closed') shortcutRef.current?.focus({ preventScroll: true });
+  }, [windowState]);
+
+  /** Ponto (dentro da janela) de onde ela encolhe e para onde volta. */
+  const setWindowOrigin = (x: number, y: number) => {
+    windowRef.current?.style.setProperty('--window-origin-x', `${Math.round(x)}px`);
+    windowRef.current?.style.setProperty('--window-origin-y', `${Math.round(y)}px`);
+  };
 
   const toggleWindow = () => {
     const frame = windowRef.current;
     const button = windowButtonRef.current;
-    // Ao minimizar, a janela encolhe em direção ao botão dela na barra de tarefas
-    // (o mesmo ponto vale para a volta).
-    if (!minimized && frame && button) {
-      const from = frame.getBoundingClientRect();
-      const to = button.getBoundingClientRect();
-      frame.style.setProperty('--minimize-x', `${Math.round(to.left + to.width / 2 - from.left)}px`);
-      frame.style.setProperty('--minimize-y', `${Math.round(to.top + to.height / 2 - from.top)}px`);
+    if (windowState === 'open') {
+      // Ao minimizar, a janela encolhe em direção ao botão dela na barra de tarefas
+      // (o mesmo ponto vale para a volta).
+      if (frame && button) {
+        const from = frame.getBoundingClientRect();
+        const to = button.getBoundingClientRect();
+        setWindowOrigin(to.left + to.width / 2 - from.left, to.top + to.height / 2 - from.top);
+      }
+      // O foco vai para o botão da janela na barra: é por ele que se restaura
+      // (quem minimizou pelo "−" da moldura ficaria com o foco numa janela inerte).
+      button?.focus({ preventScroll: true });
+      setWindowState('minimized');
+    } else {
+      setWindowState('open');
     }
-    // O foco vai para o botão da janela na barra: é por ele que se restaura
-    // (quem minimizou pelo "−" da moldura ficaria com o foco numa janela inerte).
-    if (!minimized) button?.focus({ preventScroll: true });
-    setMinimized(!minimized);
+  };
+
+  const closeWindow = () => {
+    const frame = windowRef.current;
+    if (frame) {
+      // Fecha (e reabre) a partir do meio da parte visível da janela.
+      const from = frame.getBoundingClientRect();
+      setWindowOrigin(from.width / 2, Math.max(0, window.innerHeight / 2 - from.top));
+    }
+    setWindowState('closed');
+  };
+
+  const reopenWindow = () => {
+    setWindowState('open');
+    // Depois de voltar a ser focável (sai do `inert` no próximo render).
+    requestAnimationFrame(() =>
+      mainRef.current?.querySelector<HTMLElement>('[data-view-heading]')?.focus({ preventScroll: true }),
+    );
   };
 
   const openMenu = (opener: HTMLElement | null, view: 'main' | 'settings' = 'main') =>
@@ -195,7 +239,7 @@ export function App() {
           href="#conteudo"
           onClick={(event) => {
             event.preventDefault();
-            setMinimized(false);
+            setWindowState('open');
             const heading = mainRef.current?.querySelector<HTMLElement>('[data-view-heading]');
             heading?.focus();
             heading?.scrollIntoView({ block: 'center' });
@@ -211,10 +255,13 @@ export function App() {
         ) : null}
         <DesktopBackdrop />
         {content.desktopIcons.length > 0 ? <DesktopIcons icons={content.desktopIcons} /> : null}
+        {windowState === 'closed' ? (
+          <PortfolioShortcut image={portfolioIcon} buttonRef={shortcutRef} onOpen={reopenWindow} />
+        ) : null}
 
         <div className={`desktop-stage${content.desktopIcons.length > 0 ? ' desktop-stage--with-icons' : ''}`}>
           <AeroWindow
-            minimized={minimized}
+            state={windowState}
             windowRef={windowRef}
             titleBar={
               <WindowTitleBar
@@ -225,6 +272,7 @@ export function App() {
                 logoButtonRef={titleLogoRef}
                 onOpenMenu={() => openMenu(titleLogoRef.current)}
                 onMinimize={toggleWindow}
+                onClose={closeWindow}
               />
             }
           >
@@ -242,18 +290,23 @@ export function App() {
               <CommandBar
                 label={t.sectionActions(section.label)}
                 trailing={
-                  <button
-                    ref={appearanceRef}
-                    type="button"
-                    className="command-button"
-                    aria-haspopup="dialog"
-                    aria-controls={MENU_ID}
-                    title={t.appearanceTitle}
-                    onClick={() => openMenu(appearanceRef.current, 'settings')}
-                  >
-                    <Icon name="configuracoes" size={16} />
-                    <span className="command-button__label">{t.appearance}</span>
-                  </button>
+                  <>
+                    {route.section === 'projetos' ? (
+                      <ViewMenu value={projectView} onChange={changeProjectView} />
+                    ) : null}
+                    <button
+                      ref={appearanceRef}
+                      type="button"
+                      className="command-button"
+                      aria-haspopup="dialog"
+                      aria-controls={MENU_ID}
+                      title={t.appearanceTitle}
+                      onClick={() => openMenu(appearanceRef.current, 'settings')}
+                    >
+                      <Icon name="configuracoes" size={16} />
+                      <span className="command-button__label">{t.appearance}</span>
+                    </button>
+                  </>
                 }
               >
                 <SectionCommands
@@ -282,6 +335,7 @@ export function App() {
                       category={route.category}
                       query={query}
                       onClearQuery={() => setQuery('')}
+                      view={projectView}
                     />
                   ) : null}
                   {route.section === 'sobre' ? <AboutSection section={section} about={about} /> : null}
@@ -302,7 +356,7 @@ export function App() {
         <DecorativeTaskbar
           profile={profile}
           section={section}
-          minimized={minimized}
+          windowState={windowState}
           onToggleWindow={toggleWindow}
           windowButtonRef={windowButtonRef}
           onOpenDateSettings={(opener) => openMenu(opener, 'settings')}
@@ -347,7 +401,7 @@ export function App() {
           sections={sections}
           onNavigate={(id) => {
             const changed = route.section !== id || route.category !== undefined;
-            setMinimized(false);
+            setWindowState('open');
             navigate({ section: id });
             return changed;
           }}

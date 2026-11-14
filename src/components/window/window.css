@@ -179,6 +179,10 @@
   border-color: rgba(0, 0, 0, 0.3);
   cursor: default;
 }
+.window-controls__item--button.window-controls__item--close {
+  border-width: 0;
+  color: #fff;
+}
 .window-controls__item:first-child {
   border-radius: 0 0 0 var(--control-radius);
 }

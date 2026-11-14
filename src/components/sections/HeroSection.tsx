@@ -33,35 +33,37 @@ export function HeroSection({ profile, sections }: HeroSectionProps) {
               />
               <img className="msn-frame__art" src={msnFrame} alt="" width={116} height={116} />
             </div>
-            <p className="presence">
-              <span className="presence__dot" aria-hidden="true" />
-              <span className="sr-only">{t.status}</span>
-              {t.online}
-            </p>
-            {visits !== null ? (
-              <p className="visit-counter">
-                <span className="visit-counter__icon" aria-hidden="true">
-                  <svg viewBox="0 0 16 16" width="14" height="14">
-                    <circle cx="5.6" cy="5" r="2.6" fill="#5fa8e6" stroke="#1d5c94" strokeWidth="0.8" />
-                    <path
-                      d="M1.2 13.6c.3-2.9 2.1-4.6 4.4-4.6s4.1 1.7 4.4 4.6Z"
-                      fill="#5fa8e6"
-                      stroke="#1d5c94"
-                      strokeWidth="0.8"
-                    />
-                    <circle cx="11.1" cy="5.8" r="2.2" fill="#9fd36c" stroke="#3f7d2a" strokeWidth="0.8" />
-                    <path
-                      d="M8.7 13.6c.2-2.4 1-3.9 2.4-3.9 1.9 0 3.5 1.5 3.8 3.9Z"
-                      fill="#9fd36c"
-                      stroke="#3f7d2a"
-                      strokeWidth="0.8"
-                    />
-                    <ellipse cx="5" cy="4" rx="1.3" ry="0.8" fill="#fff" opacity="0.6" />
-                  </svg>
-                </span>
-                {t.visits(visits, new Intl.NumberFormat(intl).format(visits))}
+            <div className="hero__status">
+              <p className="presence">
+                <span className="presence__dot" aria-hidden="true" />
+                <span className="sr-only">{t.status}</span>
+                {t.online}
               </p>
-            ) : null}
+              {visits !== null ? (
+                <p className="visit-counter">
+                  <span className="visit-counter__icon" aria-hidden="true">
+                    <svg viewBox="0 0 16 16" width="14" height="14">
+                      <circle cx="5.6" cy="5" r="2.6" fill="#5fa8e6" stroke="#1d5c94" strokeWidth="0.8" />
+                      <path
+                        d="M1.2 13.6c.3-2.9 2.1-4.6 4.4-4.6s4.1 1.7 4.4 4.6Z"
+                        fill="#5fa8e6"
+                        stroke="#1d5c94"
+                        strokeWidth="0.8"
+                      />
+                      <circle cx="11.1" cy="5.8" r="2.2" fill="#9fd36c" stroke="#3f7d2a" strokeWidth="0.8" />
+                      <path
+                        d="M8.7 13.6c.2-2.4 1-3.9 2.4-3.9 1.9 0 3.5 1.5 3.8 3.9Z"
+                        fill="#9fd36c"
+                        stroke="#3f7d2a"
+                        strokeWidth="0.8"
+                      />
+                      <ellipse cx="5" cy="4" rx="1.3" ry="0.8" fill="#fff" opacity="0.6" />
+                    </svg>
+                  </span>
+                  {t.visits(visits, new Intl.NumberFormat(intl).format(visits))}
+                </p>
+              ) : null}
+            </div>
           </div>
         ) : (
           <div className="hero__mark" aria-hidden="true">

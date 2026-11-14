@@ -104,6 +104,9 @@
   align-items: center;
   min-width: 0;
 }
+.taskbar__task[hidden] {
+  display: none;
+}
 .taskbar__task {
   position: relative;
   height: 100%;

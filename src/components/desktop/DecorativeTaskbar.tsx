@@ -1,6 +1,7 @@
 import type { PointerEvent, ReactNode, Ref } from 'react';
 import { useI18n } from '../../i18n/I18n';
 import type { Profile, Section } from '../../types/portfolio';
+import type { WindowState } from '../window/AeroWindow';
 import { BrandMark } from '../ui/BrandMark';
 import { Icon } from '../ui/Icon';
 import { TaskbarClock } from './TaskbarClock';
@@ -16,8 +17,8 @@ interface DecorativeTaskbarProps {
   readonly languageControl: ReactNode;
   /** Seção aberta na janela (aparece na miniatura do botão da janela). */
   readonly section: Section;
-  /** Janela minimizada: some da área de trabalho até clicar de novo no botão. */
-  readonly minimized: boolean;
+  /** Minimizada: o botão da janela a restaura. Fechada: o botão some da barra. */
+  readonly windowState: WindowState;
   readonly onToggleWindow: () => void;
   /** Botão da janela: a animação de minimizar encolhe em direção a ele. */
   readonly windowButtonRef: Ref<HTMLButtonElement>;
@@ -36,13 +37,14 @@ export function DecorativeTaskbar({
   volumeControl,
   languageControl,
   section,
-  minimized,
+  windowState,
   onToggleWindow,
   windowButtonRef,
   onOpenDateSettings,
 }: DecorativeTaskbarProps) {
   const { t } = useI18n();
   const title = t.windowTitle(profile.name);
+  const minimized = windowState === 'minimized';
 
   // Brilho que acompanha o ponteiro sobre o botão, como no Windows 7.
   const trackGlow = (event: PointerEvent<HTMLButtonElement>) => {
@@ -55,7 +57,12 @@ export function DecorativeTaskbar({
       <div className="taskbar__glass" aria-hidden="true" />
       <div className="taskbar__start">{startButton}</div>
       <div className="taskbar__items">
-        <div className="taskbar__task">
+        {/* Leitores de tela: avisa que o conteúdo saiu de cena e como voltar. */}
+        <span className="sr-only" role="status">
+          {minimized ? t.windowMinimized : ''}
+          {windowState === 'closed' ? t.windowClosed : ''}
+        </span>
+        <div className="taskbar__task" hidden={windowState === 'closed'}>
           <button
             ref={windowButtonRef}
             type="button"
@@ -67,10 +74,6 @@ export function DecorativeTaskbar({
             <BrandMark profile={profile} size={24} />
             <span className="taskbar__item-label">{title}</span>
           </button>
-          {/* Leitores de tela: avisa que o conteúdo saiu de cena e como voltar. */}
-          <span className="sr-only" role="status">
-            {minimized ? t.windowMinimized : ''}
-          </span>
           {/* Miniatura ao passar o mouse (Aero Peek): só visual, um esboço da janela. */}
           <div className="taskbar-preview" aria-hidden="true">
             <div className="taskbar-preview__title">

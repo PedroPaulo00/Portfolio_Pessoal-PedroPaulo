@@ -40,6 +40,9 @@ ICONS = {
     "desktop/thesims.png": "desktop/thesims.png",
     "desktop/cs16.png": "desktop/cs16.png",
     "desktop/minecraft.png": "desktop/minecraft.png",
+    # Ícone "Portfólio" (reabre a janela fechada). O original é um .ico de 48 px
+    # salvo com extensão .png; o Pillow lê pelo conteúdo e usa o maior tamanho.
+    "desktop/portfolio.png": "desktop/portfolio.png",
 }
 
 

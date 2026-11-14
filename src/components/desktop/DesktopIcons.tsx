@@ -1,4 +1,4 @@
-import { useId, type JSX, type MouseEvent } from 'react';
+import { useId, type JSX, type MouseEvent, type Ref } from 'react';
 import { useI18n } from '../../i18n/I18n';
 import { useNavigation } from '../../lib/navigation';
 import { parseHash } from '../../lib/router';
@@ -28,6 +28,35 @@ export function DesktopIcons({ icons }: { readonly icons: readonly DesktopIcon[]
         ))}
       </ul>
     </nav>
+  );
+}
+
+interface PortfolioShortcutProps {
+  readonly image: string;
+  readonly buttonRef: Ref<HTMLButtonElement>;
+  readonly onOpen: () => void;
+}
+
+/**
+ * Atalho "Portfólio", no centro da área de trabalho: aparece quando a janela é
+ * fechada e a abre de novo com um clique (ou Enter). Fica longe dos ícones de
+ * cenário e já vem destacado, como um ícone selecionado do Windows 7.
+ */
+export function PortfolioShortcut({ image, buttonRef, onOpen }: PortfolioShortcutProps) {
+  const { t } = useI18n();
+  return (
+    <div className="portfolio-shortcut">
+      <button
+        ref={buttonRef}
+        type="button"
+        className="portfolio-shortcut__button"
+        aria-label={t.openPortfolio(t.portfolioShortcut)}
+        onClick={onOpen}
+      >
+        <img className="portfolio-shortcut__image" src={image} alt="" width={64} height={64} draggable={false} />
+        <span className="desktop-icon__label portfolio-shortcut__label">{t.portfolioShortcut}</span>
+      </button>
+    </div>
   );
 }
 

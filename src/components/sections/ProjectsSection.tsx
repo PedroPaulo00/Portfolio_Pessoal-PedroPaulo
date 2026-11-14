@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react';
 import { useI18n } from '../../i18n/I18n';
 import type { UiStrings } from '../../i18n/ui';
+import type { ProjectView } from '../../lib/projectView';
 import type { Project, ProjectCategory, Section } from '../../types/portfolio';
 import { AeroDialog } from '../ui/AeroDialog';
 import { Icon } from '../ui/Icon';
 import { ProjectCard } from './ProjectCard';
+import { ProjectThumbnail } from './ProjectThumbnail';
 import { SectionHeader } from './SectionHeader';
 
 interface ProjectsSectionProps {
@@ -13,6 +15,8 @@ interface ProjectsSectionProps {
   readonly category: ProjectCategory | undefined;
   readonly query: string;
   readonly onClearQuery: () => void;
+  /** Modo de exibição escolhido em "Visualizar" (barra de comandos). */
+  readonly view: ProjectView;
 }
 
 function normalize(text: string): string {
@@ -39,7 +43,7 @@ export function matchesQuery(project: Project, query: string, t: UiStrings): boo
   return terms.every((term) => haystack.includes(term));
 }
 
-export function ProjectsSection({ section, projects, category, query, onClearQuery }: ProjectsSectionProps) {
+export function ProjectsSection({ section, projects, category, query, onClearQuery, view }: ProjectsSectionProps) {
   const { t } = useI18n();
   const [detailed, setDetailed] = useState<Project | null>(null);
 
@@ -67,15 +71,29 @@ export function ProjectsSection({ section, projects, category, query, onClearQue
         </div>
       ) : null}
 
-      {visible.length > 0 ? (
-        <ul className="project-grid">
+      {visible.length === 0 ? null : view === 'extra-large' || view === 'large' ? (
+        // Cartão completo (resumo, tecnologias e botões).
+        <ul className={`project-grid project-grid--${view}`}>
           {visible.map((project) => (
             <li key={project.id}>
               <ProjectCard project={project} onShowDetails={setDetailed} />
             </li>
           ))}
         </ul>
+      ) : view === 'details' ? (
+        <ProjectTable projects={visible} onOpen={setDetailed} />
       ) : (
+        // Modos compactos: o item inteiro abre os detalhes do projeto.
+        <ul className={`project-view project-view--${view}`}>
+          {visible.map((project) => (
+            <li key={project.id}>
+              <ProjectItem project={project} view={view} onOpen={setDetailed} />
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {visible.length > 0 ? null : (
         <div className="empty-state">
           <p className="empty-state__title">{t.noProjects}</p>
           <p>{trimmed ? t.tryAnotherTerm : t.emptyCategory}</p>
@@ -114,6 +132,114 @@ export function ProjectsSection({ section, projects, category, query, onClearQue
         {detailed ? <ProjectDetails project={detailed} /> : null}
       </AeroDialog>
     </div>
+  );
+}
+
+/** Logo do projeto ou, na falta dele, o ícone da categoria. */
+function ProjectIcon({ project, size }: { readonly project: Project; readonly size: number }) {
+  return project.logo ? (
+    <img className="project-item__icon" src={project.logo} alt="" width={size} height={size} loading="lazy" />
+  ) : (
+    <span className="project-item__icon">
+      <Icon name={project.category} size={size} />
+    </span>
+  );
+}
+
+interface ProjectItemProps {
+  readonly project: Project;
+  readonly view: Exclude<ProjectView, 'extra-large' | 'large' | 'details'>;
+  readonly onOpen: (project: Project) => void;
+}
+
+/**
+ * Item dos modos compactos do "Visualizar" (ícones médios e pequenos, lista,
+ * lado a lado e conteúdo). É um botão: abre os detalhes, onde ficam o texto
+ * completo e os links de demonstração e repositório.
+ */
+function ProjectItem({ project, view, onOpen }: ProjectItemProps) {
+  const { t } = useI18n();
+  const category = t.category[project.category].singular;
+  const status = project.status ? t.projectStatus[project.status] : null;
+  const withCover = view === 'medium' || view === 'content';
+
+  return (
+    <button type="button" className="project-item" aria-haspopup="dialog" onClick={() => onOpen(project)}>
+      {withCover ? (
+        <span className="project-item__cover" aria-hidden="true">
+          <ProjectThumbnail project={project} />
+        </span>
+      ) : (
+        <ProjectIcon project={project} size={view === 'tiles' ? 48 : 20} />
+      )}
+      <span className="project-item__text">
+        <span className="project-item__name">{project.name}</span>
+        {view === 'tiles' ? (
+          <span className="project-item__meta">
+            {category}
+            {status ? ` · ${status}` : ''}
+          </span>
+        ) : null}
+        {view === 'content' ? <span className="project-item__summary">{project.summary}</span> : null}
+      </span>
+      {view === 'content' ? (
+        <span className="project-item__side">
+          <span className={`badge badge--${project.category}`}>{category}</span>
+          {status ? <span className={`badge badge--status badge--status-${project.status}`}>{status}</span> : null}
+        </span>
+      ) : null}
+    </button>
+  );
+}
+
+/** Modo "Detalhes": tabela com colunas, como no Explorer. O nome abre os detalhes. */
+function ProjectTable({
+  projects,
+  onOpen,
+}: {
+  readonly projects: readonly Project[];
+  readonly onOpen: (project: Project) => void;
+}) {
+  const { t } = useI18n();
+  return (
+    <table className="project-table">
+      <thead>
+        <tr>
+          <th scope="col">{t.columnName}</th>
+          <th scope="col">{t.columnCategory}</th>
+          <th scope="col">{t.columnStatus}</th>
+          <th scope="col" className="project-table__stack">
+            {t.columnStack}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {projects.map((project) => (
+          <tr key={project.id}>
+            <th scope="row">
+              <button
+                type="button"
+                className="project-item project-item--row"
+                aria-haspopup="dialog"
+                onClick={() => onOpen(project)}
+              >
+                <ProjectIcon project={project} size={20} />
+                <span className="project-item__name">{project.name}</span>
+              </button>
+            </th>
+            <td>{t.category[project.category].singular}</td>
+            <td>
+              {project.status ? (
+                <span className={`project-table__status badge--status-${project.status}`}>
+                  {t.projectStatus[project.status]}
+                </span>
+              ) : null}
+            </td>
+            <td className="project-table__stack">{project.stack.join(', ')}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }
 

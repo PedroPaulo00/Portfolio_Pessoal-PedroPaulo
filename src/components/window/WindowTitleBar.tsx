@@ -12,6 +12,8 @@ interface WindowTitleBarProps {
   readonly logoButtonRef: Ref<HTMLButtonElement>;
   /** Botão "−": minimiza a janela (mesma ação do botão dela na barra de tarefas). */
   readonly onMinimize: () => void;
+  /** Botão "×": fecha a janela (ela volta pelo ícone "Portfólio" da área de trabalho). */
+  readonly onClose: () => void;
 }
 
 export function WindowTitleBar({
@@ -22,6 +24,7 @@ export function WindowTitleBar({
   onOpenMenu,
   logoButtonRef,
   onMinimize,
+  onClose,
 }: WindowTitleBarProps) {
   const { t } = useI18n();
   return (
@@ -45,23 +48,28 @@ export function WindowTitleBar({
           {title}
         </p>
       </div>
-      <WindowControls onMinimize={onMinimize} minimizeLabel={t.minimize} />
+      <WindowControls onMinimize={onMinimize} onClose={onClose} minimizeLabel={t.minimize} closeLabel={t.closeWindow} />
     </header>
   );
 }
 
 /**
- * Minimizar funciona com o mouse; maximizar e fechar são só visuais (fechar
- * impediria a navegação). O grupo fica fora do Tab e dos leitores de tela
- * (aria-hidden + tabIndex -1): o caminho acessível para minimizar e restaurar é
- * o botão da janela na barra de tarefas, que recebe o foco em seguida.
+ * Minimizar e fechar funcionam com o mouse; maximizar é só visual. O grupo fica
+ * fora do Tab e dos leitores de tela (aria-hidden + tabIndex -1): pelo teclado,
+ * minimiza-se e restaura-se pelo botão da janela na barra de tarefas, e nada do
+ * conteúdo depende de fechar a janela. Ao minimizar ou fechar, o foco vai para o
+ * controle que traz a janela de volta.
  */
 function WindowControls({
   onMinimize,
+  onClose,
   minimizeLabel,
+  closeLabel,
 }: {
   readonly onMinimize: () => void;
+  readonly onClose: () => void;
   readonly minimizeLabel: string;
+  readonly closeLabel: string;
 }) {
   return (
     <div className="window-controls" aria-hidden="true">
@@ -75,7 +83,15 @@ function WindowControls({
         −
       </button>
       <span className="window-controls__item">□</span>
-      <span className="window-controls__item window-controls__item--close">×</span>
+      <button
+        type="button"
+        className="window-controls__item window-controls__item--button window-controls__item--close"
+        tabIndex={-1}
+        title={closeLabel}
+        onClick={onClose}
+      >
+        ×
+      </button>
     </div>
   );
 }
