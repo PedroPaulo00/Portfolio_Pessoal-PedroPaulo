@@ -40,7 +40,7 @@ interface PortfolioShortcutProps {
 /**
  * Atalho "Portfólio", no centro da área de trabalho: aparece quando a janela é
  * fechada e a abre de novo com um clique (ou Enter). Fica longe dos ícones de
- * cenário e já vem destacado, como um ícone selecionado do Windows 7.
+ * cenário, só com a imagem e o nome (sem quadro atrás).
  */
 export function PortfolioShortcut({ image, buttonRef, onOpen }: PortfolioShortcutProps) {
   const { t } = useI18n();

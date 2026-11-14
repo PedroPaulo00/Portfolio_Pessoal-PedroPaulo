@@ -1,0 +1,385 @@
+/* ==========================================================================
+   Tela de ligar [EXT] — o "computador desligado", no tema do site (Aero /
+   Frutiger Aero): uma paisagem animada e escurecida ao fundo e, no centro, um
+   orbe de vidro com o símbolo de energia (o material do botão Iniciar), com um
+   arco de luz girando em volta. Ao clicar, o orbe acende, o fundo some e entra
+   o vídeo de inicialização. Cobre tudo e se dissolve no fim.
+   ========================================================================== */
+
+.boot {
+  --boot-cyan: #8ff4ff;
+  --boot-blue: #1c9ce4;
+  --boot-orb: 132px;
+
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: #000;
+  opacity: 1;
+  transition: opacity 450ms ease;
+  user-select: none;
+}
+.boot--leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---------- Cenário: paisagem animada, escurecida ---------- */
+.boot__scene {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: #04121f;
+  transition: opacity 420ms ease;
+}
+.boot--playing .boot__scene,
+.boot--leaving .boot__scene {
+  opacity: 0;
+}
+.boot__backdrop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 62% 50%;
+}
+/* Escurecimento leve: um véu por igual e uma vinheta que fecha nas bordas,
+   para o orbe e o texto se destacarem da paisagem. */
+.boot__scene::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 75% 70% at 50% 50%, transparent 30%, rgba(0, 8, 20, 0.5)), rgba(0, 12, 28, 0.42);
+}
+
+/* ---------- Vídeo ---------- */
+/* Quadro 4:3 do vídeo, centralizado. Em tela deitada ocupa a altura toda; em
+   celular em pé fica mais alto que a largura permitiria (as laterais, que são
+   pretas, sobram para fora), para a animação não ficar minúscula. */
+.boot__frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: min(100dvh, max(75vw, 60dvh));
+  aspect-ratio: 4 / 3;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+/* O arquivo traz duas faixas cinza-escuras em cima e embaixo: o recorte as
+   esconde, e o vídeo se funde ao fundo preto. */
+.boot__video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: fill;
+  clip-path: inset(5.2% 0);
+  opacity: 0;
+  transition: opacity 260ms ease 160ms;
+}
+.boot--playing .boot__video,
+.boot--leaving .boot__video {
+  opacity: 1;
+}
+
+/* ---------- Orbe de energia ---------- */
+.boot__stage {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  transition:
+    opacity 380ms ease,
+    transform 380ms ease;
+}
+/* Ao ligar: o orbe "mergulha" na tela enquanto o vídeo entra. */
+.boot--playing .boot__stage,
+.boot--leaving .boot__stage {
+  opacity: 0;
+  transform: scale(1.12);
+  pointer-events: none;
+}
+
+.boot__orb {
+  position: relative;
+  width: var(--boot-orb);
+  height: var(--boot-orb);
+  display: grid;
+  place-items: center;
+}
+/* Penumbra atrás do orbe: separa o conjunto da paisagem clara. */
+.boot__orb::after {
+  content: '';
+  position: absolute;
+  inset: -70px;
+  z-index: -1;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(0, 16, 36, 0.62), rgba(0, 16, 36, 0.3) 55%, transparent);
+  pointer-events: none;
+}
+/* Aro fino permanente em volta do orbe (o anel de foco do teclado cai sobre ele). */
+.boot__orb::before {
+  content: '';
+  position: absolute;
+  inset: -23px;
+  border: 1px solid rgba(160, 236, 255, 0.34);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+/* Halo: um arco de luz girando em volta do orbe. */
+.boot__halo {
+  position: absolute;
+  inset: -16px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0 52%,
+    rgba(143, 244, 255, 0.15) 64%,
+    rgba(143, 244, 255, 0.95) 86%,
+    #ffffff 90%,
+    transparent 92%
+  );
+  -webkit-mask-image: radial-gradient(closest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));
+  mask-image: radial-gradient(closest-side, transparent calc(100% - 5px), #000 calc(100% - 4px));
+  filter: drop-shadow(0 0 6px rgba(143, 244, 255, 0.8));
+  pointer-events: none;
+}
+/* Clarão ao ligar: um anel que se expande. */
+.boot__flash {
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgba(190, 248, 255, 0.9);
+  border-radius: 50%;
+  box-shadow: 0 0 34px 10px rgba(110, 215, 255, 0.7);
+  opacity: 0;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .boot__halo {
+    animation: boot-spin 5.5s linear infinite;
+  }
+  .boot--playing .boot__flash {
+    animation: boot-flash 620ms ease-out;
+  }
+}
+@keyframes boot-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+@keyframes boot-flash {
+  0% {
+    opacity: 0.95;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(3.2);
+  }
+}
+
+/* O botão: aro cromado + esfera azul iluminada por baixo + brilho de vidro. */
+.boot__power {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: #f2fdff;
+  border: 0;
+  border-radius: 50%;
+  /* Aro: metal claro em cima, escuro no meio, luz de volta embaixo. */
+  background: linear-gradient(#f4fbff, #9fc3da 30%, #2d5676 52%, #16324a 60%, #8fd4f2);
+  box-shadow:
+    0 0 0 1px rgba(3, 18, 32, 0.9),
+    0 0 26px rgba(70, 180, 255, 0.55),
+    0 0 70px rgba(40, 150, 255, 0.35),
+    0 10px 22px rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  transition:
+    box-shadow 200ms ease,
+    transform 130ms ease,
+    filter 200ms ease;
+}
+/* Esfera: mais escura em cima, acesa por baixo (como o botão Iniciar). */
+.boot__power::before {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse 78% 58% at 50% 108%, var(--boot-cyan) 0%, rgba(60, 200, 255, 0.75) 30%, transparent 70%),
+    radial-gradient(circle at 50% 38%, #2b8fd6, #0d4f95 55%, #05213f 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(190, 240, 255, 0.55),
+    inset 0 -10px 22px rgba(120, 235, 255, 0.35),
+    inset 0 8px 16px rgba(0, 12, 30, 0.55);
+}
+/* Reflexo de vidro na metade de cima. */
+.boot__power::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 17%;
+  right: 17%;
+  height: 43%;
+  border-radius: 50% 50% 46% 46% / 62% 62% 38% 38%;
+  background: linear-gradient(rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.22) 62%, rgba(255, 255, 255, 0.04));
+  pointer-events: none;
+}
+.boot__glyph {
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 0 5px rgba(143, 244, 255, 0.95)) drop-shadow(0 1px 1px rgba(0, 30, 60, 0.7));
+}
+@media (prefers-reduced-motion: no-preference) {
+  .boot__power {
+    animation: boot-breathe 3.2s ease-in-out infinite;
+  }
+}
+@keyframes boot-breathe {
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(3, 18, 32, 0.9),
+      0 0 40px rgba(110, 215, 255, 0.85),
+      0 0 110px rgba(50, 165, 255, 0.5),
+      0 10px 22px rgba(0, 0, 0, 0.6);
+  }
+}
+@media (hover: hover) {
+  .boot__power:hover {
+    filter: brightness(1.18) saturate(1.1);
+    box-shadow:
+      0 0 0 1px rgba(3, 18, 32, 0.9),
+      0 0 46px rgba(140, 232, 255, 0.95),
+      0 0 130px rgba(60, 175, 255, 0.6),
+      0 10px 22px rgba(0, 0, 0, 0.6);
+    animation: none;
+  }
+}
+.boot__power:active {
+  transform: scale(0.95);
+  filter: brightness(0.92);
+}
+.boot__power:focus-visible {
+  outline: 2px solid #b8f8ff;
+  outline-offset: 22px;
+}
+
+/* ---------- Textos ---------- */
+.boot__hint {
+  position: absolute;
+  top: calc(100% + 46px);
+  width: max-content;
+  max-width: 90vw;
+  margin: 0;
+  text-align: center;
+  font-size: 1.0625rem;
+  letter-spacing: 0.06em;
+  color: #f2fbff;
+  text-shadow:
+    0 0 14px rgba(0, 40, 80, 0.9),
+    0 0 10px rgba(120, 220, 255, 0.6),
+    0 1px 3px rgba(0, 0, 0, 0.9);
+}
+.boot__hint-touch {
+  display: none;
+}
+@media (pointer: coarse) {
+  .boot__hint-mouse {
+    display: none;
+  }
+  .boot__hint-touch {
+    display: inline;
+  }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .boot__hint {
+    animation: boot-hint 3.2s ease-in-out infinite;
+  }
+}
+@keyframes boot-hint {
+  50% {
+    opacity: 0.62;
+  }
+}
+
+/* Assinatura no rodapé: logo + nome, como a marca na moldura de um monitor. */
+.boot__brand {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: max(26px, env(safe-area-inset-bottom, 0px));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  padding: 0 16px;
+  font-size: var(--text-small);
+  letter-spacing: 0.04em;
+  color: #eef7fc;
+  text-shadow:
+    0 0 10px rgba(0, 30, 60, 0.9),
+    0 1px 3px rgba(0, 0, 0, 0.9);
+  transition: opacity 380ms ease;
+}
+.boot--playing .boot__brand,
+.boot--leaving .boot__brand {
+  opacity: 0;
+}
+
+/* "Pular" durante o vídeo. */
+.boot__skip {
+  position: absolute;
+  right: max(16px, env(safe-area-inset-right, 0px));
+  bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  min-height: 40px;
+  padding: 6px 18px;
+  font: inherit;
+  font-size: var(--text-small);
+  color: #e3eef6;
+  background: rgba(20, 30, 40, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 3px;
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .boot__skip:hover {
+    color: #fff;
+    background: rgba(50, 70, 90, 0.85);
+    border-color: rgba(255, 255, 255, 0.7);
+  }
+}
+.boot__skip:focus-visible {
+  outline: 2px solid #b8f8ff;
+  outline-offset: 3px;
+}
+
+/* Telas pequenas ou baixas: orbe um pouco menor. */
+@media (max-width: 37.49em), (max-height: 30em) {
+  .boot {
+    --boot-orb: 112px;
+  }
+  .boot__hint {
+    top: calc(100% + 42px);
+  }
+}
+/* Tela deitada e baixa (celular): o texto sobe para perto do orbe. */
+@media (max-height: 26em) {
+  .boot__hint {
+    top: calc(100% + 34px);
+  }
+}
+@media (max-height: 26em) {
+  .boot__brand {
+    display: none;
+  }
+}

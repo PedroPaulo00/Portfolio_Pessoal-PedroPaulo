@@ -12,7 +12,8 @@ Portfólio pessoal de **Pedro Paulo de Lima**, desenvolvedor de software e gradu
 - **Projetos** com filtro por categoria, busca e janela de detalhes com galeria de capturas.
 - **Spotify ao vivo:** perfil, música tocando agora, últimas faixas e mais ouvidos do mês, servidos por uma função serverless (as credenciais nunca chegam ao navegador). Botão para atualizar na hora.
 - **Bilíngue:** idioma detectado pelo navegador, troca pelo indicador PT/EN da barra de tarefas. O build falha se algum texto ficar em uma língua só.
-- **Som de fundo** em loop, com controle de volume na bandeja (e atalho para silenciar logo no início da página).
+- **Tela de ligar:** o site abre "desligado"; o botão de energia toca a animação de inicialização e revela a área de trabalho, de onde se abre o portfólio pelo ícone.
+- **Som de fundo** em loop, a partir do momento em que o portfólio é aberto, com controle de volume na bandeja (e atalho para silenciar logo no início da página).
 - **Acessível e responsivo:** navegação completa por teclado, leitores de tela, preferência por menos movimento, de 320 px a telas largas.
 
 ## Tecnologias

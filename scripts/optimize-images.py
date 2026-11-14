@@ -40,9 +40,6 @@ ICONS = {
     "desktop/thesims.png": "desktop/thesims.png",
     "desktop/cs16.png": "desktop/cs16.png",
     "desktop/minecraft.png": "desktop/minecraft.png",
-    # Ícone "Portfólio" (reabre a janela fechada). O original é um .ico de 48 px
-    # salvo com extensão .png; o Pillow lê pelo conteúdo e usa o maior tamanho.
-    "desktop/portfolio.png": "desktop/portfolio.png",
 }
 
 
@@ -239,6 +236,9 @@ def main() -> None:
     # Ícones da área de trabalho.
     for source, target in ICONS.items():
         save(square(Image.open(SRC / source)).resize((96, 96), Image.LANCZOS), target, optimize=True)
+    # Ícone "Portfólio" (abre a janela): aparece maior (64 px), então sai com 192 px.
+    save(square(Image.open(SRC / "desktop/portfolio.png")).resize((192, 192), Image.LANCZOS),
+         "desktop/portfolio.png", optimize=True)
 
     # Ícones de tecnologias (ladrilho de 20 px → 64 px para telas densas).
     for source, target in TECH.items():

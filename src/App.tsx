@@ -1,6 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import startLogo from './assets/brands/start-logo.png';
 import portfolioIcon from './assets/desktop/portfolio.png';
+import bootBackdropVideo from './assets/video/intro_fundo.mp4';
+import bootBackdropPoster from './assets/video/intro_fundo.webp';
+import bootVideo from './assets/video/win_boot.mp4';
+import { BootScreen } from './components/boot/BootScreen';
 import { DecorativeTaskbar } from './components/desktop/DecorativeTaskbar';
 import { DesktopBackdrop } from './components/desktop/DesktopBackdrop';
 import { DesktopIcons, PortfolioShortcut } from './components/desktop/DesktopIcons';
@@ -13,6 +17,7 @@ import { PrivacySection } from './components/sections/PrivacySection';
 import { ProjectsSection } from './components/sections/ProjectsSection';
 import { SkillsSection } from './components/sections/SkillsSection';
 import { SpotifySection } from './components/spotify/SpotifySection';
+import { BrandMark } from './components/ui/BrandMark';
 import { Icon } from './components/ui/Icon';
 import { AeroWindow, type WindowState } from './components/window/AeroWindow';
 import { CommandBar } from './components/window/CommandBar';
@@ -60,6 +65,7 @@ export function App() {
   const sections = content.sections.filter((item) => item.id !== 'spotify' || portfolio.spotify.enabled);
   const router = useRouter();
   const sound = useAmbientSound(portfolio.sound);
+  const { play: playSound, stop: stopSound } = sound;
   const { navigate } = router;
   // Com o Spotify desligado, #spotify cai no Início em vez de uma vista vazia.
   // (constante de módulo: referência estável, sem reexecutar os efeitos de foco).
@@ -75,9 +81,12 @@ export function App() {
   });
   const [status, setStatus] = useState('');
   const [copied, setCopied] = useState(false);
-  // Janela aberta, minimizada (volta pela barra de tarefas) ou fechada (volta pelo
-  // ícone "Portfólio"). Fora de cena, só a área de trabalho fica à vista.
-  const [windowState, setWindowState] = useState<WindowState>('open');
+  // O site abre "desligado": botão de ligar → vídeo de inicialização → área de trabalho.
+  const [booted, setBooted] = useState(false);
+  // Janela aberta, minimizada (volta pela barra de tarefas) ou fechada (abre pelo
+  // ícone "Portfólio"). Fora de cena, só a área de trabalho fica à vista. Depois
+  // de ligar, o portfólio começa fechado: o visitante o abre pelo ícone.
+  const [windowState, setWindowState] = useState<WindowState>('closed');
   // Ir para outro destino (menu, ícone, voltar/avançar) traz a janela de volta.
   const [shownRoute, setShownRoute] = useState(route);
   if (shownRoute !== route) {
@@ -144,10 +153,25 @@ export function App() {
     return () => document.documentElement.classList.remove('window-away');
   }, [windowState]);
 
-  // Janela fechada: o foco vai para o ícone "Portfólio", que a abre de novo.
+  // Janela fechada (e ao terminar de ligar): o foco vai para o ícone "Portfólio".
+  // (Exceto logo após ligar com mouse ou toque: o foco desenharia um anel no ícone.)
+  const skipShortcutFocus = useRef(false);
   useEffect(() => {
-    if (windowState === 'closed') shortcutRef.current?.focus({ preventScroll: true });
-  }, [windowState]);
+    if (!booted || windowState !== 'closed') return;
+    if (skipShortcutFocus.current) {
+      skipShortcutFocus.current = false;
+      return;
+    }
+    shortcutRef.current?.focus({ preventScroll: true });
+  }, [booted, windowState]);
+
+  // A música acompanha a janela: toca com ela aberta (por qualquer caminho: ícone,
+  // menu Iniciar...), continua com ela minimizada e para quando é fechada.
+  useEffect(() => {
+    if (!booted) return;
+    if (windowState === 'open') playSound();
+    if (windowState === 'closed') stopSound();
+  }, [booted, windowState, playSound, stopSound]);
 
   /** Ponto (dentro da janela) de onde ela encolhe e para onde volta. */
   const setWindowOrigin = (x: number, y: number) => {
@@ -186,6 +210,14 @@ export function App() {
   };
 
   const reopenWindow = () => {
+    const frame = windowRef.current;
+    if (frame) {
+      // Abre a partir do meio da parte visível (mesmo ponto usado ao fechar).
+      const from = frame.getBoundingClientRect();
+      setWindowOrigin(from.width / 2, Math.max(0, window.innerHeight / 2 - from.top));
+    }
+    // Dentro do clique: o navegador libera o áudio na hora (ver lib/ambient.ts).
+    playSound();
     setWindowState('open');
     // Depois de voltar a ser focável (sai do `inert` no próximo render).
     requestAnimationFrame(() =>
@@ -233,186 +265,205 @@ export function App() {
   return (
     <SpotifyProvider config={portfolio.spotify}>
       <NavigationProvider value={{ route, navigate }}>
-        {/* Primeiro item do Tab. Não altera o hash (que é a rota): foca o título da vista. */}
-        <a
-          className="skip-link"
-          href="#conteudo"
-          onClick={(event) => {
-            event.preventDefault();
-            setWindowState('open');
-            const heading = mainRef.current?.querySelector<HTMLElement>('[data-view-heading]');
-            heading?.focus();
-            heading?.scrollIntoView({ block: 'center' });
-          }}
-        >
-          {t.skipToContent}
-        </a>
-        {/* WCAG 1.4.2: som que toca sozinho precisa ser desligável logo no início. */}
-        {!sound.muted ? (
-          <button type="button" className="skip-link skip-link--second" onClick={sound.toggleMute}>
-            {t.muteBackground}
-          </button>
-        ) : null}
-        <DesktopBackdrop />
-        {content.desktopIcons.length > 0 ? <DesktopIcons icons={content.desktopIcons} /> : null}
-        {windowState === 'closed' ? (
-          <PortfolioShortcut image={portfolioIcon} buttonRef={shortcutRef} onOpen={reopenWindow} />
-        ) : null}
-
-        <div className={`desktop-stage${content.desktopIcons.length > 0 ? ' desktop-stage--with-icons' : ''}`}>
-          <AeroWindow
-            state={windowState}
-            windowRef={windowRef}
-            titleBar={
-              <WindowTitleBar
-                profile={profile}
-                title={t.windowTitle(profile.name)}
-                menuId={MENU_ID}
-                menuOpen={menu.open}
-                logoButtonRef={titleLogoRef}
-                onOpenMenu={() => openMenu(titleLogoRef.current)}
-                onMinimize={toggleWindow}
-                onClose={closeWindow}
-              />
-            }
+        {booted ? null : (
+          <BootScreen
+            videoSrc={bootVideo}
+            backdropVideo={bootBackdropVideo}
+            backdropPoster={bootBackdropPoster}
+            muted={sound.muted}
+            volume={sound.volume}
+            brand={<BrandMark profile={profile} size={20} />}
+            title={t.windowTitle(profile.name)}
+            onDone={(byKeyboard) => {
+              skipShortcutFocus.current = !byKeyboard;
+              setBooted(true);
+            }}
+          />
+        )}
+        {/* "Desligado", tudo abaixo existe (e já carrega), mas fica fora do Tab e
+            dos leitores de tela até a inicialização terminar. */}
+        <div className="os" inert={!booted}>
+          {/* Primeiro item do Tab. Não altera o hash (que é a rota): foca o título da vista. */}
+          <a
+            className="skip-link"
+            href="#conteudo"
+            onClick={(event) => {
+              event.preventDefault();
+              setWindowState('open');
+              const heading = mainRef.current?.querySelector<HTMLElement>('[data-view-heading]');
+              heading?.focus();
+              heading?.scrollIntoView({ block: 'center' });
+            }}
           >
-            {/* Região rotulada: histórico, localização, pesquisa e comandos da janela. */}
-            <section className="window-tools" aria-label={t.windowTools}>
-              <LocationBar
-                canGoBack={router.canGoBack}
-                canGoForward={router.canGoForward}
-                onBack={router.back}
-                onForward={router.forward}
-                crumbs={crumbs}
-                search={<SearchBox value={query} onChange={setQuery} onSubmit={submitSearch} />}
-              />
+            {t.skipToContent}
+          </a>
+          {/* WCAG 1.4.2: som que toca sozinho precisa ser desligável logo no início. */}
+          {!sound.muted ? (
+            <button type="button" className="skip-link skip-link--second" onClick={sound.toggleMute}>
+              {t.muteBackground}
+            </button>
+          ) : null}
+          <DesktopBackdrop />
+          {content.desktopIcons.length > 0 ? <DesktopIcons icons={content.desktopIcons} /> : null}
+          {windowState === 'closed' ? (
+            <PortfolioShortcut image={portfolioIcon} buttonRef={shortcutRef} onOpen={reopenWindow} />
+          ) : null}
 
-              <CommandBar
-                label={t.sectionActions(section.label)}
-                trailing={
-                  <>
-                    {route.section === 'projetos' ? (
-                      <ViewMenu value={projectView} onChange={changeProjectView} />
-                    ) : null}
-                    <button
-                      ref={appearanceRef}
-                      type="button"
-                      className="command-button"
-                      aria-haspopup="dialog"
-                      aria-controls={MENU_ID}
-                      title={t.appearanceTitle}
-                      onClick={() => openMenu(appearanceRef.current, 'settings')}
-                    >
-                      <Icon name="configuracoes" size={16} />
-                      <span className="command-button__label">{t.appearance}</span>
-                    </button>
-                  </>
-                }
-              >
-                <SectionCommands
-                  route={route}
-                  hasEmail={Boolean(contact.email)}
-                  copied={copied}
-                  onCopyEmail={copyEmail}
+          <div className={`desktop-stage${content.desktopIcons.length > 0 ? ' desktop-stage--with-icons' : ''}`}>
+            <AeroWindow
+              state={windowState}
+              windowRef={windowRef}
+              titleBar={
+                <WindowTitleBar
+                  profile={profile}
+                  title={t.windowTitle(profile.name)}
+                  menuId={MENU_ID}
+                  menuOpen={menu.open}
+                  logoButtonRef={titleLogoRef}
+                  onOpenMenu={() => openMenu(titleLogoRef.current)}
+                  onMinimize={toggleWindow}
+                  onClose={closeWindow}
                 />
-              </CommandBar>
-              {/* Feedback para leitores de tela, sem rodapé visível (kit 7F). */}
-              <div className="sr-only" role="status" aria-live="polite">
-                {status}
-              </div>
-            </section>
+              }
+            >
+              {/* Região rotulada: histórico, localização, pesquisa e comandos da janela. */}
+              <section className="window-tools" aria-label={t.windowTools}>
+                <LocationBar
+                  canGoBack={router.canGoBack}
+                  canGoForward={router.canGoForward}
+                  onBack={router.back}
+                  onForward={router.forward}
+                  crumbs={crumbs}
+                  search={<SearchBox value={query} onChange={setQuery} onSubmit={submitSearch} />}
+                />
 
-            <div className="window-layout">
-              <PortfolioNavigation sections={sections} />
-              <main className="window-main" id="conteudo" ref={mainRef}>
-                {/* A chave por destino remonta a vista e dispara a transição de entrada. */}
-                <div className="view" key={routeHref(route)}>
-                  {route.section === 'inicio' ? <HeroSection profile={profile} sections={sections} /> : null}
-                  {route.section === 'projetos' ? (
-                    <ProjectsSection
-                      section={section}
-                      projects={projects}
-                      category={route.category}
-                      query={query}
-                      onClearQuery={() => setQuery('')}
-                      view={projectView}
-                    />
-                  ) : null}
-                  {route.section === 'sobre' ? <AboutSection section={section} about={about} /> : null}
-                  {route.section === 'tecnologias' ? <SkillsSection section={section} skills={skills} /> : null}
-                  {route.section === 'spotify' && portfolio.spotify.enabled ? (
-                    <SpotifySection section={section} showPlaylists={portfolio.spotify.showPlaylists} />
-                  ) : null}
-                  {route.section === 'contato' ? <ContactSection section={section} contact={contact} /> : null}
-                  {route.section === 'privacidade' ? (
-                    <PrivacySection section={section} privacy={content.privacy} />
-                  ) : null}
+                <CommandBar
+                  label={t.sectionActions(section.label)}
+                  trailing={
+                    <>
+                      {route.section === 'projetos' ? (
+                        <ViewMenu value={projectView} onChange={changeProjectView} />
+                      ) : null}
+                      <button
+                        ref={appearanceRef}
+                        type="button"
+                        className="command-button"
+                        aria-haspopup="dialog"
+                        aria-controls={MENU_ID}
+                        title={t.appearanceTitle}
+                        onClick={() => openMenu(appearanceRef.current, 'settings')}
+                      >
+                        <Icon name="configuracoes" size={16} />
+                        <span className="command-button__label">{t.appearance}</span>
+                      </button>
+                    </>
+                  }
+                >
+                  <SectionCommands
+                    route={route}
+                    hasEmail={Boolean(contact.email)}
+                    copied={copied}
+                    onCopyEmail={copyEmail}
+                  />
+                </CommandBar>
+                {/* Feedback para leitores de tela, sem rodapé visível (kit 7F). */}
+                <div className="sr-only" role="status" aria-live="polite">
+                  {status}
                 </div>
-              </main>
-            </div>
-          </AeroWindow>
+              </section>
+
+              <div className="window-layout">
+                <PortfolioNavigation sections={sections} />
+                <main className="window-main" id="conteudo" ref={mainRef}>
+                  {/* A chave por destino remonta a vista e dispara a transição de entrada. */}
+                  <div className="view" key={routeHref(route)}>
+                    {route.section === 'inicio' ? <HeroSection profile={profile} sections={sections} /> : null}
+                    {route.section === 'projetos' ? (
+                      <ProjectsSection
+                        section={section}
+                        projects={projects}
+                        category={route.category}
+                        query={query}
+                        onClearQuery={() => setQuery('')}
+                        view={projectView}
+                      />
+                    ) : null}
+                    {route.section === 'sobre' ? <AboutSection section={section} about={about} /> : null}
+                    {route.section === 'tecnologias' ? <SkillsSection section={section} skills={skills} /> : null}
+                    {route.section === 'spotify' && portfolio.spotify.enabled ? (
+                      <SpotifySection section={section} showPlaylists={portfolio.spotify.showPlaylists} />
+                    ) : null}
+                    {route.section === 'contato' ? <ContactSection section={section} contact={contact} /> : null}
+                    {route.section === 'privacidade' ? (
+                      <PrivacySection section={section} privacy={content.privacy} />
+                    ) : null}
+                  </div>
+                </main>
+              </div>
+            </AeroWindow>
+          </div>
+
+          <DecorativeTaskbar
+            profile={profile}
+            section={section}
+            windowState={windowState}
+            onToggleWindow={toggleWindow}
+            windowButtonRef={windowButtonRef}
+            onOpenDateSettings={(opener) => openMenu(opener, 'settings')}
+            startButton={
+              <button
+                ref={startButtonRef}
+                type="button"
+                className="start-button"
+                aria-label={t.startLabel(profile.name)}
+                aria-haspopup="dialog"
+                aria-controls={MENU_ID}
+                aria-expanded={menu.open}
+                title={t.start}
+                onClick={() => openMenu(startButtonRef.current)}
+              >
+                <span className="start-button__orb" aria-hidden="true">
+                  <img className="start-button__logo" src={startLogo} alt="" width={28} height={28} />
+                </span>
+              </button>
+            }
+            volumeControl={<VolumeControl sound={sound} />}
+            languageControl={
+              <button
+                type="button"
+                className="language-button"
+                aria-label={t.languageButton}
+                title={t.languageButton}
+                onClick={() => setLocale(locale === 'pt' ? 'en' : 'pt')}
+              >
+                {t.languageShort}
+              </button>
+            }
+          />
+
+          <StartMenu
+            id={MENU_ID}
+            open={menu.open}
+            opener={menu.opener}
+            initialView={menu.view}
+            onClose={() => setMenu((current) => ({ ...current, open: false }))}
+            profile={profile}
+            sections={sections}
+            onNavigate={(id) => {
+              const changed = route.section !== id || route.category !== undefined;
+              setWindowState('open');
+              navigate({ section: id });
+              return changed;
+            }}
+            theme={theme}
+            onThemeChange={changeTheme}
+            glass={glass}
+            onGlassChange={changeGlass}
+            blurSupported={supportsBackdropBlur()}
+            locale={locale}
+            onLocaleChange={setLocale}
+          />
         </div>
-
-        <DecorativeTaskbar
-          profile={profile}
-          section={section}
-          windowState={windowState}
-          onToggleWindow={toggleWindow}
-          windowButtonRef={windowButtonRef}
-          onOpenDateSettings={(opener) => openMenu(opener, 'settings')}
-          startButton={
-            <button
-              ref={startButtonRef}
-              type="button"
-              className="start-button"
-              aria-label={t.startLabel(profile.name)}
-              aria-haspopup="dialog"
-              aria-controls={MENU_ID}
-              aria-expanded={menu.open}
-              title={t.start}
-              onClick={() => openMenu(startButtonRef.current)}
-            >
-              <span className="start-button__orb" aria-hidden="true">
-                <img className="start-button__logo" src={startLogo} alt="" width={28} height={28} />
-              </span>
-            </button>
-          }
-          volumeControl={<VolumeControl sound={sound} />}
-          languageControl={
-            <button
-              type="button"
-              className="language-button"
-              aria-label={t.languageButton}
-              title={t.languageButton}
-              onClick={() => setLocale(locale === 'pt' ? 'en' : 'pt')}
-            >
-              {t.languageShort}
-            </button>
-          }
-        />
-
-        <StartMenu
-          id={MENU_ID}
-          open={menu.open}
-          opener={menu.opener}
-          initialView={menu.view}
-          onClose={() => setMenu((current) => ({ ...current, open: false }))}
-          profile={profile}
-          sections={sections}
-          onNavigate={(id) => {
-            const changed = route.section !== id || route.category !== undefined;
-            setWindowState('open');
-            navigate({ section: id });
-            return changed;
-          }}
-          theme={theme}
-          onThemeChange={changeTheme}
-          glass={glass}
-          onGlassChange={changeGlass}
-          blurSupported={supportsBackdropBlur()}
-          locale={locale}
-          onLocaleChange={setLocale}
-        />
       </NavigationProvider>
     </SpotifyProvider>
   );
