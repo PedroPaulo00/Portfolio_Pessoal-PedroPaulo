@@ -10,9 +10,19 @@ interface WindowTitleBarProps {
   readonly menuOpen: boolean;
   readonly onOpenMenu: () => void;
   readonly logoButtonRef: Ref<HTMLButtonElement>;
+  /** Botão "−": minimiza a janela (mesma ação do botão dela na barra de tarefas). */
+  readonly onMinimize: () => void;
 }
 
-export function WindowTitleBar({ profile, title, menuId, menuOpen, onOpenMenu, logoButtonRef }: WindowTitleBarProps) {
+export function WindowTitleBar({
+  profile,
+  title,
+  menuId,
+  menuOpen,
+  onOpenMenu,
+  logoButtonRef,
+  onMinimize,
+}: WindowTitleBarProps) {
   const { t } = useI18n();
   return (
     // Banner: identidade do site (logo + nome).
@@ -35,16 +45,35 @@ export function WindowTitleBar({ profile, title, menuId, menuOpen, onOpenMenu, l
           {title}
         </p>
       </div>
-      <WindowControls />
+      <WindowControls onMinimize={onMinimize} minimizeLabel={t.minimize} />
     </header>
   );
 }
 
-/** Minimizar/maximizar/fechar: apenas visuais na V1 (fechar impediria a navegação). */
-function WindowControls() {
+/**
+ * Minimizar funciona com o mouse; maximizar e fechar são só visuais (fechar
+ * impediria a navegação). O grupo fica fora do Tab e dos leitores de tela
+ * (aria-hidden + tabIndex -1): o caminho acessível para minimizar e restaurar é
+ * o botão da janela na barra de tarefas, que recebe o foco em seguida.
+ */
+function WindowControls({
+  onMinimize,
+  minimizeLabel,
+}: {
+  readonly onMinimize: () => void;
+  readonly minimizeLabel: string;
+}) {
   return (
     <div className="window-controls" aria-hidden="true">
-      <span className="window-controls__item">−</span>
+      <button
+        type="button"
+        className="window-controls__item window-controls__item--button"
+        tabIndex={-1}
+        title={minimizeLabel}
+        onClick={onMinimize}
+      >
+        −
+      </button>
       <span className="window-controls__item">□</span>
       <span className="window-controls__item window-controls__item--close">×</span>
     </div>

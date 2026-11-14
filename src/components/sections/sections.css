@@ -530,34 +530,161 @@ a.contact-item:hover {
 }
 
 /* ---------- Galeria da janela Detalhes ---------- */
-.project-gallery {
+/* ---------- Detalhes do projeto (diálogo) ---------- */
+.project-details {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+}
+/* Faixa de identidade: logo + nome + selos; a capa do projeto esmaece à direita. */
+.project-details__head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 112px;
+  padding: var(--space-4) var(--space-5);
+  overflow: hidden;
+  background: linear-gradient(var(--toolbar-top), var(--toolbar-bottom));
+  border-bottom: 1px solid var(--divider);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+[data-theme='dark'] .project-details__head {
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.project-details__cover {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 58%;
+  max-width: none;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.55;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 85%);
+  mask-image: linear-gradient(90deg, transparent, #000 85%);
+  pointer-events: none;
+}
+.project-details__logo {
+  position: relative;
+  flex: none;
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  border-radius: 10px;
+  filter: drop-shadow(0 2px 4px rgba(0, 30, 60, 0.3));
+}
+.project-details__logo--icon {
   display: grid;
+  place-items: center;
+  background: linear-gradient(var(--button-top), var(--button-bottom));
+  border: 1px solid var(--button-border);
+}
+.project-details__identity {
+  position: relative;
+  min-width: 0;
+  max-width: 62%;
+}
+.project-details__name {
+  margin: 0 0 8px;
+  font-size: var(--text-title);
+  line-height: var(--leading-title);
+  color: var(--heading);
+  overflow-wrap: anywhere;
+}
+.project-details__identity .project-card__meta {
+  margin: 0;
+}
+.project-details__section {
+  padding: var(--space-4) var(--space-5) 0;
+}
+.project-details__section:last-child {
+  padding-bottom: var(--space-5);
+}
+.project-details__section p {
+  max-width: 68ch;
+}
+.project-details__section p:last-child {
+  margin-bottom: 0;
+}
+/* Título de grupo do Explorer: texto + filete até a borda. */
+.project-details__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-small);
+  font-weight: var(--font-bold);
+  color: var(--heading);
+}
+.project-details__title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--divider);
+}
+
+/* Capturas: fileira de miniaturas com a mesma altura (as de celular ficam lado a lado). */
+.project-gallery {
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--space-3);
-  margin: var(--space-4) 0 0;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 .project-gallery__link {
-  display: grid;
-  place-items: center;
-  padding: 6px;
-  background: linear-gradient(var(--toolbar-top), var(--toolbar-bottom));
+  display: block;
+  padding: 5px;
+  background: var(--surface);
   border: 1px solid var(--divider);
-  border-radius: 4px;
+  border-radius: 3px;
+  box-shadow: 0 1px 3px rgba(0, 30, 60, 0.18);
+  transition:
+    border-color 140ms var(--ease),
+    box-shadow 140ms var(--ease),
+    transform 140ms var(--ease);
 }
 @media (hover: hover) {
   .project-gallery__link:hover {
     border-color: var(--selection-border);
+    box-shadow:
+      0 0 0 1px var(--selection-border),
+      0 4px 12px rgba(0, 60, 120, 0.28);
+    transform: translateY(-2px);
   }
 }
 .project-gallery__link img {
   display: block;
   max-width: 100%;
-  max-height: 20rem;
+  max-height: 210px;
   width: auto;
   height: auto;
-  border-radius: 2px;
-  box-shadow: 0 1px 4px rgba(0, 30, 60, 0.25);
+  border-radius: 1px;
+}
+@media (max-width: 37.49em) {
+  .project-details__head {
+    min-height: 0;
+    padding: var(--space-4);
+  }
+  .project-details__cover {
+    display: none;
+  }
+  .project-details__identity {
+    max-width: none;
+  }
+  .project-details__logo {
+    width: 56px;
+    height: 56px;
+  }
+  .project-details__name {
+    font-size: var(--text-subtitle);
+  }
+  .project-details__section {
+    padding-inline: var(--space-4);
+  }
+  .project-gallery__link img {
+    max-height: 170px;
+  }
 }
 
 /* Logos dos serviços no Contato (GitHub, Gmail, Hotmail, Instagram). */
@@ -586,12 +713,6 @@ a.contact-item:hover {
   object-fit: contain;
   border-radius: 6px;
   filter: drop-shadow(0 1px 2px rgba(0, 30, 60, 0.25));
-}
-.project-logo--dialog {
-  float: right;
-  width: 64px;
-  height: 64px;
-  margin: 0 0 8px 12px;
 }
 .project-thumb__logo {
   display: block;

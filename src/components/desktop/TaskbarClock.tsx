@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useI18n } from '../../i18n/I18n';
+import { DateTimeFlyout } from './DateTimeFlyout';
 
 /** Hora local do visitante, alinhada à virada de cada segundo. */
 function useNow(): Date {
@@ -22,13 +23,25 @@ function useNow(): Date {
   return now;
 }
 
+interface TaskbarClockProps {
+  /** Link "Alterar configurações de data e hora..." do painel. */
+  readonly onOpenSettings: (opener: HTMLElement | null) => void;
+}
+
 /**
- * Relógio da bandeja: hh:mm:ss e, abaixo, a data (só a hora em telas estreitas). Sem aria-live de propósito: anunciar a hora a
- * cada segundo atrapalharia leitores de tela. A data completa fica no title.
+ * Relógio da bandeja: hh:mm:ss e, abaixo, a data (só a hora em telas estreitas).
+ * É um botão: abre o painel de data e hora (calendário + relógio analógico), que
+ * fecha com Esc, clique fora ou ao sair com Tab. Sem aria-live de propósito:
+ * anunciar a hora a cada segundo atrapalharia leitores de tela.
  */
-export function TaskbarClock() {
+export function TaskbarClock({ onOpenSettings }: TaskbarClockProps) {
   const now = useNow();
-  const { intl } = useI18n();
+  const { t, intl } = useI18n();
+  const [open, setOpen] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const panelId = useId();
+
   const { timeFormat, dateFormat, shortDateFormat } = useMemo(
     () => ({
       // 24 h nas duas línguas: o relógio tem largura fixa (hh:mm:ss).
@@ -44,10 +57,53 @@ export function TaskbarClock() {
     }),
     [intl],
   );
+
+  useEffect(() => {
+    if (!open) return;
+    const close = (event: Event) => {
+      const target = event.target as Node;
+      if (panelRef.current?.contains(target) || buttonRef.current?.contains(target)) return;
+      setOpen(false);
+    };
+    document.addEventListener('pointerdown', close);
+    document.addEventListener('focusin', close);
+    return () => {
+      document.removeEventListener('pointerdown', close);
+      document.removeEventListener('focusin', close);
+    };
+  }, [open]);
+
   return (
-    <time className="taskbar__clock" dateTime={now.toISOString()} title={dateFormat.format(now)}>
-      <span className="taskbar__clock-time">{timeFormat.format(now)}</span>
-      <span className="taskbar__clock-date">{shortDateFormat.format(now)}</span>
-    </time>
+    <div className="datetime">
+      <button
+        ref={buttonRef}
+        type="button"
+        className="taskbar__clock"
+        title={dateFormat.format(now)}
+        aria-haspopup="dialog"
+        aria-expanded={open}
+        aria-controls={panelId}
+        onClick={() => setOpen((value) => !value)}
+      >
+        <span className="taskbar__clock-time">{timeFormat.format(now)}</span>
+        <span className="taskbar__clock-date">{shortDateFormat.format(now)}</span>
+        <span className="sr-only">{t.openDateAndTime}</span>
+      </button>
+      {open ? (
+        <DateTimeFlyout
+          id={panelId}
+          panelRef={panelRef}
+          now={now}
+          onClose={() => {
+            setOpen(false);
+            buttonRef.current?.focus();
+          }}
+          onOpenSettings={() => {
+            setOpen(false);
+            onOpenSettings(buttonRef.current);
+          }}
+        />
+      ) : null}
+    </div>
   );
 }

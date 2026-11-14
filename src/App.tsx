@@ -72,11 +72,21 @@ export function App() {
   });
   const [status, setStatus] = useState('');
   const [copied, setCopied] = useState(false);
+  // Janela minimizada pelo botão da barra de tarefas (só a área de trabalho à vista).
+  const [minimized, setMinimized] = useState(false);
+  // Ir para outro destino (menu, ícone, voltar/avançar) restaura a janela.
+  const [shownRoute, setShownRoute] = useState(route);
+  if (shownRoute !== route) {
+    setShownRoute(route);
+    if (minimized) setMinimized(false);
+  }
 
   const titleLogoRef = useRef<HTMLButtonElement>(null);
   const startButtonRef = useRef<HTMLButtonElement>(null);
   const appearanceRef = useRef<HTMLButtonElement>(null);
   const mainRef = useRef<HTMLElement>(null);
+  const windowRef = useRef<HTMLDivElement>(null);
+  const windowButtonRef = useRef<HTMLButtonElement>(null);
   const firstRender = useRef(true);
   const keepFocusOnce = useRef(false);
 
@@ -115,6 +125,29 @@ export function App() {
     }
     main?.querySelector<HTMLElement>('[data-view-heading]')?.focus({ preventScroll: true });
   }, [route]);
+
+  // Sem a janela, a área de trabalho não rola (e a barra de rolagem some).
+  useEffect(() => {
+    document.documentElement.classList.toggle('window-minimized', minimized);
+    return () => document.documentElement.classList.remove('window-minimized');
+  }, [minimized]);
+
+  const toggleWindow = () => {
+    const frame = windowRef.current;
+    const button = windowButtonRef.current;
+    // Ao minimizar, a janela encolhe em direção ao botão dela na barra de tarefas
+    // (o mesmo ponto vale para a volta).
+    if (!minimized && frame && button) {
+      const from = frame.getBoundingClientRect();
+      const to = button.getBoundingClientRect();
+      frame.style.setProperty('--minimize-x', `${Math.round(to.left + to.width / 2 - from.left)}px`);
+      frame.style.setProperty('--minimize-y', `${Math.round(to.top + to.height / 2 - from.top)}px`);
+    }
+    // O foco vai para o botão da janela na barra: é por ele que se restaura
+    // (quem minimizou pelo "−" da moldura ficaria com o foco numa janela inerte).
+    if (!minimized) button?.focus({ preventScroll: true });
+    setMinimized(!minimized);
+  };
 
   const openMenu = (opener: HTMLElement | null, view: 'main' | 'settings' = 'main') =>
     setMenu({ open: true, opener, view });
@@ -162,6 +195,7 @@ export function App() {
           href="#conteudo"
           onClick={(event) => {
             event.preventDefault();
+            setMinimized(false);
             const heading = mainRef.current?.querySelector<HTMLElement>('[data-view-heading]');
             heading?.focus();
             heading?.scrollIntoView({ block: 'center' });
@@ -180,6 +214,8 @@ export function App() {
 
         <div className={`desktop-stage${content.desktopIcons.length > 0 ? ' desktop-stage--with-icons' : ''}`}>
           <AeroWindow
+            minimized={minimized}
+            windowRef={windowRef}
             titleBar={
               <WindowTitleBar
                 profile={profile}
@@ -188,6 +224,7 @@ export function App() {
                 menuOpen={menu.open}
                 logoButtonRef={titleLogoRef}
                 onOpenMenu={() => openMenu(titleLogoRef.current)}
+                onMinimize={toggleWindow}
               />
             }
           >
@@ -264,6 +301,11 @@ export function App() {
 
         <DecorativeTaskbar
           profile={profile}
+          section={section}
+          minimized={minimized}
+          onToggleWindow={toggleWindow}
+          windowButtonRef={windowButtonRef}
+          onOpenDateSettings={(opener) => openMenu(opener, 'settings')}
           startButton={
             <button
               ref={startButtonRef}
@@ -305,6 +347,7 @@ export function App() {
           sections={sections}
           onNavigate={(id) => {
             const changed = route.section !== id || route.category !== undefined;
+            setMinimized(false);
             navigate({ section: id });
             return changed;
           }}

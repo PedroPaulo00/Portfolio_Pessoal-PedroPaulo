@@ -3,6 +3,7 @@ import { useI18n } from '../../i18n/I18n';
 import type { UiStrings } from '../../i18n/ui';
 import type { Project, ProjectCategory, Section } from '../../types/portfolio';
 import { AeroDialog } from '../ui/AeroDialog';
+import { Icon } from '../ui/Icon';
 import { ProjectCard } from './ProjectCard';
 import { SectionHeader } from './SectionHeader';
 
@@ -81,32 +82,116 @@ export function ProjectsSection({ section, projects, category, query, onClearQue
         </div>
       )}
 
-      <AeroDialog open={detailed !== null} title={detailed?.name ?? ''} onClose={() => setDetailed(null)}>
-        {detailed ? (
-          <>
-            {detailed.logo ? (
-              <img className="project-logo project-logo--dialog" src={detailed.logo} alt="" width={64} height={64} />
-            ) : null}
-            <p className="dialog-meta">
-              {t.category[detailed.category].singular}
-              {detailed.status ? ` · ${t.projectStatus[detailed.status]}` : ''}
-            </p>
-            <p>{detailed.details}</p>
-            {detailed.gallery && detailed.gallery.length > 0 ? (
-              <ul className="project-gallery" aria-label={t.screenshots}>
-                {detailed.gallery.map((image) => (
-                  <li key={image.src}>
-                    <a className="project-gallery__link" href={image.src} target="_blank" rel="noreferrer">
-                      <img src={image.src} alt={image.alt} loading="lazy" decoding="async" />
-                      <span className="sr-only">{t.opensImage}</span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </>
-        ) : null}
+      <AeroDialog
+        wide
+        open={detailed !== null}
+        title={detailed?.name ?? ''}
+        onClose={() => setDetailed(null)}
+        actions={
+          detailed ? (
+            <>
+              {detailed.demoUrl ? (
+                <a
+                  className="aero-button aero-button--primary"
+                  href={detailed.demoUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {t.demo}
+                  <span className="sr-only">{t.opensNewTab}</span>
+                </a>
+              ) : null}
+              {detailed.repositoryUrl ? (
+                <a className="aero-button" href={detailed.repositoryUrl} target="_blank" rel="noreferrer">
+                  {t.repository}
+                  <span className="sr-only">{t.opensNewTab}</span>
+                </a>
+              ) : null}
+            </>
+          ) : null
+        }
+      >
+        {detailed ? <ProjectDetails project={detailed} /> : null}
       </AeroDialog>
+    </div>
+  );
+}
+
+/**
+ * Conteúdo do diálogo de detalhes: faixa de identidade (logo, nome, selos e a
+ * capa esmaecida ao fundo), texto em parágrafos, tecnologias e capturas.
+ * Em portfolio.ts, uma linha em branco ("\n\n") em `details` separa parágrafos.
+ */
+function ProjectDetails({ project }: { readonly project: Project }) {
+  const { t } = useI18n();
+  const paragraphs = (project.details ?? '')
+    .split(/\n{2,}/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean);
+
+  return (
+    <div className="project-details">
+      <header className="project-details__head">
+        {project.thumbnail ? (
+          <img className="project-details__cover" src={project.thumbnail.src} alt="" aria-hidden="true" />
+        ) : null}
+        {project.logo ? (
+          <img className="project-details__logo" src={project.logo} alt="" width={72} height={72} />
+        ) : (
+          <span className="project-details__logo project-details__logo--icon">
+            <Icon name={project.category} size={44} />
+          </span>
+        )}
+        <div className="project-details__identity">
+          <p className="project-details__name">{project.name}</p>
+          <div className="project-card__meta">
+            <span className={`badge badge--${project.category}`}>{t.category[project.category].singular}</span>
+            {project.status ? (
+              <span className={`badge badge--status badge--status-${project.status}`}>
+                {t.projectStatus[project.status]}
+              </span>
+            ) : null}
+          </div>
+        </div>
+      </header>
+
+      {paragraphs.length > 0 ? (
+        <section className="project-details__section">
+          <h3 className="project-details__title">{t.aboutProject}</h3>
+          {paragraphs.map((paragraph) => (
+            <p key={paragraph}>{paragraph}</p>
+          ))}
+        </section>
+      ) : null}
+
+      {project.stack.length > 0 ? (
+        <section className="project-details__section">
+          <h3 className="project-details__title">{t.technologiesUsed}</h3>
+          <ul className="chip-list">
+            {project.stack.map((tech) => (
+              <li key={tech} className="chip">
+                {tech}
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {project.gallery && project.gallery.length > 0 ? (
+        <section className="project-details__section">
+          <h3 className="project-details__title">{t.screenshots}</h3>
+          <ul className="project-gallery">
+            {project.gallery.map((image) => (
+              <li key={image.src}>
+                <a className="project-gallery__link" href={image.src} target="_blank" rel="noreferrer">
+                  <img src={image.src} alt={image.alt} loading="lazy" decoding="async" />
+                  <span className="sr-only">{t.opensImage}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
     </div>
   );
 }

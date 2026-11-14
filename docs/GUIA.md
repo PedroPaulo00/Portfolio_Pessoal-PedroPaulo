@@ -100,7 +100,7 @@ import thumbMeuApp from '../assets/projetos/meu-app.webp';
 
 ### 7. Papel de parede e botão Iniciar
 
-- **Imagens originais:** ficam em `src/assets/originais/`, separadas por tipo: `brands/` (logos AFL, Windows e Spotify), `desktop/` (ícones da área de trabalho), `profile/` (foto), `projetos/` (capturas), `tech/` (ícones de tecnologias enviados em imagem), `wallpaper/` e `referencias/` (modelos visuais, como o `exemplo_MSN.png`). Elas não entram no site publicado. O site usa versões otimizadas, geradas por `npm run images` (requer Python + Pillow).
+- **Imagens originais:** ficam em `src/assets/originais/`, separadas por tipo: `brands/` (logos AFL, Windows e Spotify), `desktop/` (ícones da área de trabalho), `profile/` (foto), `projetos/` (capturas), `tech/` (ícones de tecnologias enviados em imagem), `wallpaper/` e `referencias/` (modelos visuais, como o `exemplo_MSN.png` e o `calendario.png`). Elas não entram no site publicado. O site usa versões otimizadas, geradas por `npm run images` (requer Python + Pillow).
 - **Para trocar uma imagem:** substitua o arquivo em `originais/` mantendo o nome e rode `npm run images`. A relação entre cada original e a versão que o site usa está no início de [`scripts/optimize-images.py`](../scripts/optimize-images.py).
 - **Papel de parede:** o original é `src/assets/originais/wallpaper/wallpaper_xp.png` (o anterior, `Wallpaper_fundo.png`, continua na pasta). O site usa `src/assets/wallpaper/wallpaper-1920.webp` e `wallpaper-1280.webp`, para celular. Para trocar, mude o nome do arquivo em `optimize-images.py` e rode `npm run images`.
 - **Botão Iniciar:** o site usa `src/assets/brands/start-logo.png`.
@@ -221,6 +221,17 @@ npm run check
 - **Menu do portfólio:** abre pelo logo da barra de título ou pelo botão na barra de tarefas. Ele leva às seções e reúne a **Aparência**.
 - **Aparência:** tema claro/escuro do conteúdo e vidro da janela (translúcido + blur, translúcido sem blur ou opaco). O padrão é com blur em computador, como o Aero do Windows 7, e sem blur em celular e tablet, que é mais leve para rolar. As duas escolhas são independentes e ficam salvas no navegador. Sem blur, a barra de tarefas e o menu Iniciar ficam com o vidro mais denso, para o texto da janela não se misturar com eles.
 - **Barra de tarefas:** funcionam o botão **Iniciar** (abre o menu), o **volume** do som de fundo e o **relógio** (hh:mm:ss e, embaixo, a data, como no Windows 7; em celular, só a hora; a data completa aparece ao passar o mouse).
+- **Botão da janela na barra de tarefas:** ao passar o mouse, ganha o brilho que segue o ponteiro e mostra uma miniatura da janela com a seção atual. Ao clicar, a janela **minimiza**: encolhe até o botão e some, deixando só a área de trabalho e a barra. Outro clique **restaura**. Ir para uma seção pelo menu Iniciar, por um ícone ou pelo voltar/avançar do navegador também restaura. Minimizada, a janela sai do Tab e dos leitores de tela, que recebem um aviso de como voltar. No celular, o botão mostra só o ícone, sem miniatura.
+- **Botão "−" da janela:** minimiza do mesmo jeito que o botão da barra de tarefas (e o foco vai para esse botão, que é por onde se restaura). Maximizar e fechar continuam só visuais.
+- **Relógio → painel de data e hora:** clicar na hora abre o painel do Windows 7 (modelo em `src/assets/originais/referencias/calendario.png`): data por extenso, calendário, relógio analógico, hora digital e o link do rodapé.
+  - **Calendário:** as setas trocam o mês; clicar no título sobe para o ano (12 meses) e depois para a década (anos), e as setas passam a trocar ano ou década; clicar num mês ou ano desce de volta. Clicar num dia o seleciona, e hoje fica com a borda azul. A data do topo volta para hoje.
+  - **Teclado:** setas andam pelos dias, Home/End vão ao começo/fim da semana, PageUp/PageDown trocam o mês, Esc fecha.
+  - **Link "Alterar configurações de data e hora...":** abre Aparência, onde se troca o idioma (que define o formato de data e hora).
+  - Datas, nomes de meses e dias seguem o idioma do site. O código está em `src/components/desktop/DateTimeFlyout.tsx` e `datetime.css`.
+- **Detalhes de um projeto:** o diálogo mostra uma faixa com logo, nome, selos e a capa do projeto ao fundo; depois "Sobre o projeto", tecnologias e capturas de tela; no rodapé fixo, Demonstração, Repositório e Fechar. Para separar parágrafos no texto, use `
+
+`dentro de`details`, em `portfolio.ts`.
+
 - **Elementos decorativos:** os outros ícones da bandeja, o botão da janela e os controles minimizar/maximizar/fechar são só cenário.
 
 ### Orbes por função
@@ -231,7 +242,7 @@ npm run check
 ### Responsividade
 
 - **Rolagem:** existe uma só, a da página. A janela cresce com o conteúdo, e o fundo e a barra de tarefas ficam fixos. Com mouse, as barras de rolagem têm o desenho do Windows 7 (`src/styles/motion.css`); em telas de toque, valem as do navegador.
-- **Diálogos** (detalhes de projeto): abrem na área útil, acima da barra de tarefas.
+- **Diálogos** (detalhes de projeto): abrem na área útil, acima da barra de tarefas; o conteúdo rola e os botões ficam fixos embaixo.
 - **Entre 1024 e 1279 px:** a janela deixa de ser centralizada e ocupa a largura que sobra ao lado dos ícones.
 - **≥ 900 px:** painel lateral do Explorer.
 - **< 900 px:** a navegação vira uma faixa de seções que quebra em linhas.

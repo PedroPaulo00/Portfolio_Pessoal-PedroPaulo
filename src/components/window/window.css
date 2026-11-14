@@ -167,6 +167,18 @@
     rgba(255, 255, 255, 0.5)
   );
 }
+/* O "−" é um botão de verdade (minimiza): zera o estilo padrão do navegador
+   para ficar idêntico aos vizinhos. */
+.window-controls__item--button {
+  padding: 0;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1;
+  border-width: 0 1px 0 0;
+  border-style: solid;
+  border-color: rgba(0, 0, 0, 0.3);
+  cursor: default;
+}
 .window-controls__item:first-child {
   border-radius: 0 0 0 var(--control-radius);
 }

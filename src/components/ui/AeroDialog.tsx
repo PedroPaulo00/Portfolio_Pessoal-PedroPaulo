@@ -7,15 +7,19 @@ interface AeroDialogProps {
   readonly title: string;
   readonly onClose: () => void;
   readonly children: ReactNode;
+  /** Botões extras do rodapé, antes do "Fechar". */
   readonly actions?: ReactNode;
+  /** Diálogo mais largo, com o conteúdo de borda a borda (ex.: detalhes de projeto). */
+  readonly wide?: boolean;
 }
 
 /**
  * Diálogo como uma pequena janela Aero: mesma moldura protegida da janela
  * principal; aqui o botão fechar é REAL (vermelho do kit, com hover). Esc, clique
- * fora e o botão fecham; o <dialog> nativo devolve o foco a quem o abriu.
+ * fora e os botões fecham; o <dialog> nativo devolve o foco a quem o abriu.
+ * O conteúdo rola; a faixa de botões fica fixa no rodapé, como no Windows 7.
  */
-export function AeroDialog({ open, title, onClose, children, actions }: AeroDialogProps) {
+export function AeroDialog({ open, title, onClose, children, actions, wide = false }: AeroDialogProps) {
   const { t } = useI18n();
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
@@ -30,7 +34,7 @@ export function AeroDialog({ open, title, onClose, children, actions }: AeroDial
   return (
     <dialog
       ref={ref}
-      className="aero-dialog"
+      className={`aero-dialog${wide ? ' aero-dialog--wide' : ''}`}
       aria-labelledby={titleId}
       onClose={onClose}
       onClick={(event) => {
@@ -47,8 +51,13 @@ export function AeroDialog({ open, title, onClose, children, actions }: AeroDial
           </button>
         </header>
         <div className="aero-window__body aero-dialog__body">
-          {children}
-          {actions ? <div className="aero-dialog__actions">{actions}</div> : null}
+          <div className="aero-dialog__content">{children}</div>
+          <div className="aero-dialog__actions">
+            {actions}
+            <button type="button" className="aero-button" onClick={() => ref.current?.close()}>
+              {t.close}
+            </button>
+          </div>
         </div>
       </div>
     </dialog>

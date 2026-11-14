@@ -1,0 +1,309 @@
+/* ==========================================================================
+   Painel de data e hora [EXT] — o do Windows 7, aberto pelo relógio da bandeja:
+   data por extenso, calendário, relógio analógico, hora digital e link no rodapé.
+   A moldura é de vidro (como a barra); a folha interna segue o tema do conteúdo.
+   ========================================================================== */
+
+.datetime {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.datetime-flyout {
+  --dt-bg: #ffffff;
+  --dt-text: #000000;
+  --dt-muted: #6d6d6d;
+  --dt-link: #0066cc;
+  --dt-link-hover: #3399ff;
+  --dt-footer: #f1f5fb;
+  --dt-footer-edge: #ccd9ea;
+  --dt-today-edge: #0066cc;
+  --dt-selected: #d8eaff;
+  --dt-hover: #e8f3ff;
+
+  position: absolute;
+  right: -16px;
+  bottom: calc(100% + 8px);
+  width: min(391px, calc(100vw - 12px));
+  max-height: calc(100dvh - var(--taskbar-height) - env(safe-area-inset-bottom, 0px) - 16px);
+  padding: 6px;
+  overflow: auto;
+  border: 1px solid rgba(0, 0, 0, 0.7);
+  border-radius: 6px;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.1) 40%, rgba(255, 255, 255, 0.04)),
+    rgba(30, 72, 98, 0.74);
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur) * 3));
+  backdrop-filter: blur(calc(var(--glass-blur) * 3));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.55),
+    0 8px 24px rgba(0, 0, 0, 0.5);
+  cursor: default;
+  user-select: none;
+}
+[data-glass='clear'] .datetime-flyout,
+[data-glass='opaque'] .datetime-flyout {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.1) 40%, rgba(255, 255, 255, 0.04)), #1e4862;
+}
+[data-theme='dark'] .datetime-flyout {
+  --dt-bg: var(--surface);
+  --dt-text: var(--text);
+  --dt-muted: #8f9fb0;
+  --dt-link: #84caff;
+  --dt-link-hover: #b9e1ff;
+  --dt-footer: #1c2530;
+  --dt-footer-edge: var(--divider);
+  --dt-today-edge: #84caff;
+  --dt-selected: #2b435a;
+  --dt-hover: #233346;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .datetime-flyout {
+    animation: start-menu-in 140ms var(--ease);
+  }
+}
+
+.datetime-flyout__sheet {
+  color: var(--dt-text);
+  background: var(--dt-bg);
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.45);
+  font-size: 0.8125rem;
+  line-height: 1.2;
+}
+
+/* Data por extenso (azul): clique volta o calendário para hoje. */
+.datetime-flyout__today {
+  display: block;
+  margin: 12px auto 14px;
+  padding: 2px 6px;
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--dt-link);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.datetime-flyout__body {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 0 14px 14px;
+}
+
+/* ---------- Calendário ---------- */
+.cal {
+  flex: none;
+  width: 172px;
+}
+.cal__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 26px;
+  margin-bottom: 3px;
+}
+.cal__title {
+  min-width: 0;
+  padding: 2px 4px;
+  font: inherit;
+  color: inherit;
+  white-space: nowrap;
+  background: transparent;
+  border: 0;
+}
+button.cal__title {
+  cursor: pointer;
+}
+.cal__arrow {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: inherit;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+.cal__arrow::before {
+  content: '';
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+}
+.cal__arrow--previous::before {
+  border-right: 5px solid currentColor;
+}
+.cal__arrow--next::before {
+  border-left: 5px solid currentColor;
+}
+@media (hover: hover) {
+  .datetime-flyout__today:hover,
+  .datetime-flyout__link:hover {
+    color: var(--dt-link-hover);
+    text-decoration: underline;
+  }
+  button.cal__title:hover,
+  .cal__arrow:hover,
+  .cal__day:hover,
+  .cal__tile:hover {
+    color: var(--dt-link);
+  }
+}
+
+.cal__row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+}
+.cal__weekday {
+  height: 19px;
+  line-height: 19px;
+}
+.cal__day {
+  width: 100%;
+  height: 17px;
+  display: block;
+  padding: 0;
+  font: inherit;
+  line-height: 15px;
+  color: inherit;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+.cal__day.is-outside,
+.cal__tile.is-outside {
+  color: var(--dt-muted);
+}
+.cal__day.is-selected,
+.cal__tile.is-selected {
+  background: var(--dt-selected);
+}
+.cal__day.is-today,
+.cal__tile.is-today {
+  border-color: var(--dt-today-edge);
+}
+
+/* Meses do ano / anos da década: 4 × 3 na mesma área da grade de dias. */
+.cal__tiles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 40px;
+  gap: 0;
+}
+.cal__tile {
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+.cal__tile:disabled {
+  visibility: hidden;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cal__view {
+    animation: cal-in 150ms var(--ease);
+  }
+}
+@keyframes cal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+.datetime-flyout :focus-visible {
+  outline: 2px solid var(--dt-link);
+  outline-offset: 1px;
+}
+.cal__day:focus-visible {
+  outline-offset: -1px;
+}
+
+/* ---------- Relógio ---------- */
+.datetime-flyout__clock {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+.analog-clock {
+  width: 100%;
+  max-width: 152px;
+  height: auto;
+}
+.datetime-flyout__time {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Rodapé ---------- */
+.datetime-flyout__footer {
+  padding: 13px 12px 14px;
+  text-align: center;
+  background: var(--dt-footer);
+  border-top: 1px solid var(--dt-footer-edge);
+}
+.datetime-flyout__link {
+  padding: 2px 4px;
+  font: inherit;
+  font-size: 0.875rem;
+  color: var(--dt-link);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+/* Toque: dias e setas maiores. */
+@media (pointer: coarse) {
+  .cal__day {
+    height: 28px;
+    line-height: 26px;
+  }
+  .cal__head {
+    height: 36px;
+  }
+  .cal__arrow {
+    width: 36px;
+    height: 36px;
+  }
+  .cal__tiles {
+    grid-auto-rows: 56px;
+  }
+  .datetime-flyout__today,
+  .datetime-flyout__link {
+    padding-block: 8px;
+  }
+  .datetime-flyout__today {
+    margin-block: 6px 8px;
+  }
+  .datetime-flyout__footer {
+    padding-block: 7px 8px;
+  }
+}
+/* Celular: o painel se prende às bordas da tela, logo acima da barra de tarefas. */
+@media (max-width: 37.49em) {
+  .datetime-flyout {
+    position: fixed;
+    left: max(6px, env(safe-area-inset-left, 0px));
+    right: max(6px, env(safe-area-inset-right, 0px));
+    bottom: calc(var(--taskbar-height) + env(safe-area-inset-bottom, 0px) + 8px);
+    width: auto;
+    max-width: 391px;
+    margin-left: auto;
+  }
+}
+/* Telas bem estreitas: o relógio vai para baixo do calendário. */
+@media (max-width: 21.5em) {
+  .datetime-flyout__body {
+    flex-direction: column;
+    align-items: center;
+  }
+}
