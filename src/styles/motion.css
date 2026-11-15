@@ -221,3 +221,568 @@ a.contact-item:active,
     transform: none;
   }
 }
+
+/* ==========================================================================
+   Animações de entrada [EXT], no espírito do Windows 7 / Vista: curtas,
+   suaves e uma vez só (nada em loop). Todas partem de um estado "antes"
+   (opacidade, deslocamento pequeno) e terminam exatamente no visual parado,
+   então nada muda depois que acabam. Com "reduzir movimento", não existem.
+   ========================================================================== */
+
+:root {
+  --motion-enter: 340ms;
+  --motion-stagger: 45ms;
+  /* Desaceleração do Aero: sai rápido e assenta devagar. */
+  --ease-aero: cubic-bezier(0.16, 0.84, 0.3, 1);
+}
+
+/* Barra verde de "carregando" da barra de endereços (o Explorer a mostra a
+   cada pasta aberta): enche da esquerda para a direita e some. */
+.location-path {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+.location-path__progress {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(#e2fbd9, #b6ecaa 48%, #9be38c 52%, #c8f3bd);
+  opacity: 0;
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+/* Reflexo que atravessa o vidro da janela quando ela aparece. */
+.aero-window__glint {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  border-radius: var(--frame-radius);
+  pointer-events: none;
+}
+.aero-window__glint::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  bottom: -10%;
+  left: 0;
+  width: 38%;
+  background: linear-gradient(
+    105deg,
+    transparent 15%,
+    rgba(255, 255, 255, 0.08) 35%,
+    rgba(255, 255, 255, 0.42) 50%,
+    rgba(255, 255, 255, 0.08) 65%,
+    transparent 85%
+  );
+  transform: translateX(-120%);
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ---------- Área de trabalho logo após a inicialização ---------- */
+  .os--on .taskbar {
+    animation: taskbar-in 520ms var(--ease-aero) backwards;
+  }
+  .os--on .desktop-icons__list > li {
+    animation: desktop-icon-in 420ms var(--ease-aero) backwards;
+    animation-delay: calc(220ms + var(--i, 0) * 60ms);
+  }
+  /* O atalho "Portfólio" entra depois da barra, quando a tela já está à mostra. */
+  .os:not(.os--on) .portfolio-shortcut__button {
+    animation: none;
+  }
+  .os--on .portfolio-shortcut__button {
+    animation: shortcut-in 460ms var(--ease-aero) 420ms both;
+  }
+
+  /* ---------- Janela: o reflexo passa quando ela abre ou é restaurada ---------- */
+  .desktop-stage > .aero-window:not(.is-minimized, .is-closed) > .aero-window__glint::before {
+    animation: window-glint 1100ms cubic-bezier(0.4, 0, 0.2, 1) 120ms;
+  }
+
+  /* ---------- Troca de seção ---------- */
+  .view {
+    animation: view-in var(--motion-enter) var(--ease-aero) backwards;
+  }
+  .location-path__progress {
+    animation: address-progress 620ms ease-out;
+  }
+  .section-header__title {
+    animation: heading-in 420ms var(--ease-aero) backwards;
+  }
+  .section-header__description {
+    animation: heading-in 420ms var(--ease-aero) 70ms backwards;
+  }
+
+  /* Itens de cada vista entram em cascata, como os ícones de uma pasta. */
+  .hero > *,
+  .hero__shortcuts .library-grid > li,
+  .project-grid > li,
+  .project-view > li,
+  .project-table tbody tr,
+  .about__layout > * > *,
+  .skills__groups > .skill-group,
+  .contact-list > li,
+  .privacy__body > *,
+  .sp-grid > *,
+  .sp-list > li,
+  .sp-playlist-grid > li {
+    animation: item-in 380ms var(--ease-aero) backwards;
+    animation-delay: calc(60ms + var(--i, 0) * var(--motion-stagger));
+  }
+  /* Itens pequenos (etiquetas, tecnologias): surgem com um leve "pop". */
+  .view .chip-list > li,
+  .skill-group__items > li {
+    animation: chip-in 300ms var(--ease-aero) backwards;
+    animation-delay: calc(180ms + var(--i, 0) * 22ms);
+  }
+
+  /* Contador de visitas: aparece quando o número chega do servidor. */
+  .visit-counter {
+    animation: item-in 420ms var(--ease-aero) backwards;
+  }
+}
+
+/* Posição na cascata (o CSS não sabe o índice; até 12 basta). */
+:is(
+    .hero,
+    .library-grid,
+    .project-grid,
+    .project-view,
+    .project-table tbody,
+    .about__text,
+    .about__aside,
+    .skills__groups,
+    .contact-list,
+    .privacy__body,
+    .sp-grid,
+    .sp-list,
+    .sp-playlist-grid,
+    .chip-list,
+    .skill-group__items,
+    .desktop-icons__list
+  )
+  > :nth-child(2) {
+  --i: 1;
+}
+:is(
+    .hero,
+    .library-grid,
+    .project-grid,
+    .project-view,
+    .project-table tbody,
+    .about__text,
+    .about__aside,
+    .skills__groups,
+    .contact-list,
+    .privacy__body,
+    .sp-grid,
+    .sp-list,
+    .sp-playlist-grid,
+    .chip-list,
+    .skill-group__items,
+    .desktop-icons__list
+  )
+  > :nth-child(3) {
+  --i: 2;
+}
+:is(
+    .hero,
+    .library-grid,
+    .project-grid,
+    .project-view,
+    .project-table tbody,
+    .about__text,
+    .about__aside,
+    .skills__groups,
+    .contact-list,
+    .privacy__body,
+    .sp-grid,
+    .sp-list,
+    .sp-playlist-grid,
+    .chip-list,
+    .skill-group__items,
+    .desktop-icons__list
+  )
+  > :nth-child(4) {
+  --i: 3;
+}
+:is(
+    .hero,
+    .library-grid,
+    .project-grid,
+    .project-view,
+    .project-table tbody,
+    .about__text,
+    .about__aside,
+    .skills__groups,
+    .contact-list,
+    .privacy__body,
+    .sp-grid,
+    .sp-list,
+    .sp-playlist-grid,
+    .chip-list,
+    .skill-group__items,
+    .desktop-icons__list
+  )
+  > :nth-child(5) {
+  --i: 4;
+}
+:is(
+    .hero,
+    .library-grid,
+    .project-grid,
+    .project-view,
+    .project-table tbody,
+    .about__text,
+    .about__aside,
+    .skills__groups,
+    .contact-list,
+    .privacy__body,
+    .sp-grid,
+    .sp-list,
+    .sp-playlist-grid,
+    .chip-list,
+    .skill-group__items,
+    .desktop-icons__list
+  )
+  > :nth-child(6) {
+  --i: 5;
+}
+:is(
+    .hero,
+    .library-grid,
+    .project-grid,
+    .project-view,
+    .project-table tbody,
+    .about__text,
+    .about__aside,
+    .skills__groups,
+    .contact-list,
+    .privacy__body,
+    .sp-grid,
+    .sp-list,
+    .sp-playlist-grid,
+    .chip-list,
+    .skill-group__items,
+    .desktop-icons__list
+  )
+  > :nth-child(7) {
+  --i: 6;
+}
+:is(
+    .hero,
+    .library-grid,
+    .project-grid,
+    .project-view,
+    .project-table tbody,
+    .about__text,
+    .about__aside,
+    .skills__groups,
+    .contact-list,
+    .privacy__body,
+    .sp-grid,
+    .sp-list,
+    .sp-playlist-grid,
+    .chip-list,
+    .skill-group__items,
+    .desktop-icons__list
+  )
+  > :nth-child(8) {
+  --i: 7;
+}
+:is(
+    .hero,
+    .library-grid,
+    .project-grid,
+    .project-view,
+    .project-table tbody,
+    .about__text,
+    .about__aside,
+    .skills__groups,
+    .contact-list,
+    .privacy__body,
+    .sp-grid,
+    .sp-list,
+    .sp-playlist-grid,
+    .chip-list,
+    .skill-group__items,
+    .desktop-icons__list
+  )
+  > :nth-child(9) {
+  --i: 8;
+}
+:is(
+    .hero,
+    .library-grid,
+    .project-grid,
+    .project-view,
+    .project-table tbody,
+    .about__text,
+    .about__aside,
+    .skills__groups,
+    .contact-list,
+    .privacy__body,
+    .sp-grid,
+    .sp-list,
+    .sp-playlist-grid,
+    .chip-list,
+    .skill-group__items,
+    .desktop-icons__list
+  )
+  > :nth-child(10) {
+  --i: 9;
+}
+:is(
+    .hero,
+    .library-grid,
+    .project-grid,
+    .project-view,
+    .project-table tbody,
+    .about__text,
+    .about__aside,
+    .skills__groups,
+    .contact-list,
+    .privacy__body,
+    .sp-grid,
+    .sp-list,
+    .sp-playlist-grid,
+    .chip-list,
+    .skill-group__items,
+    .desktop-icons__list
+  )
+  > :nth-child(11) {
+  --i: 10;
+}
+:is(
+    .hero,
+    .library-grid,
+    .project-grid,
+    .project-view,
+    .project-table tbody,
+    .about__text,
+    .about__aside,
+    .skills__groups,
+    .contact-list,
+    .privacy__body,
+    .sp-grid,
+    .sp-list,
+    .sp-playlist-grid,
+    .chip-list,
+    .skill-group__items,
+    .desktop-icons__list
+  )
+  > :nth-child(n + 12) {
+  --i: 11;
+}
+
+@keyframes taskbar-in {
+  from {
+    transform: translateY(100%);
+  }
+}
+@keyframes desktop-icon-in {
+  from {
+    opacity: 0;
+    transform: translateX(-10px) scale(0.92);
+  }
+}
+@keyframes window-glint {
+  0% {
+    opacity: 0;
+    transform: translateX(-120%);
+  }
+  15% {
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(320%);
+  }
+}
+@keyframes address-progress {
+  0% {
+    opacity: 1;
+    transform: scaleX(0);
+  }
+  65% {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(1);
+  }
+}
+@keyframes heading-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+}
+@keyframes item-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+@keyframes chip-in {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+}
+
+/* ==========================================================================
+   Mais animações [EXT]: menus, diálogos, seleção e detalhes. Mesmas regras
+   do bloco acima: uma vez só, terminando no visual parado.
+   ========================================================================== */
+
+.presence__dot {
+  position: relative;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* ---------- Menu Iniciar ---------- */
+  .start-menu[open] .start-menu__item {
+    animation: menu-item-in 260ms var(--ease-aero) backwards;
+    animation-delay: calc(40ms + var(--i, 0) * 28ms);
+  }
+  .start-menu[open] .start-menu__side > :not(.start-menu__brand) {
+    animation: menu-side-in 300ms var(--ease-aero) 90ms backwards;
+  }
+  /* O quadro da foto "assenta" no topo do menu. */
+  .start-menu[open] .start-menu__brand {
+    animation: menu-photo-in 340ms var(--ease-aero) 60ms backwards;
+  }
+
+  /* ---------- Painel de volume (bandeja) ---------- */
+  .volume__panel {
+    animation: flyout-in 160ms var(--ease) backwards;
+  }
+
+  /* ---------- Navegação lateral: a seleção acende ao mudar ---------- */
+  .side-nav__link.is-selected {
+    animation: selection-glow 520ms ease-out;
+  }
+
+  /* ---------- Barra de endereço: o novo trecho do caminho desliza ---------- */
+  .location-path__item {
+    animation: crumb-in 280ms var(--ease-aero) backwards;
+  }
+
+  /* ---------- Barra de comandos: os botões da seção aparecem ---------- */
+  .command-bar .command-button {
+    animation: command-in 260ms var(--ease-aero) 80ms backwards;
+  }
+
+  /* ---------- Status "Online": um pulso de presença ao abrir o Início ---------- */
+  .presence__dot::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px rgba(118, 216, 65, 0.7);
+    opacity: 0;
+    animation: presence-ping 1400ms ease-out 500ms;
+    pointer-events: none;
+  }
+
+  /* ---------- Detalhes do projeto: conteúdo em cascata ---------- */
+  .aero-dialog[open] .project-details > * {
+    animation: item-in 340ms var(--ease-aero) backwards;
+    animation-delay: calc(80ms + var(--i, 0) * 55ms);
+  }
+  .aero-dialog[open] .project-gallery > li {
+    animation: chip-in 320ms var(--ease-aero) backwards;
+    animation-delay: calc(260ms + var(--i, 0) * 50ms);
+  }
+
+  /* ---------- Pesquisa e estados vazios ---------- */
+  .search-summary,
+  .empty-state {
+    animation: item-in 320ms var(--ease-aero) backwards;
+  }
+}
+
+/* Índice da cascata nos novos grupos. */
+:is(.start-menu__list, .project-details, .project-gallery) > :nth-child(2) {
+  --i: 1;
+}
+:is(.start-menu__list, .project-details, .project-gallery) > :nth-child(3) {
+  --i: 2;
+}
+:is(.start-menu__list, .project-details, .project-gallery) > :nth-child(4) {
+  --i: 3;
+}
+:is(.start-menu__list, .project-details, .project-gallery) > :nth-child(5) {
+  --i: 4;
+}
+:is(.start-menu__list, .project-details, .project-gallery) > :nth-child(6) {
+  --i: 5;
+}
+:is(.start-menu__list, .project-details, .project-gallery) > :nth-child(7) {
+  --i: 6;
+}
+:is(.start-menu__list, .project-details, .project-gallery) > :nth-child(n + 8) {
+  --i: 7;
+}
+
+@keyframes menu-item-in {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+}
+@keyframes menu-side-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes menu-photo-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(6px) scale(0.9);
+  }
+}
+@keyframes flyout-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+@keyframes selection-glow {
+  from {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.55),
+      0 0 0 3px rgba(51, 153, 255, 0.28),
+      0 0 10px rgba(51, 153, 255, 0.35);
+  }
+}
+@keyframes crumb-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+}
+@keyframes command-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes presence-ping {
+  0% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}

@@ -5,11 +5,12 @@ import bootBackdropVideo from './assets/video/intro_fundo.mp4';
 import bootBackdropPoster from './assets/video/intro_fundo.webp';
 import bootVideo from './assets/video/win_boot.mp4';
 import { BootScreen } from './components/boot/BootScreen';
+import { PowerScreen } from './components/boot/PowerScreen';
 import { DecorativeTaskbar } from './components/desktop/DecorativeTaskbar';
 import { DesktopBackdrop } from './components/desktop/DesktopBackdrop';
 import { DesktopIcons, PortfolioShortcut } from './components/desktop/DesktopIcons';
 import { VolumeControl } from './components/desktop/VolumeControl';
-import { StartMenu } from './components/launcher/StartMenu';
+import { StartMenu, type PowerAction } from './components/launcher/StartMenu';
 import { AboutSection } from './components/sections/AboutSection';
 import { ContactSection } from './components/sections/ContactSection';
 import { HeroSection } from './components/sections/HeroSection';
@@ -83,6 +84,10 @@ export function App() {
   const [copied, setCopied] = useState(false);
   // O site abre "desligado": botão de ligar → vídeo de inicialização → área de trabalho.
   const [booted, setBooted] = useState(false);
+  // Desligar/Reiniciar (menu Iniciar): a tela "Desligando..." está à mostra.
+  const [power, setPower] = useState<PowerAction | null>(null);
+  // Depois de "Reiniciar", a inicialização toca o vídeo sem esperar o botão.
+  const [autoBoot, setAutoBoot] = useState(false);
   // Janela aberta, minimizada (volta pela barra de tarefas) ou fechada (abre pelo
   // ícone "Portfólio"). Fora de cena, só a área de trabalho fica à vista. Depois
   // de ligar, o portfólio começa fechado: o visitante o abre pelo ícone.
@@ -225,6 +230,25 @@ export function App() {
     );
   };
 
+  /**
+   * Desligar ou reiniciar: a música para na hora (com a saída curta), a janela
+   * fecha por trás da tela "Desligando..." e, no fim dela, o site volta ao botão
+   * de ligar (desligar) ou ao vídeo de inicialização (reiniciar). Ao ligar de
+   * novo, tudo recomeça como na primeira visita: portfólio fechado e música só
+   * quando ele for aberto.
+   */
+  const powerOff = (action: PowerAction) => {
+    if (power) return;
+    stopSound();
+    closeWindow();
+    setPower(action);
+  };
+  const finishPowerOff = () => {
+    setAutoBoot(power === 'restart');
+    setPower(null);
+    setBooted(false);
+  };
+
   const openMenu = (opener: HTMLElement | null, view: 'main' | 'settings' = 'main') =>
     setMenu({ open: true, opener, view });
 
@@ -274,15 +298,17 @@ export function App() {
             volume={sound.volume}
             brand={<BrandMark profile={profile} size={20} />}
             title={t.windowTitle(profile.name)}
+            autoStart={autoBoot}
             onDone={(byKeyboard) => {
               skipShortcutFocus.current = !byKeyboard;
               setBooted(true);
             }}
           />
         )}
+        {power ? <PowerScreen action={power} onDone={finishPowerOff} /> : null}
         {/* "Desligado", tudo abaixo existe (e já carrega), mas fica fora do Tab e
             dos leitores de tela até a inicialização terminar. */}
-        <div className="os" inert={!booted}>
+        <div className={booted ? 'os os--on' : 'os'} inert={!booted || power !== null}>
           {/* Primeiro item do Tab. Não altera o hash (que é a rota): foca o título da vista. */}
           <a
             className="skip-link"
@@ -462,6 +488,7 @@ export function App() {
             blurSupported={supportsBackdropBlur()}
             locale={locale}
             onLocaleChange={setLocale}
+            onPower={powerOff}
           />
         </div>
       </NavigationProvider>

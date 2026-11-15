@@ -23,6 +23,8 @@ export function AeroWindow({ titleBar, children, state = 'open', windowRef }: Ae
   return (
     <div ref={windowRef} className={`aero-window${state === 'open' ? '' : ` is-${state}`}`} inert={state !== 'open'}>
       {titleBar}
+      {/* Reflexo que atravessa o vidro quando a janela aparece (só decoração). */}
+      <span className="aero-window__glint" aria-hidden="true" />
       <div className="aero-window__body">{children}</div>
     </div>
   );

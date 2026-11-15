@@ -25,7 +25,11 @@ interface StartMenuProps {
   readonly initialView?: 'main' | 'settings';
   readonly locale: Locale;
   readonly onLocaleChange: (locale: Locale) => void;
+  /** Desligar (volta ao botão de ligar) ou reiniciar (vídeo de inicialização de novo). */
+  readonly onPower: (action: PowerAction) => void;
 }
+
+export type PowerAction = 'shutdown' | 'restart';
 
 const GLASS_OPTIONS = ['blur', 'clear', 'opaque'] as const satisfies readonly GlassMode[];
 const THEME_OPTIONS = ['light', 'dark'] as const satisfies readonly Theme[];
@@ -51,11 +55,14 @@ const LOGO_OVERHANG = 34;
  * ir para seções e ajustar a aparência. Não é um menu de sistema operacional.
  */
 export function StartMenu(props: StartMenuProps) {
-  const { id, open, opener, onClose, profile, sections, onNavigate, initialView = 'main' } = props;
+  const { id, open, opener, onClose, profile, sections, onNavigate, onPower, initialView = 'main' } = props;
   const { t } = useI18n();
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [view, setView] = useState<'main' | 'settings'>('main');
   const [query, setQuery] = useState('');
+  // Lista de opções de desligamento (seta ao lado de "Desligar").
+  const [powerOptions, setPowerOptions] = useState(false);
+  const powerArrowRef = useRef<HTMLButtonElement>(null);
   const settingsButtonRef = useRef<HTMLButtonElement>(null);
   const backButtonRef = useRef<HTMLButtonElement>(null);
   const headingId = useId();
@@ -71,6 +78,7 @@ export function StartMenu(props: StartMenuProps) {
     if (open && !dialog.open) {
       setView(initialView);
       setQuery('');
+      setPowerOptions(false);
       dialog.showModal();
     } else if (!open && dialog.open) {
       dialog.close();
@@ -201,8 +209,13 @@ export function StartMenu(props: StartMenuProps) {
         </div>
 
         <aside className="start-menu__side">
+          {/* Quadro do usuário, como no menu Iniciar do Windows 7: a foto do dono. */}
           <span className="start-menu__brand">
-            <BrandMark profile={profile} size={48} />
+            {profile.photo ? (
+              <img className="start-menu__photo" src={profile.photo.src} alt="" width={48} height={48} />
+            ) : (
+              <BrandMark profile={profile} size={48} />
+            )}
           </span>
           <p className="start-menu__owner">{profile.name}</p>
           <button
@@ -226,9 +239,72 @@ export function StartMenu(props: StartMenuProps) {
             <Icon name="privacidade" size={20} />
             {t.privacy}
           </button>
-          <button type="button" className="start-menu__close" onClick={() => dialogRef.current?.close()}>
-            {t.closeMenu}
-          </button>
+          {/* Desligar | ▸ (a seta abre "Reiniciar"), no pé da coluna, como no Windows 7. */}
+          <div className="start-menu__power">
+            {powerOptions ? (
+              <div
+                id={`${id}-power-options`}
+                className="start-menu__power-options"
+                onKeyDown={(event) => {
+                  if (event.key !== 'Escape') return;
+                  // Esc fecha só a lista, não o menu inteiro.
+                  event.preventDefault();
+                  event.stopPropagation();
+                  setPowerOptions(false);
+                  powerArrowRef.current?.focus();
+                }}
+              >
+                <button
+                  type="button"
+                  className="start-menu__power-option"
+                  autoFocus
+                  onClick={() => {
+                    closedByNavigation.current = true;
+                    onClose();
+                    onPower('restart');
+                  }}
+                >
+                  <PowerGlyph restart />
+                  {t.restart}
+                </button>
+                <button
+                  type="button"
+                  className="start-menu__power-option"
+                  onClick={() => {
+                    closedByNavigation.current = true;
+                    onClose();
+                    onPower('shutdown');
+                  }}
+                >
+                  <PowerGlyph />
+                  {t.shutDown}
+                </button>
+              </div>
+            ) : null}
+            <button
+              type="button"
+              className="start-menu__power-button"
+              onClick={() => {
+                closedByNavigation.current = true;
+                onClose();
+                onPower('shutdown');
+              }}
+            >
+              {t.shutDown}
+            </button>
+            <button
+              ref={powerArrowRef}
+              type="button"
+              className="start-menu__power-arrow"
+              aria-label={t.shutDownOptions}
+              title={t.shutDownOptions}
+              aria-expanded={powerOptions}
+              aria-controls={powerOptions ? `${id}-power-options` : undefined}
+              onClick={() => setPowerOptions((current) => !current)}
+            >
+              <span className="start-menu__power-caret" aria-hidden="true" />
+            </button>
+          </div>
         </aside>
       </div>
     </dialog>
@@ -320,5 +396,31 @@ function SettingsView({
         ))}
       </fieldset>
     </div>
+  );
+}
+
+/** Símbolo de energia (desligar) ou seta circular (reiniciar), em traço branco. */
+function PowerGlyph({ restart = false }: { readonly restart?: boolean }) {
+  return (
+    <svg className="start-menu__power-glyph" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
+      {restart ? (
+        <>
+          <path d="M13 8a5 5 0 1 1-1.6-3.7" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          <path
+            d="M12.6 1.6v3.3H9.3"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </>
+      ) : (
+        <>
+          <path d="M5 4.2a5 5 0 1 0 6 0" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          <path d="M8 1.8v5.4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+        </>
+      )}
+    </svg>
   );
 }

@@ -73,7 +73,7 @@ export function ProjectsSection({ section, projects, category, query, onClearQue
 
       {visible.length === 0 ? null : view === 'extra-large' || view === 'large' ? (
         // Cartão completo (resumo, tecnologias e botões).
-        <ul className={`project-grid project-grid--${view}`}>
+        <ul className={`project-grid project-grid--${view}`} key={view}>
           {visible.map((project) => (
             <li key={project.id}>
               <ProjectCard project={project} onShowDetails={setDetailed} />
@@ -84,7 +84,7 @@ export function ProjectsSection({ section, projects, category, query, onClearQue
         <ProjectTable projects={visible} onOpen={setDetailed} />
       ) : (
         // Modos compactos: o item inteiro abre os detalhes do projeto.
-        <ul className={`project-view project-view--${view}`}>
+        <ul className={`project-view project-view--${view}`} key={view}>
           {visible.map((project) => (
             <li key={project.id}>
               <ProjectItem project={project} view={view} onOpen={setDetailed} />

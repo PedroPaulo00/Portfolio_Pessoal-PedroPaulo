@@ -52,6 +52,12 @@ export function LocationBar({ canGoBack, canGoForward, onBack, onForward, crumbs
       </div>
 
       <nav className="location-path" aria-label={t.location}>
+        {/* Barra verde de "carregando" do Explorer, a cada troca de destino. */}
+        <span
+          className="location-path__progress"
+          key={crumbs.map((crumb) => crumb.label).join('/')}
+          aria-hidden="true"
+        />
         <img className="location-path__icon" src={locationIcon} alt="" width={22} height={22} />
         <ol className="location-path__list">
           {crumbs.map((crumb, index) => {

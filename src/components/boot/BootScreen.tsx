@@ -20,6 +20,11 @@ interface BootScreenProps {
    * ícone Portfólio. Com mouse ou toque, não: o foco desenharia um anel nele.
    */
   readonly onDone: (byKeyboard: boolean) => void;
+  /**
+   * Reiniciar (menu Iniciar): pula o botão de ligar e toca o vídeo de
+   * inicialização direto, como um computador que volta sozinho.
+   */
+  readonly autoStart?: boolean;
 }
 
 type Phase = 'off' | 'playing' | 'leaving';
@@ -48,13 +53,15 @@ export function BootScreen({
   brand,
   title,
   onDone,
+  autoStart = false,
 }: BootScreenProps) {
   const { t } = useI18n();
-  const [phase, setPhase] = useState<Phase>('off');
-  // Com "movimento reduzido" no sistema, o fundo fica parado.
+  // Com "movimento reduzido" no sistema, o fundo fica parado (e o vídeo não toca).
   const [animated] = useState(() => !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const [phase, setPhase] = useState<Phase>(() => (autoStart ? (animated ? 'playing' : 'leaving') : 'off'));
   const videoRef = useRef<HTMLVideoElement>(null);
-  const byKeyboard = useRef(true);
+  // Reiniciar veio de um clique no menu: sem anel de foco no ícone ao terminar.
+  const byKeyboard = useRef(!autoStart);
   const done = useRef(onDone);
   useEffect(() => {
     done.current = onDone;
@@ -65,6 +72,27 @@ export function BootScreen({
     setPhase('leaving');
   }, []);
 
+  /**
+   * Toca o vídeo com o som do site. Se o navegador recusar o som (alguns só
+   * liberam áudio logo após um toque), tenta de novo sem som; se nem assim,
+   * segue direto para a área de trabalho.
+   */
+  const startVideo = useCallback(
+    (video: HTMLVideoElement) => {
+      video.muted = muted;
+      video.volume = Math.min(1, Math.max(0, volume / 100));
+      video.play().catch(() => {
+        if (video.muted) {
+          finish();
+          return;
+        }
+        video.muted = true;
+        video.play().catch(finish);
+      });
+    },
+    [muted, volume, finish],
+  );
+
   const powerOn = () => {
     const video = videoRef.current;
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -72,11 +100,19 @@ export function BootScreen({
       finish();
       return;
     }
-    video.muted = muted;
-    video.volume = Math.min(1, Math.max(0, volume / 100));
     setPhase('playing');
-    video.play().catch(finish);
+    startVideo(video);
   };
+
+  // Reiniciar: o vídeo começa sozinho, ao montar (só uma vez).
+  const autoStarted = useRef(false);
+  useEffect(() => {
+    if (!autoStart || autoStarted.current || !animated) return;
+    autoStarted.current = true;
+    const video = videoRef.current;
+    if (video) startVideo(video);
+    else finish();
+  }, [autoStart, animated, startVideo, finish]);
 
   // Vídeo que não sai do lugar (formato não suportado, rede lenta) ou não acaba.
   useEffect(() => {
