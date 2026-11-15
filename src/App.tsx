@@ -316,7 +316,7 @@ export function App() {
               titleBar={
                 <WindowTitleBar
                   profile={profile}
-                  title={t.windowTitle(profile.name)}
+                  title={t.portfolioShortcut}
                   menuId={MENU_ID}
                   menuOpen={menu.open}
                   logoButtonRef={titleLogoRef}

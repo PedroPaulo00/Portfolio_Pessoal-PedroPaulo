@@ -43,7 +43,8 @@ export function DecorativeTaskbar({
   onOpenDateSettings,
 }: DecorativeTaskbarProps) {
   const { t } = useI18n();
-  const title = t.windowTitle(profile.name);
+  // Nome da janela (o mesmo da barra de título); a aba do navegador mantém o nome completo.
+  const title = t.portfolioShortcut;
   const minimized = windowState === 'minimized';
 
   // Brilho que acompanha o ponteiro sobre o botão, como no Windows 7.
