@@ -35,7 +35,7 @@ const FADE_MS = 450;
  * Iniciar) e um arco de luz girando em volta. O clique toca o vídeo de
  * inicialização; ao terminar, a tela se dissolve e revela a área de trabalho.
  *
- * Nunca prende o visitante: dá para pular o vídeo; se o aparelho não conseguir
+ * Nunca prende o visitante: o vídeo é curto; se o aparelho não conseguir
  * tocá-lo (ou ele travar), segue direto; e com "movimento reduzido" ligado no
  * sistema, o vídeo nem toca e o fundo fica parado.
  */
@@ -195,12 +195,6 @@ export function BootScreen({
         {brand}
         <span>{title}</span>
       </p>
-
-      {phase === 'playing' ? (
-        <button type="button" className="boot__skip" onClick={finish}>
-          {t.skipBoot}
-        </button>
-      ) : null}
     </div>
   );
 }
