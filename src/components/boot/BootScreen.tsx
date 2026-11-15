@@ -91,6 +91,25 @@ export function BootScreen({
     };
   }, [phase, finish]);
 
+  // Página em segundo plano (outra aba, navegador minimizado ou fechado): o vídeo
+  // de inicialização, que tem som, pausa; ao voltar, continua de onde parou.
+  useEffect(() => {
+    if (phase !== 'playing') return;
+    const sync = () => {
+      const video = videoRef.current;
+      if (!video) return;
+      if (document.visibilityState === 'hidden') video.pause();
+      else if (video.paused && !video.ended) video.play().catch(finish);
+    };
+    const onPageHide = () => videoRef.current?.pause();
+    document.addEventListener('visibilitychange', sync);
+    window.addEventListener('pagehide', onPageHide);
+    return () => {
+      document.removeEventListener('visibilitychange', sync);
+      window.removeEventListener('pagehide', onPageHide);
+    };
+  }, [phase, finish]);
+
   // Dissolve e entrega a área de trabalho.
   useEffect(() => {
     if (phase !== 'leaving') return;

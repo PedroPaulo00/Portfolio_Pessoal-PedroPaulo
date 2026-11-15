@@ -71,6 +71,8 @@ class AmbientPlayer {
   private level = 0;
   private removeUnlock: (() => void) | null = null;
   private disposed = false;
+  /** Página em segundo plano (outra aba, navegador minimizado ou fechado). */
+  private hidden = false;
 
   constructor(
     private readonly config: SoundConfig,
@@ -113,6 +115,7 @@ class AmbientPlayer {
       // Liberação do som (agora ou após um clique, mesmo durante o download).
       ctx.addEventListener('statechange', () => this.reveal());
       this.unlockOnInteraction(ctx);
+      if (this.hidden) void ctx.suspend().catch(() => undefined);
 
       const response = await fetch(this.config.src);
       if (!response.ok) throw new Error(`HTTP ${response.status} ao carregar ${this.config.src}`);
@@ -145,6 +148,7 @@ class AmbientPlayer {
     this.voice = { source, gain, audible: false };
     master.gain.value = this.level;
 
+    if (this.hidden) return; // volta a tocar quando a página reaparecer
     void ctx.resume().catch(() => undefined); // áudio liberado: começa já
     if (ctx.state === 'running') this.reveal();
     else this.onStatus('waiting-interaction');
@@ -182,15 +186,43 @@ class AmbientPlayer {
 
   /** `resume()` precisa ser chamado dentro do próprio evento do visitante. */
   private unlockOnInteraction(ctx: AudioContext) {
+    this.removeUnlock?.();
     const unlock = () => {
       if (ctx.state === 'running' || ctx.state === 'closed') {
         UNLOCK_EVENTS.forEach((type) => window.removeEventListener(type, unlock, true));
         return;
       }
-      void ctx.resume().catch(() => undefined);
+      if (!this.hidden) void ctx.resume().catch(() => undefined);
     };
     UNLOCK_EVENTS.forEach((type) => window.addEventListener(type, unlock, { capture: true }));
     this.removeUnlock = () => UNLOCK_EVENTS.forEach((type) => window.removeEventListener(type, unlock, true));
+  }
+
+  /**
+   * Página escondida (trocou de aba, minimizou o navegador, fechou o navegador
+   * do Instagram etc.): suspende todo o áudio. A Web Audio API, ao contrário de
+   * <audio>, não é pausada pelo navegador em segundo plano. Ao voltar, a música
+   * continua de onde parou, com uma entrada curta. Se o navegador exigir um
+   * toque para liberar o som de novo, ela volta no próximo toque.
+   */
+  setHidden(hidden: boolean) {
+    if (this.hidden === hidden) return;
+    this.hidden = hidden;
+    const { ctx, master } = this;
+    if (!ctx || ctx.state === 'closed') return;
+    if (hidden) {
+      void ctx.suspend().catch(() => undefined);
+      return;
+    }
+    if (!this.voice) return; // janela fechada: continua em silêncio
+    if (master) {
+      const now = ctx.currentTime;
+      master.gain.cancelScheduledValues(now);
+      master.gain.setValueAtTime(0, now);
+      master.gain.linearRampToValueAtTime(this.level, now + 0.6);
+    }
+    void ctx.resume().catch(() => undefined);
+    if (ctx.state !== 'running') this.unlockOnInteraction(ctx);
   }
 
   /** Volume geral, com transição curta (evita estalos). */
@@ -251,7 +283,23 @@ export function useAmbientSound(config: SoundConfig): AmbientSound {
   useEffect(() => {
     const instance = new AmbientPlayer(config, setStatus);
     player.current = instance;
-    return () => instance.dispose();
+    // Segundo plano: outra aba, navegador minimizado ou fechado (pagehide cobre
+    // o fechamento de navegadores embutidos, como o do Instagram, e o bfcache).
+    const sync = () => instance.setHidden(document.visibilityState === 'hidden');
+    const onPageHide = () => instance.setHidden(true);
+    const onPageShow = () => sync();
+    sync();
+    document.addEventListener('visibilitychange', sync);
+    window.addEventListener('pagehide', onPageHide);
+    window.addEventListener('pageshow', onPageShow);
+    document.addEventListener('freeze', onPageHide);
+    return () => {
+      document.removeEventListener('visibilitychange', sync);
+      window.removeEventListener('pagehide', onPageHide);
+      window.removeEventListener('pageshow', onPageShow);
+      document.removeEventListener('freeze', onPageHide);
+      instance.dispose();
+    };
   }, [config]);
 
   // Chamado dentro do clique que abre o portfólio: o navegador aceita o som na
