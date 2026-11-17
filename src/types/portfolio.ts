@@ -163,6 +163,11 @@ export interface DesktopIcon<M extends Mode = 'view'> {
    * tarefas) até ser clicada, no lugar de abrir uma janela.
    */
   readonly surf?: DesktopIconContent<M>;
+  /**
+   * Ao clicar, aparece como assistente (o Clippy): a animação no canto da tela
+   * com o balão de dicas, no lugar de abrir uma janela.
+   */
+  readonly assistant?: string;
 }
 
 export interface DesktopIconContent<M extends Mode = 'view'> {

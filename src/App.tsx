@@ -330,7 +330,13 @@ export function App() {
             </button>
           ) : null}
           <DesktopBackdrop dark={theme === 'dark'} />
-          {content.desktopIcons.length > 0 ? <DesktopIcons icons={content.desktopIcons} /> : null}
+          {content.desktopIcons.length > 0 ? (
+            <DesktopIcons
+              icons={content.desktopIcons}
+              windowOpen={windowState === 'open'}
+              onOpenWindow={() => (windowState === 'closed' ? reopenWindow() : setWindowState('open'))}
+            />
+          ) : null}
           {windowState === 'closed' ? (
             <PortfolioShortcut image={portfolioIcon} buttonRef={shortcutRef} onOpen={reopenWindow} />
           ) : null}

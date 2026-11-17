@@ -5,6 +5,7 @@ import { useNavigation } from '../../lib/navigation';
 import { parseHash } from '../../lib/router';
 import type { DesktopIcon, DesktopIconKind } from '../../types/portfolio';
 import { AeroDialog } from '../ui/AeroDialog';
+import { Assistant } from './Assistant';
 import { Surfer } from './Surfer';
 import './desktop-icons.css';
 
@@ -17,7 +18,15 @@ import './desktop-icons.css';
  * a tela é baixa. A largura ocupada vai para --desktop-icons-span (no <html>):
  * a janela e o atalho "Portfólio" usam esse valor para não cobrir os ícones.
  */
-export function DesktopIcons({ icons }: { readonly icons: readonly DesktopIcon[] }) {
+interface DesktopIconsProps {
+  readonly icons: readonly DesktopIcon[];
+  /** A janela do portfólio está aberta (o assistente comenta a seção atual). */
+  readonly windowOpen: boolean;
+  /** Abre (ou restaura) a janela do portfólio, a pedido do assistente. */
+  readonly onOpenWindow: () => void;
+}
+
+export function DesktopIcons({ icons, windowOpen, onOpenWindow }: DesktopIconsProps) {
   const { t } = useI18n();
   const navRef = useRef<HTMLElement>(null);
   const [opened, setOpened] = useState<DesktopIcon | null>(null);
@@ -28,7 +37,24 @@ export function DesktopIcons({ icons }: { readonly icons: readonly DesktopIcon[]
     readonly host: Element;
   } | null>(null);
 
+  // Ícone com `assistant` (Clippy): fica no canto até ser ocultado. Clicar de
+  // novo no ícone só reabre o balão (`summon`).
+  const [assistant, setAssistant] = useState<{
+    readonly image: string;
+    readonly host: Element;
+    readonly summon: number;
+  } | null>(null);
+
   const openIcon = (icon: DesktopIcon, button: HTMLElement) => {
+    if (icon.assistant) {
+      const image = icon.assistant;
+      setAssistant((current) =>
+        current
+          ? { ...current, summon: current.summon + 1 }
+          : { image, host: button.closest('.os') ?? document.body, summon: 0 },
+      );
+      return;
+    }
     if (!icon.surf) {
       setOpened(icon);
       return;
@@ -99,6 +125,18 @@ export function DesktopIcons({ icons }: { readonly icons: readonly DesktopIcon[]
               onGone={() => setSurfing(null)}
             />,
             surfing.host,
+          )
+        : null}
+      {assistant
+        ? createPortal(
+            <Assistant
+              image={assistant.image}
+              windowOpen={windowOpen}
+              onOpenWindow={onOpenWindow}
+              summon={assistant.summon}
+              onGone={() => setAssistant(null)}
+            />,
+            assistant.host,
           )
         : null}
     </nav>
@@ -194,7 +232,7 @@ function IconButton({
     <button
       type="button"
       className="desktop-icon desktop-icon--link"
-      aria-haspopup={icon.surf ? undefined : 'dialog'}
+      aria-haspopup={icon.surf || icon.assistant ? undefined : 'dialog'}
       onClick={(event) => onOpen(event.currentTarget)}
     >
       <IconImage icon={icon} />

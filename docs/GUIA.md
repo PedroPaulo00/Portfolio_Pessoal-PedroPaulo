@@ -124,6 +124,7 @@ import thumbMeuApp from '../assets/projetos/meu-app.webp';
   - `href`: o destino, como `'#projetos'` ou uma URL. Sem `href`, o clique abre uma **janela-modelo** com o ícone, o nome, um selo "Em breve" e uma área "Conteúdo em construção", até o conteúdo de verdade ser definido.
   - `content`: uma imagem que abre numa janela ao clicar (a **Lixeira** mostra `lixeira_conteudo.png`);
   - `surf`: uma imagem que **surfa pela tela** ao clicar, no lugar de abrir janela. É o **Bonzi** (`bonzi_conteudo.png`, com o fundo branco recortado pelo `npm run images`): ele surfa por cima da barra de tarefas, sobe pelos cantos e cruza a tela por cima da janela, até alguém clicar nele (ou apertar Esc), quando some com um "puf". Com "reduzir movimento", fica parado sobre a barra até ser clicado.
+  - `assistant`: uma animação que vira **assistente**, como o Clippy do Office 97. É o **Clippy** (`clippy_win_gif.gif`, com o fundo azul recortado pelo `npm run images` e salvo como WebP animado). Ele surge no canto de baixo à direita com o balão amarelo clássico e comenta o que o visitante está vendo ("Parece que você está procurando projetos..."), com atalhos para outras seções. O assunto muda sozinho a cada seção, e ele dá um pulinho. **Me conte uma curiosidade** mostra dicas do site. Clicar nele mostra ou esconde o balão, arrastar muda ele de lugar e **Ocultar** faz ele ir embora. Os textos ficam em `clippy`, no [`ui.ts`](../src/i18n/ui.ts).
 - **Telas pequenas:** os ícones só aparecem com 1024 px ou mais; abaixo disso não há espaço ao lado da janela.
 
 ### 8. Spotify

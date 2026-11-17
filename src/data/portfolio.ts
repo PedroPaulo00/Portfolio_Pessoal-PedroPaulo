@@ -13,6 +13,7 @@ import logo from '../assets/brands/logo.png';
 import arquivosIcon from '../assets/desktop/arquivos.png';
 import bonziIcon from '../assets/desktop/bonzi.png';
 import bonziSurf from '../assets/desktop/bonzi-surf.webp';
+import clippyAssistant from '../assets/desktop/clippy-assistente.webp';
 import clippyIcon from '../assets/desktop/clippy.png';
 import computadorIcon from '../assets/desktop/computador.png';
 import cs16Icon from '../assets/desktop/cs16.png';
@@ -461,12 +462,12 @@ export const portfolio: PortfolioData<'source'> = {
     { id: 'minecraft', label: 'Minecraft', kind: 'template', image: minecraftIcon },
     {
       id: 'bonzi',
-      label: 'Bonzi',
+      label: 'BonziBuddy',
       kind: 'template',
       image: bonziIcon,
-      surf: { image: bonziSurf, alt: { pt: 'Bonzi surfando', en: 'Bonzi surfing' } },
+      surf: { image: bonziSurf, alt: { pt: 'BonziBuddy surfando', en: 'BonziBuddy surfing' } },
     },
-    { id: 'clippy', label: 'Clippy', kind: 'template', image: clippyIcon },
+    { id: 'clippy', label: 'Clippy', kind: 'template', image: clippyIcon, assistant: clippyAssistant },
   ],
 
   // Política de privacidade (rota #privacidade). Revise se algo mudar no site

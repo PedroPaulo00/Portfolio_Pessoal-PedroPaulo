@@ -227,6 +227,29 @@ def cut_out_white(image: Image.Image, tolerance: int = 32, min_hole: int = 5000)
     return rgba.crop(mask.point(lambda v: 255 if v > 8 else 0).getbbox())
 
 
+def key_out_teal(frame: Image.Image) -> Image.Image:
+    """Fundo azul-esverdeado (o do GIF do Clippy) → transparente, com borda suave.
+    O "quanto é fundo" vem de quanto verde e azul passam do vermelho (o Clippy é
+    prata, o papel é creme e os olhos são preto e branco: nenhum é esverdeado).
+    Nas bordas, tira a cor do fundo que vazou (sem halo azul)."""
+    bg = (60, 140, 164)
+    rgba = frame.convert("RGBA")
+    px = rgba.load()
+    w, h = rgba.size
+    for y in range(h):
+        for x in range(w):
+            r, g, b, _ = px[x, y]
+            teal = min(g - r, b - r)
+            a = 1.0 if teal <= 22 else 0.0 if teal >= 62 else 1 - (teal - 22) / 40
+            if a <= 0:
+                px[x, y] = (0, 0, 0, 0)
+                continue
+            if a < 1:
+                r, g, b = (max(0, min(255, round((c - (1 - a) * k) / a))) for c, k in zip((r, g, b), bg))
+            px[x, y] = (r, g, b, round(a * 255))
+    return rgba
+
+
 def save(image: Image.Image, relative: str, **options) -> None:
     out = ROOT / relative
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -305,6 +328,18 @@ def main() -> None:
     surfer = cut_out_white(Image.open(SRC / "desktop/bonzi_conteudo.png"))
     surfer = surfer.resize((round(surfer.width * 280 / surfer.height), 280), Image.LANCZOS)
     save(surfer, "desktop/bonzi-surf.webp", format="WEBP", quality=88, method=6)
+    # Clippy (assistente que aparece ao clicar no ícone): GIF animado sem o fundo,
+    # salvo como WebP animado com transparência (mesmos quadros e tempos).
+    gif = Image.open(SRC / "desktop/clippy_win_gif.gif")
+    frames, durations = [], []
+    for index in range(gif.n_frames):
+        gif.seek(index)
+        frames.append(key_out_teal(gif))
+        durations.append(gif.info.get("duration", 100))
+    target = ROOT / "desktop/clippy-assistente.webp"
+    frames[0].save(target, format="WEBP", save_all=True, append_images=frames[1:], duration=durations,
+                   loop=0, quality=85, method=6, lossless=False, allow_mixed=True)
+    print(f"{'desktop/clippy-assistente.webp':<35}{target.stat().st_size // 1024:>4} KB")
     save(square(Image.open(SRC / "desktop/portfolio.png")).resize((192, 192), Image.LANCZOS),
          "desktop/portfolio.png", optimize=True)
 

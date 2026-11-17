@@ -1,0 +1,339 @@
+/* ==========================================================================
+   Clippy [EXT] — o assistente do Office 97: o clipe no canto da tela e o balão
+   amarelo clássico (borda preta, ponta apontando para ele), com opções de
+   marcador azul e botões cinza. O balão segue o tema "retrô" de propósito,
+   igual no tema claro e no escuro.
+   ========================================================================== */
+
+.assistant {
+  --assistant-size: clamp(96px, 22vw, 120px);
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 31;
+  width: var(--assistant-size);
+  height: var(--assistant-size);
+}
+
+/* ---------- O Clippy (clique: balão; arrastar: muda de lugar) ---------- */
+.assistant__figure {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  cursor: grab;
+  touch-action: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.assistant__figure:active {
+  cursor: grabbing;
+}
+.assistant__figure:focus-visible {
+  outline: 2px dotted #000;
+  outline-offset: 2px;
+}
+.assistant__hop {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.assistant__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(1px 3px 3px rgba(0, 0, 0, 0.35));
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+/* ---------- Balão ---------- */
+.assistant__balloon {
+  position: absolute;
+  right: 6px;
+  bottom: calc(100% + 16px);
+  width: min(270px, calc(100vw - 24px));
+  padding: 10px 12px 10px;
+  font-family: Tahoma, 'Segoe UI', Verdana, sans-serif;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: #000;
+  text-align: left;
+  background: #ffffe1;
+  border: 1px solid #000;
+  border-radius: 10px;
+  box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.18);
+}
+/* Ponta do balão: um triângulo de borda preta com outro amarelo por dentro. */
+.assistant__balloon::before,
+.assistant__balloon::after {
+  content: '';
+  position: absolute;
+  right: 40px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+}
+.assistant__balloon::before {
+  top: 100%;
+  border-width: 16px 0 0 16px;
+  border-color: #000 transparent transparent transparent;
+}
+.assistant__balloon::after {
+  top: calc(100% - 1px);
+  right: 41px;
+  border-width: 14px 0 0 14px;
+  border-color: #ffffe1 transparent transparent transparent;
+}
+/* Clippy na metade esquerda da tela: balão alinhado à esquerda dele. */
+.assistant__balloon--left {
+  right: auto;
+  left: 6px;
+}
+.assistant__balloon--left::before {
+  right: auto;
+  left: 40px;
+  border-width: 16px 16px 0 0;
+}
+.assistant__balloon--left::after {
+  right: auto;
+  left: 41px;
+  border-width: 14px 14px 0 0;
+}
+/* Clippy no alto da tela: balão embaixo, ponta para cima. */
+.assistant__balloon--below {
+  top: calc(100% + 16px);
+  bottom: auto;
+}
+.assistant__balloon--below::before {
+  top: auto;
+  bottom: 100%;
+  border-width: 0 0 16px 16px;
+  border-color: transparent transparent #000 transparent;
+}
+.assistant__balloon--below::after {
+  top: auto;
+  bottom: calc(100% - 1px);
+  border-width: 0 0 14px 14px;
+  border-color: transparent transparent #ffffe1 transparent;
+}
+.assistant__balloon--below.assistant__balloon--left::before {
+  border-width: 0 16px 16px 0;
+}
+.assistant__balloon--below.assistant__balloon--left::after {
+  border-width: 0 14px 14px 0;
+}
+
+/* Tela baixa: balão ao lado do Clippy (à esquerda dele; à direita se ele
+   estiver na metade esquerda), alinhado pela base, com a ponta para o lado. */
+.assistant__balloon--side {
+  top: auto;
+  bottom: 0;
+  right: calc(100% + 14px);
+  left: auto;
+  width: min(270px, calc(100vw - var(--assistant-size) - 44px));
+}
+.assistant__balloon--side::before {
+  top: auto;
+  bottom: 34px;
+  right: auto;
+  left: 100%;
+  border-width: 9px 0 9px 15px;
+  border-color: transparent transparent transparent #000;
+}
+.assistant__balloon--side::after {
+  top: auto;
+  bottom: 35px;
+  right: auto;
+  left: calc(100% - 1px);
+  border-width: 8px 0 8px 14px;
+  border-color: transparent transparent transparent #ffffe1;
+}
+.assistant__balloon--side.assistant__balloon--left {
+  right: auto;
+  left: calc(100% + 14px);
+}
+.assistant__balloon--side.assistant__balloon--left::before {
+  left: auto;
+  right: 100%;
+  border-width: 9px 15px 9px 0;
+  border-color: transparent #000 transparent transparent;
+}
+.assistant__balloon--side.assistant__balloon--left::after {
+  left: auto;
+  right: calc(100% - 1px);
+  border-width: 8px 14px 8px 0;
+  border-color: transparent #ffffe1 transparent transparent;
+}
+
+/* Ao lado e no alto da tela: alinhado pelo topo do Clippy. */
+.assistant__balloon--side.assistant__balloon--below {
+  top: 0;
+  bottom: auto;
+}
+.assistant__balloon--side.assistant__balloon--below::before {
+  top: 34px;
+  bottom: auto;
+}
+.assistant__balloon--side.assistant__balloon--below::after {
+  top: 35px;
+  bottom: auto;
+}
+
+.assistant__title {
+  margin: 0 0 4px;
+  font-weight: 700;
+}
+.assistant__message {
+  margin: 0;
+}
+
+/* Opções com o marcador azul do assistente. */
+.assistant__options {
+  display: grid;
+  gap: 2px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.assistant__option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 26px;
+  padding: 2px 4px;
+  font: inherit;
+  color: #000;
+  text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.assistant__option::before {
+  content: '';
+  flex: none;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #b8e2ff, #2a7fd4 55%, #0b4a94);
+  box-shadow: 0 0 0 1px rgba(0, 40, 100, 0.4);
+}
+@media (hover: hover) {
+  .assistant__option:hover {
+    color: #00007f;
+    text-decoration: underline;
+  }
+}
+.assistant__option:focus-visible,
+.assistant__button:focus-visible {
+  outline: 1px dotted #000;
+  outline-offset: 1px;
+}
+
+/* Botões cinza clássicos, no rodapé do balão. */
+.assistant__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-top: 10px;
+}
+.assistant__button {
+  min-height: 24px;
+  padding: 2px 10px;
+  font: inherit;
+  font-size: 0.75rem;
+  color: #000;
+  background: linear-gradient(#fdfdfd, #e7e7e7);
+  border: 1px solid #707070;
+  border-radius: 3px;
+  box-shadow: inset 0 1px 0 #fff;
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .assistant__button:hover {
+    background: linear-gradient(#eaf6fd, #bee6fd);
+    border-color: #3c7fb1;
+  }
+}
+.assistant__button:active {
+  background: linear-gradient(#c4e5f6, #98d1ef);
+  border-color: #2c628b;
+}
+@media (pointer: coarse) {
+  .assistant__option {
+    min-height: 36px;
+  }
+  .assistant__button {
+    min-height: 36px;
+  }
+}
+
+/* ---------- Movimento ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  /* Chega "caindo" no lugar e quicando, como ao ser chamado no Office. */
+  .assistant__figure {
+    animation: assistant-in 520ms cubic-bezier(0.2, 1.4, 0.4, 1) backwards;
+  }
+  /* A cada mudança de assunto, um pulinho. */
+  .assistant__hop {
+    animation: assistant-hop 480ms ease-out;
+  }
+  .assistant__balloon {
+    animation: balloon-in 220ms ease-out 120ms backwards;
+  }
+  .assistant--leaving .assistant__figure {
+    animation: assistant-out 400ms cubic-bezier(0.5, 0, 0.9, 0.4) forwards;
+  }
+}
+.assistant--leaving .assistant__figure {
+  opacity: 0;
+}
+@keyframes assistant-in {
+  from {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.6);
+  }
+}
+@keyframes assistant-hop {
+  0%,
+  100% {
+    transform: none;
+  }
+  35% {
+    transform: translateY(-12px) rotate(-4deg);
+  }
+  60% {
+    transform: translateY(0) rotate(2deg);
+  }
+  80% {
+    transform: translateY(-3px);
+  }
+}
+@keyframes balloon-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.96);
+  }
+}
+@keyframes assistant-out {
+  0% {
+    opacity: 1;
+    transform: none;
+  }
+  35% {
+    opacity: 1;
+    transform: translateY(-10px) scale(1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.2);
+  }
+}
