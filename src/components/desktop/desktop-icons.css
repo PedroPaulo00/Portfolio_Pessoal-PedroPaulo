@@ -204,7 +204,16 @@
 /* O atalho se centraliza no espaço livre à direita dos ícones (que podem ocupar
    várias colunas em telas baixas), para nunca ficar por cima deles. */
 .portfolio-shortcut {
-  padding-left: calc(var(--desktop-icons-span, 0px) + 6px);
+  /* Nunca empurrado para fora da tela (o botão tem 112 px). */
+  padding-left: min(calc(var(--desktop-icons-span, 0px) + 6px), calc(100% - 118px));
+}
+/* Tela muito baixa (celular deitado): só cabem duas linhas de ícones e eles se
+   espalham em muitas colunas; colunas mais estreitas deixam espaço livre para o
+   atalho "Portfólio" à direita. */
+@media (max-height: 22.5em) {
+  :root {
+    --desktop-icons-width: 80px;
+  }
 }
 
 /* ---------- Janela-modelo de um ícone (conteúdo "em breve") ---------- */

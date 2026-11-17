@@ -3,11 +3,15 @@
    ========================================================================== */
 
 .start-menu {
+  /* Altura livre entre o quadro da foto (que passa 34 px do topo do menu) e a
+     barra de tarefas: o menu inteiro cabe acima dela, mesmo com o celular deitado. */
+  --start-menu-room: calc(100dvh - var(--taskbar-height, 40px) - env(safe-area-inset-bottom, 0px) - 52px);
+
   position: fixed;
   inset: auto;
   margin: 0;
   width: min(430px, calc(100vw - 24px));
-  max-height: calc(100dvh - 24px - 34px);
+  max-height: var(--start-menu-room);
   padding: 7px;
   overflow: visible;
   color: #fff;
@@ -56,8 +60,9 @@
 .start-menu__main {
   display: flex;
   flex-direction: column;
-  min-height: 300px;
-  max-height: calc(100dvh - 24px - 34px - 16px);
+  /* A lista rola por dentro quando a tela é baixa. */
+  min-height: min(300px, calc(var(--start-menu-room) - 16px));
+  max-height: calc(var(--start-menu-room) - 16px);
   overflow: auto;
   color: var(--text);
   background: var(--launcher-list);
@@ -72,6 +77,9 @@
   gap: 1px;
   padding: 5px;
   flex: 1;
+  /* Em tela baixa, só a lista rola: a busca fica sempre à vista no rodapé. */
+  min-height: 0;
+  overflow-y: auto;
 }
 .start-menu__item {
   display: flex;
@@ -125,6 +133,7 @@
 }
 
 .start-menu__search {
+  flex: none;
   position: relative;
   padding: 9px 10px 10px;
   background: linear-gradient(#f2f6fa, #dce6ef);
@@ -297,6 +306,11 @@
     border-color: rgba(255, 255, 255, 0.4);
   }
 }
+/* O ícone não encolhe quando o texto ao lado é longo (coluna estreita no celular). */
+.start-menu__item .aero-icon,
+.start-menu__side-link .aero-icon {
+  flex: none;
+}
 .start-menu__side-link[aria-pressed='true'] {
   background: rgba(255, 255, 255, 0.18);
   border-color: rgba(255, 255, 255, 0.5);
@@ -463,5 +477,24 @@
   from {
     opacity: 0;
     transform: translateY(6px);
+  }
+}
+
+/* Telas baixas (celular deitado): a coluna de vidro fica mais compacta para o
+   nome, os atalhos e o "Desligar" caberem na altura do menu. */
+@media (max-height: 30em) {
+  .start-menu__side {
+    gap: 2px;
+    padding-top: 30px;
+  }
+  .start-menu__owner {
+    margin-bottom: 4px;
+    padding: 2px 6px 6px;
+  }
+  .start-menu__side-link,
+  .start-menu__power-button,
+  .start-menu__power-arrow,
+  .start-menu__power-option {
+    min-height: 36px;
   }
 }

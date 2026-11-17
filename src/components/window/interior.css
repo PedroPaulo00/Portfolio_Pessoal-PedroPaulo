@@ -435,6 +435,17 @@
     --view-row: 44px;
   }
 }
+/* Ao abrir, a página rola até o painel caber acima da barra de tarefas. */
+.view-menu__panel {
+  scroll-margin: 8px 0 calc(var(--taskbar-height, 40px) + env(safe-area-inset-bottom, 0px) + 8px);
+}
+/* Telas baixas (celular deitado, 320 px de altura): linhas um pouco mais baixas
+   para o painel inteiro caber entre o topo e a barra de tarefas. */
+@media (pointer: coarse) and (max-height: 30em) {
+  .view-menu__panel {
+    --view-row: 34px;
+  }
+}
 /* Celular, em Projetos: com o "Visualizar" na barra, os filtros ficam só com o
    texto e os dois botões da direita encolhem, para tudo caber numa linha. */
 @media (max-width: 37.49em) {

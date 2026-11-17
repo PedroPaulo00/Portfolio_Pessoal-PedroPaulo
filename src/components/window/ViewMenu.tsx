@@ -23,7 +23,10 @@ export function ViewMenu({ value, onChange }: ViewMenuProps) {
 
   useEffect(() => {
     if (!open) return;
-    panelRef.current?.querySelector<HTMLElement>('[aria-checked="true"]')?.focus();
+    panelRef.current?.querySelector<HTMLElement>('[aria-checked="true"]')?.focus({ preventScroll: true });
+    // Tela baixa (celular deitado): rola a página o necessário para o painel
+    // aparecer inteiro, acima da barra de tarefas (scroll-margin no CSS).
+    panelRef.current?.scrollIntoView({ block: 'nearest' });
     const close = (event: Event) => {
       const target = event.target as Node;
       if (panelRef.current?.contains(target) || buttonRef.current?.contains(target)) return;
