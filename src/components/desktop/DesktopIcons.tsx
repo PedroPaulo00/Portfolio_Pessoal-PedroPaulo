@@ -1,9 +1,11 @@
 import { useId, useLayoutEffect, useRef, useState, type JSX, type MouseEvent, type Ref } from 'react';
+import { createPortal } from 'react-dom';
 import { useI18n } from '../../i18n/I18n';
 import { useNavigation } from '../../lib/navigation';
 import { parseHash } from '../../lib/router';
 import type { DesktopIcon, DesktopIconKind } from '../../types/portfolio';
 import { AeroDialog } from '../ui/AeroDialog';
+import { Surfer } from './Surfer';
 import './desktop-icons.css';
 
 /**
@@ -19,6 +21,23 @@ export function DesktopIcons({ icons }: { readonly icons: readonly DesktopIcon[]
   const { t } = useI18n();
   const navRef = useRef<HTMLElement>(null);
   const [opened, setOpened] = useState<DesktopIcon | null>(null);
+  // Ícone com `surf` em ação: a imagem passeia pela tela até ser clicada.
+  const [surfing, setSurfing] = useState<{
+    readonly icon: DesktopIcon;
+    readonly from: DOMRect;
+    readonly host: Element;
+  } | null>(null);
+
+  const openIcon = (icon: DesktopIcon, button: HTMLElement) => {
+    if (!icon.surf) {
+      setOpened(icon);
+      return;
+    }
+    if (surfing) return; // já está na tela
+    // Fora da faixa dos ícones (que forma uma camada própria, abaixo da barra de
+    // tarefas): no contêiner da área de trabalho, para passar por cima de tudo.
+    setSurfing({ icon, from: button.getBoundingClientRect(), host: button.closest('.os') ?? document.body });
+  };
 
   useLayoutEffect(() => {
     const nav = navRef.current;
@@ -52,14 +71,36 @@ export function DesktopIcons({ icons }: { readonly icons: readonly DesktopIcon[]
             {icon.href ? (
               <IconLink icon={icon} href={icon.href} />
             ) : (
-              <IconButton icon={icon} onOpen={() => setOpened(icon)} />
+              <IconButton icon={icon} onOpen={(button) => openIcon(icon, button)} />
             )}
           </li>
         ))}
       </ul>
       <AeroDialog open={opened !== null} title={opened?.label ?? ''} onClose={() => setOpened(null)}>
-        {opened ? <TemplateWindow icon={opened} /> : null}
+        {opened?.content ? (
+          <div className="desktop-window">
+            <img
+              className="desktop-window__image"
+              src={opened.content.image}
+              alt={opened.content.alt}
+              decoding="async"
+            />
+          </div>
+        ) : opened ? (
+          <TemplateWindow icon={opened} />
+        ) : null}
       </AeroDialog>
+      {surfing?.icon.surf
+        ? createPortal(
+            <Surfer
+              image={surfing.icon.surf.image}
+              alt={surfing.icon.surf.alt}
+              from={surfing.from}
+              onGone={() => setSurfing(null)}
+            />,
+            surfing.host,
+          )
+        : null}
     </nav>
   );
 }
@@ -142,9 +183,20 @@ function IconLink({ icon, href }: { readonly icon: DesktopIcon; readonly href: s
   );
 }
 
-function IconButton({ icon, onOpen }: { readonly icon: DesktopIcon; readonly onOpen: () => void }) {
+function IconButton({
+  icon,
+  onOpen,
+}: {
+  readonly icon: DesktopIcon;
+  readonly onOpen: (button: HTMLButtonElement) => void;
+}) {
   return (
-    <button type="button" className="desktop-icon desktop-icon--link" aria-haspopup="dialog" onClick={onOpen}>
+    <button
+      type="button"
+      className="desktop-icon desktop-icon--link"
+      aria-haspopup={icon.surf ? undefined : 'dialog'}
+      onClick={(event) => onOpen(event.currentTarget)}
+    >
       <IconImage icon={icon} />
       <span className="desktop-icon__label">{icon.label}</span>
     </button>

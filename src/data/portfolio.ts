@@ -12,9 +12,11 @@ import somFundo from '../assets/audio/som_fundo_novo.mp3';
 import logo from '../assets/brands/logo.png';
 import arquivosIcon from '../assets/desktop/arquivos.png';
 import bonziIcon from '../assets/desktop/bonzi.png';
+import bonziSurf from '../assets/desktop/bonzi-surf.webp';
 import clippyIcon from '../assets/desktop/clippy.png';
 import computadorIcon from '../assets/desktop/computador.png';
 import cs16Icon from '../assets/desktop/cs16.png';
+import lixeiraContent from '../assets/desktop/lixeira-conteudo.webp';
 import lixeiraIcon from '../assets/desktop/lixeira.png';
 import mediaPlayerIcon from '../assets/desktop/media-player.png';
 import minecraftIcon from '../assets/desktop/minecraft.png';
@@ -443,7 +445,13 @@ export const portfolio: PortfolioData<'source'> = {
   // Ícones com `image` usam a imagem própria no lugar do desenho de `kind`.
   // As imagens saem de src/assets/originais/ via `npm run images`.
   desktopIcons: [
-    { id: 'lixeira', label: { pt: 'Lixeira', en: 'Recycle Bin' }, kind: 'lixeira', image: lixeiraIcon },
+    {
+      id: 'lixeira',
+      label: { pt: 'Lixeira', en: 'Recycle Bin' },
+      kind: 'lixeira',
+      image: lixeiraIcon,
+      content: { image: lixeiraContent, alt: { pt: 'Escudo do Corinthians', en: 'Corinthians crest' } },
+    },
     { id: 'computador', label: { pt: 'Meu computador', en: 'Computer' }, kind: 'computador', image: computadorIcon },
     { id: 'arquivos', label: { pt: 'Arquivos', en: 'Files' }, kind: 'arquivos', image: arquivosIcon },
     { id: 'msn', label: 'MSN', kind: 'template', image: msnIcon },
@@ -451,7 +459,13 @@ export const portfolio: PortfolioData<'source'> = {
     { id: 'the-sims-2', label: 'The Sims 2', kind: 'template', image: theSimsIcon },
     { id: 'cs-16', label: 'CS 1.6', kind: 'template', image: cs16Icon },
     { id: 'minecraft', label: 'Minecraft', kind: 'template', image: minecraftIcon },
-    { id: 'bonzi', label: 'Bonzi', kind: 'template', image: bonziIcon },
+    {
+      id: 'bonzi',
+      label: 'Bonzi',
+      kind: 'template',
+      image: bonziIcon,
+      surf: { image: bonziSurf, alt: { pt: 'Bonzi surfando', en: 'Bonzi surfing' } },
+    },
     { id: 'clippy', label: 'Clippy', kind: 'template', image: clippyIcon },
   ],
 

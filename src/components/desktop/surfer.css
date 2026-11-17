@@ -1,0 +1,106 @@
+/* ==========================================================================
+   Bonzi surfando [EXT]: passeia por cima de tudo (janela e barra de tarefas).
+   A posição, o balanço e a inclinação vêm de Surfer.tsx a cada quadro; aqui
+   ficam o tamanho, a entrada e o "puf" ao sumir.
+   ========================================================================== */
+
+.surfer {
+  --surfer-size: clamp(84px, 20vw, 140px);
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 30;
+  width: var(--surfer-size);
+  height: var(--surfer-size);
+  padding: 0;
+  border: 0;
+  border-radius: 40%;
+  background: transparent;
+  cursor: pointer;
+  will-change: transform;
+  -webkit-tap-highlight-color: transparent;
+}
+.surfer:focus-visible {
+  outline: 2px solid #b8f8ff;
+  outline-offset: 2px;
+}
+.surfer__body {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 85%;
+}
+.surfer__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 6px rgba(0, 20, 50, 0.35));
+  -webkit-user-drag: none;
+  user-select: none;
+}
+@media (hover: hover) {
+  .surfer:hover .surfer__image {
+    filter: drop-shadow(0 6px 6px rgba(0, 20, 50, 0.35)) brightness(1.08);
+  }
+}
+
+/* Anel de brilho que se abre quando ele some. */
+.surfer__poof {
+  position: absolute;
+  inset: 20%;
+  border: 3px solid rgba(220, 200, 255, 0.95);
+  border-radius: 50%;
+  box-shadow: 0 0 18px 6px rgba(190, 150, 255, 0.6);
+  opacity: 0;
+  pointer-events: none;
+}
+.surfer--leaving {
+  cursor: default;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .surfer__image {
+    animation: surfer-in 420ms cubic-bezier(0.2, 1.4, 0.4, 1) backwards;
+  }
+  .surfer--leaving .surfer__image {
+    animation: surfer-out 420ms cubic-bezier(0.5, 0, 0.8, 0.4) forwards;
+  }
+  .surfer--leaving .surfer__poof {
+    animation: surfer-poof 520ms ease-out forwards;
+  }
+}
+.surfer--leaving .surfer__image {
+  opacity: 0;
+}
+@keyframes surfer-in {
+  from {
+    opacity: 0;
+    transform: scale(0.2) rotate(-20deg);
+  }
+}
+@keyframes surfer-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.12) rotate(-8deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.1) rotate(200deg);
+  }
+}
+@keyframes surfer-poof {
+  0% {
+    opacity: 0.95;
+    transform: scale(0.4);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}

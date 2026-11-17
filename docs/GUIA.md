@@ -122,6 +122,8 @@ import thumbMeuApp from '../assets/projetos/meu-app.webp';
   - `kind`: um desenho pronto (`lixeira`, `computador`, `arquivos`, `vscode` ou `template`);
   - `image`: uma imagem própria importada de `src/assets/desktop/`, que substitui o desenho. Para um ícone novo, coloque o original em `originais/desktop/`, acrescente uma linha em `ICONS` no `optimize-images.py` e rode `npm run images`;
   - `href`: o destino, como `'#projetos'` ou uma URL. Sem `href`, o clique abre uma **janela-modelo** com o ícone, o nome, um selo "Em breve" e uma área "Conteúdo em construção", até o conteúdo de verdade ser definido.
+  - `content`: uma imagem que abre numa janela ao clicar (a **Lixeira** mostra `lixeira_conteudo.png`);
+  - `surf`: uma imagem que **surfa pela tela** ao clicar, no lugar de abrir janela. É o **Bonzi** (`bonzi_conteudo.png`, com o fundo branco recortado pelo `npm run images`): ele surfa por cima da barra de tarefas, sobe pelos cantos e cruza a tela por cima da janela, até alguém clicar nele (ou apertar Esc), quando some com um "puf". Com "reduzir movimento", fica parado sobre a barra até ser clicado.
 - **Telas pequenas:** os ícones só aparecem com 1024 px ou mais; abaixo disso não há espaço ao lado da janela.
 
 ### 8. Spotify

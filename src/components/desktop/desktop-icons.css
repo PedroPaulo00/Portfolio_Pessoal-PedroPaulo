@@ -253,3 +253,19 @@
     color-mix(in srgb, var(--text-secondary) 6%, transparent) 10px 20px
   );
 }
+
+/* ---------- Janela com conteúdo próprio (ex.: Lixeira): uma imagem ---------- */
+.desktop-window {
+  display: grid;
+  place-items: center;
+  padding: 8px 0;
+}
+.desktop-window__image {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+  /* Cabe na janela sem rolar, descontando a barra de tarefas, o título e o rodapé. */
+  max-height: min(360px, calc(100dvh - var(--taskbar-height, 40px) - 200px));
+  object-fit: contain;
+}

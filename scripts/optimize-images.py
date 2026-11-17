@@ -178,6 +178,55 @@ def logo_template() -> Image.Image:
     draw.rounded_rectangle((8, 8, big - 8, big - 8), 96, outline=(10, 70, 100, 200), width=6)
     return img.resize((size, size), Image.LANCZOS)
 
+def cut_out_white(image: Image.Image, tolerance: int = 32, min_hole: int = 5000) -> Image.Image:
+    """Fundo branco → transparente: apaga o branco ligado às bordas e os buracos
+    brancos grandes fechados pela figura (ex.: entre as pernas). Brancos pequenos
+    de dentro (olhos, reflexos) ficam. Depois suaviza o contorno."""
+    from collections import deque
+
+    from PIL import ImageFilter
+
+    rgba = image.convert("RGBA")
+    w, h = rgba.size
+    px = rgba.load()
+    limit = 255 - tolerance
+
+    def whiteish(x: int, y: int) -> bool:
+        r, g, b, _ = px[x, y]
+        return r >= limit and g >= limit and b >= limit
+
+    mask = Image.new("L", (w, h), 255)
+    m = mask.load()
+    seen = bytearray(w * h)
+    for sy in range(h):
+        for sx in range(w):
+            if seen[sy * w + sx]:
+                continue
+            seen[sy * w + sx] = 1
+            if not whiteish(sx, sy):
+                continue
+            # Uma região branca contínua: vai para o fundo se tocar a borda ou for grande.
+            region = [(sx, sy)]
+            queue = deque(region)
+            border = False
+            while queue:
+                x, y = queue.popleft()
+                border = border or x in (0, w - 1) or y in (0, h - 1)
+                for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                    if 0 <= nx < w and 0 <= ny < h and not seen[ny * w + nx]:
+                        seen[ny * w + nx] = 1
+                        if whiteish(nx, ny):
+                            queue.append((nx, ny))
+                            region.append((nx, ny))
+            if border or len(region) >= min_hole:
+                for x, y in region:
+                    m[x, y] = 0
+    # Contorno: encolhe 1 px (tira o halo branco) e desfoca de leve.
+    mask = mask.filter(ImageFilter.MinFilter(3)).filter(ImageFilter.GaussianBlur(1.2))
+    rgba.putalpha(mask)
+    return rgba.crop(mask.point(lambda v: 255 if v > 8 else 0).getbbox())
+
+
 def save(image: Image.Image, relative: str, **options) -> None:
     out = ROOT / relative
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -246,6 +295,16 @@ def main() -> None:
     for source, target in ICONS.items():
         save(square(Image.open(SRC / source)).resize((96, 96), Image.LANCZOS), target, optimize=True)
     # Ícone "Portfólio" (abre a janela): aparece maior (64 px), então sai com 192 px.
+    # Conteúdo da Lixeira (janela ao clicar no ícone): até 480 px de altura (2× de 240).
+    trash = Image.open(SRC / "desktop/lixeira_conteudo.png").convert("RGBA")
+    if trash.height > 480:
+        trash = trash.resize((round(trash.width * 480 / trash.height), 480), Image.LANCZOS)
+    save(trash, "desktop/lixeira-conteudo.webp", format="WEBP", quality=90, method=6)
+    # Bonzi surfando (anda pela tela ao clicar no ícone): fundo branco recortado,
+    # 2× de 140 px de altura.
+    surfer = cut_out_white(Image.open(SRC / "desktop/bonzi_conteudo.png"))
+    surfer = surfer.resize((round(surfer.width * 280 / surfer.height), 280), Image.LANCZOS)
+    save(surfer, "desktop/bonzi-surf.webp", format="WEBP", quality=88, method=6)
     save(square(Image.open(SRC / "desktop/portfolio.png")).resize((192, 192), Image.LANCZOS),
          "desktop/portfolio.png", optimize=True)
 

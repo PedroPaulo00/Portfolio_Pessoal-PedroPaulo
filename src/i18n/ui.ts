@@ -114,6 +114,7 @@ const pt = {
   // Área de trabalho e navegação
   desktopShortcuts: 'Atalhos da área de trabalho',
   comingSoon: 'Em breve',
+  surferStop: (what: string) => `${what} pela tela. Clique para ele ir embora`,
   desktopTemplate: (label: string) =>
     `Aqui vai ficar o conteúdo de ${label}. Por enquanto, esta janela é só um modelo.`,
   underConstruction: 'Conteúdo em construção',
@@ -334,6 +335,7 @@ const en: UiStrings = {
 
   desktopShortcuts: 'Desktop shortcuts',
   comingSoon: 'Coming soon',
+  surferStop: (what) => `${what} across the screen. Click to make him go away`,
   desktopTemplate: (label) => `This is where ${label} will live. For now, this window is just a placeholder.`,
   underConstruction: 'Under construction',
   projectCategories: 'Project categories',

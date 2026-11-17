@@ -156,6 +156,20 @@ export interface DesktopIcon<M extends Mode = 'view'> {
    * o ícone e o nome, até o conteúdo de verdade ser definido.
    */
   readonly href?: string;
+  /** Conteúdo da janela ao clicar (no lugar da janela-modelo): uma imagem. */
+  readonly content?: DesktopIconContent<M>;
+  /**
+   * Ao clicar, a imagem surfa pela tela (por cima da janela e da barra de
+   * tarefas) até ser clicada, no lugar de abrir uma janela.
+   */
+  readonly surf?: DesktopIconContent<M>;
+}
+
+export interface DesktopIconContent<M extends Mode = 'view'> {
+  /** Imagem importada de src/assets/. */
+  readonly image: string;
+  /** Descrição da imagem para leitores de tela. */
+  readonly alt: Name<M>;
 }
 
 export interface PortfolioData<M extends Mode = 'view'> {
