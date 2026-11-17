@@ -115,13 +115,13 @@ import thumbMeuApp from '../assets/projetos/meu-app.webp';
 
 - **Imagens originais:** ficam em `src/assets/originais/`, separadas por tipo: `brands/` (logos AFL, Windows e Spotify), `desktop/` (ícones da área de trabalho), `profile/` (foto), `projetos/` (capturas), `tech/` (ícones de tecnologias enviados em imagem), `wallpaper/` e `referencias/` (modelos visuais, como o `exemplo_MSN.png` e o `calendario.png`). Elas não entram no site publicado. O site usa versões otimizadas, geradas por `npm run images` (requer Python + Pillow).
 - **Para trocar uma imagem:** substitua o arquivo em `originais/` mantendo o nome e rode `npm run images`. A relação entre cada original e a versão que o site usa está no início de [`scripts/optimize-images.py`](../scripts/optimize-images.py).
-- **Papel de parede:** o original é `src/assets/originais/wallpaper/wallpaper_xp.png` (o anterior, `Wallpaper_fundo.png`, continua na pasta). O site usa `src/assets/wallpaper/wallpaper-1920.webp` e `wallpaper-1280.webp`, para celular. Para trocar, mude o nome do arquivo em `optimize-images.py` e rode `npm run images`.
+- **Papel de parede:** o original é `src/assets/originais/wallpaper/wallpaper_xp.png` (o anterior, `Wallpaper_fundo.png`, continua na pasta). O site usa `src/assets/wallpaper/wallpaper-1920.webp` e `wallpaper-1280.webp`, para celular. No **tema escuro**, a área de trabalho usa o papel de parede noturno: original `originais/wallpaper/dark_wallpaper.jpg`, saída `wallpaper-dark-1920.webp` e `wallpaper-dark-1280.webp`. Ao trocar de tema, um se dissolve no outro, e cada um só é baixado quando o tema dele é usado. Para trocar, mude o nome do arquivo em `optimize-images.py` e rode `npm run images`.
 - **Botão Iniciar:** o site usa `src/assets/brands/start-logo.png`.
-- **Ícones da área de trabalho:** ficam em `desktopIcons`, em `portfolio.ts`, na ordem de cima para baixo. Hoje são Lixeira, Meu computador, Arquivos, MSN, The Sims 2, CS 1.6 e Minecraft, todos com imagens próprias. Cada ícone aceita:
+- **Ícones da área de trabalho:** ficam em `desktopIcons`, em `portfolio.ts`, na ordem de cima para baixo. Hoje são Lixeira, Meu computador, Arquivos, MSN, Media Player, The Sims 2, CS 1.6, Minecraft, Bonzi e Clippy, todos com imagens próprias. Todos são clicáveis. Como no Windows, a lista desce em coluna e passa para a coluna seguinte quando a tela é baixa; a janela e o atalho **Portfólio** se afastam da largura que os ícones ocuparem. Cada ícone aceita:
   - `label`: o texto embaixo do ícone;
   - `kind`: um desenho pronto (`lixeira`, `computador`, `arquivos`, `vscode` ou `template`);
   - `image`: uma imagem própria importada de `src/assets/desktop/`, que substitui o desenho. Para um ícone novo, coloque o original em `originais/desktop/`, acrescente uma linha em `ICONS` no `optimize-images.py` e rode `npm run images`;
-  - `href`: o destino, como `'#projetos'` ou uma URL. Sem `href`, o ícone é só cenário.
+  - `href`: o destino, como `'#projetos'` ou uma URL. Sem `href`, o clique abre uma **janela-modelo** com o ícone, o nome, um selo "Em breve" e uma área "Conteúdo em construção", até o conteúdo de verdade ser definido.
 - **Telas pequenas:** os ícones só aparecem com 1024 px ou mais; abaixo disso não há espaço ao lado da janela.
 
 ### 8. Spotify

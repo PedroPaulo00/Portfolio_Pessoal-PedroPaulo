@@ -329,7 +329,7 @@ export function App() {
               {t.muteBackground}
             </button>
           ) : null}
-          <DesktopBackdrop />
+          <DesktopBackdrop dark={theme === 'dark'} />
           {content.desktopIcons.length > 0 ? <DesktopIcons icons={content.desktopIcons} /> : null}
           {windowState === 'closed' ? (
             <PortfolioShortcut image={portfolioIcon} buttonRef={shortcutRef} onOpen={reopenWindow} />

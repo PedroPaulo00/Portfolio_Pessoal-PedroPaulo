@@ -40,6 +40,9 @@ ICONS = {
     "desktop/thesims.png": "desktop/thesims.png",
     "desktop/cs16.png": "desktop/cs16.png",
     "desktop/minecraft.png": "desktop/minecraft.png",
+    "desktop/media_player.png": "desktop/media-player.png",
+    "desktop/bonzi.webp": "desktop/bonzi.png",
+    "desktop/clippy.png": "desktop/clippy.png",
 }
 
 
@@ -189,6 +192,12 @@ def main() -> None:
          "wallpaper/wallpaper-1920.webp", format="WEBP", quality=80, method=6)
     save(wallpaper.resize((1280, round(1280 * wallpaper.height / wallpaper.width)), Image.LANCZOS),
          "wallpaper/wallpaper-1280.webp", format="WEBP", quality=78, method=6)
+    # Papel de parede do tema escuro (mesmos tamanhos).
+    dark = Image.open(SRC / "wallpaper" / "dark_wallpaper.jpg").convert("RGB")
+    save(dark.resize((1920, round(1920 * dark.height / dark.width)), Image.LANCZOS),
+         "wallpaper/wallpaper-dark-1920.webp", format="WEBP", quality=80, method=6)
+    save(dark.resize((1280, round(1280 * dark.height / dark.width)), Image.LANCZOS),
+         "wallpaper/wallpaper-dark-1280.webp", format="WEBP", quality=78, method=6)
 
     # Logo do site (barra de título, menu, barra de tarefas) e favicons.
     logo = square(Image.open(SRC / "brands" / "AFL_logo.png"))

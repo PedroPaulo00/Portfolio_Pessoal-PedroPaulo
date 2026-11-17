@@ -113,6 +113,10 @@ const pt = {
 
   // Área de trabalho e navegação
   desktopShortcuts: 'Atalhos da área de trabalho',
+  comingSoon: 'Em breve',
+  desktopTemplate: (label: string) =>
+    `Aqui vai ficar o conteúdo de ${label}. Por enquanto, esta janela é só um modelo.`,
+  underConstruction: 'Conteúdo em construção',
   projectCategories: 'Categorias de projeto',
 
   // Início
@@ -329,6 +333,9 @@ const en: UiStrings = {
   search: 'Search',
 
   desktopShortcuts: 'Desktop shortcuts',
+  comingSoon: 'Coming soon',
+  desktopTemplate: (label) => `This is where ${label} will live. For now, this window is just a placeholder.`,
+  underConstruction: 'Under construction',
   projectCategories: 'Project categories',
 
   inThisPortfolio: 'In this portfolio',

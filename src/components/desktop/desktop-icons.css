@@ -5,32 +5,61 @@
 
 :root {
   --desktop-icons-width: 92px;
+  /* Célula fixa, como a grade de ícones do Windows: borda + respiro + imagem de
+     48 px + rótulo de até 2 linhas. Todos os ícones ocupam a mesma altura, com
+     ou sem rótulo em duas linhas, e as colunas ficam alinhadas entre si. */
+  --desktop-icon-height: calc(2px + 6px + 48px + 4px + 2 * 1.25 * var(--text-caption) + 5px);
 }
 
 .desktop-icons {
   position: fixed;
   top: 0;
   left: max(6px, env(safe-area-inset-left, 0px));
+  right: 0;
   bottom: calc(var(--taskbar-height) + env(safe-area-inset-bottom, 0px));
   z-index: 0;
-  width: var(--desktop-icons-width);
   padding: 10px 0;
   overflow: hidden;
   user-select: none;
+  /* A faixa cobre a área de trabalho, mas só os ícones recebem cliques. */
+  pointer-events: none;
 }
+/* Grade de células iguais, de cima para baixo e, se a tela for baixa, na coluna
+   seguinte (como no Windows). A largura ocupada é medida em DesktopIcons.tsx
+   (--desktop-icons-span). */
 .desktop-icons__list {
   display: grid;
-  gap: 6px;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(auto-fill, var(--desktop-icon-height));
+  grid-auto-columns: var(--desktop-icons-width);
+  align-content: start;
+  justify-content: start;
+  row-gap: 6px;
+  height: 100%;
   margin: 0;
   padding: 0;
   list-style: none;
+}
+.desktop-icons__list > li {
+  width: var(--desktop-icons-width);
+  pointer-events: auto;
+}
+/* A janela-modelo mora dentro da faixa: precisa voltar a receber cliques
+   (fechar, botões e clique fora). */
+.desktop-icons .aero-dialog {
+  pointer-events: auto;
 }
 
 .desktop-icon {
   display: grid;
   justify-items: center;
+  align-content: start;
+  height: 100%;
   gap: 4px;
+  width: 100%;
   padding: 6px 4px 5px;
+  font: inherit;
+  background: transparent;
   color: #fff;
   text-align: center;
   text-decoration: none;
@@ -106,21 +135,6 @@
     opacity: 0;
   }
 }
-/* Sem a janela, os ícones podem ocupar mais de uma coluna (telas baixas), de
-   cima para baixo e da esquerda para a direita, como no Windows. */
-html.window-away .desktop-icons {
-  width: auto;
-  right: 0;
-}
-html.window-away .desktop-icons__list {
-  display: flex;
-  flex-flow: column wrap;
-  align-content: flex-start;
-  height: 100%;
-}
-html.window-away .desktop-icons__list > li {
-  width: var(--desktop-icons-width);
-}
 
 /* ---------- Atalho "Portfólio": abre a janela ----------
    No centro da área de trabalho, longe dos ícones de cenário. */
@@ -187,10 +201,55 @@ html.window-away .desktop-icons__list > li {
     transform: scale(0.85);
   }
 }
-/* Celular baixo: os ícones de cenário ocupam duas colunas; o atalho se centraliza
-   no espaço que sobra à direita delas. */
-@media (max-width: 37.49em) and (max-height: 43.75em) {
-  .portfolio-shortcut {
-    padding-left: calc(var(--desktop-icons-width) * 2 + 6px);
-  }
+/* O atalho se centraliza no espaço livre à direita dos ícones (que podem ocupar
+   várias colunas em telas baixas), para nunca ficar por cima deles. */
+.portfolio-shortcut {
+  padding-left: calc(var(--desktop-icons-span, 0px) + 6px);
+}
+
+/* ---------- Janela-modelo de um ícone (conteúdo "em breve") ---------- */
+.desktop-template {
+  display: grid;
+  gap: 14px;
+}
+.desktop-template__head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.desktop-template__icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 76px;
+  height: 76px;
+  border: 1px solid var(--divider);
+  border-radius: 4px;
+  background: linear-gradient(var(--surface), var(--sidebar));
+}
+.desktop-template__icon .desktop-icon__image {
+  width: 64px;
+  height: 64px;
+  filter: drop-shadow(0 2px 2px rgba(0, 10, 30, 0.3));
+}
+.desktop-template__name {
+  margin: 0 0 6px;
+  font-size: 1.25rem;
+  color: var(--heading);
+}
+.desktop-template__placeholder {
+  display: grid;
+  place-items: center;
+  min-height: 120px;
+  padding: 16px;
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+  text-align: center;
+  border: 1px dashed var(--divider);
+  border-radius: 4px;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent 0 10px,
+    color-mix(in srgb, var(--text-secondary) 6%, transparent) 10px 20px
+  );
 }

@@ -11,9 +11,12 @@
 import somFundo from '../assets/audio/som_fundo_novo.mp3';
 import logo from '../assets/brands/logo.png';
 import arquivosIcon from '../assets/desktop/arquivos.png';
+import bonziIcon from '../assets/desktop/bonzi.png';
+import clippyIcon from '../assets/desktop/clippy.png';
 import computadorIcon from '../assets/desktop/computador.png';
 import cs16Icon from '../assets/desktop/cs16.png';
 import lixeiraIcon from '../assets/desktop/lixeira.png';
+import mediaPlayerIcon from '../assets/desktop/media-player.png';
 import minecraftIcon from '../assets/desktop/minecraft.png';
 import msnIcon from '../assets/desktop/msn.png';
 import theSimsIcon from '../assets/desktop/thesims.png';
@@ -444,9 +447,12 @@ export const portfolio: PortfolioData<'source'> = {
     { id: 'computador', label: { pt: 'Meu computador', en: 'Computer' }, kind: 'computador', image: computadorIcon },
     { id: 'arquivos', label: { pt: 'Arquivos', en: 'Files' }, kind: 'arquivos', image: arquivosIcon },
     { id: 'msn', label: 'MSN', kind: 'template', image: msnIcon },
+    { id: 'media-player', label: 'Media Player', kind: 'template', image: mediaPlayerIcon },
     { id: 'the-sims-2', label: 'The Sims 2', kind: 'template', image: theSimsIcon },
     { id: 'cs-16', label: 'CS 1.6', kind: 'template', image: cs16Icon },
     { id: 'minecraft', label: 'Minecraft', kind: 'template', image: minecraftIcon },
+    { id: 'bonzi', label: 'Bonzi', kind: 'template', image: bonziIcon },
+    { id: 'clippy', label: 'Clippy', kind: 'template', image: clippyIcon },
   ],
 
   // Política de privacidade (rota #privacidade). Revise se algo mudar no site

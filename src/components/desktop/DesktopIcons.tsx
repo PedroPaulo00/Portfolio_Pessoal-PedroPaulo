@@ -1,33 +1,88 @@
-import { useId, type JSX, type MouseEvent, type Ref } from 'react';
+import { useId, useLayoutEffect, useRef, useState, type JSX, type MouseEvent, type Ref } from 'react';
 import { useI18n } from '../../i18n/I18n';
 import { useNavigation } from '../../lib/navigation';
 import { parseHash } from '../../lib/router';
 import type { DesktopIcon, DesktopIconKind } from '../../types/portfolio';
+import { AeroDialog } from '../ui/AeroDialog';
 import './desktop-icons.css';
 
 /**
- * Ícones da área de trabalho, à esquerda, estilo Windows 7.
- * Sem `href`: puro cenário (aria-hidden, sem foco, sem cursor de clique).
- * Com `href`: link real — '#secao' navega dentro da janela; URL abre em nova aba.
+ * Ícones da área de trabalho, à esquerda, estilo Windows 7. Todos clicáveis:
+ * com `href`, é um link ('#secao' navega dentro da janela; URL abre em nova aba);
+ * sem `href`, abre uma janela-modelo ("em breve") com o ícone e o nome.
+ *
+ * Como no Windows, a lista desce em coluna e passa para a coluna seguinte quando
+ * a tela é baixa. A largura ocupada vai para --desktop-icons-span (no <html>):
+ * a janela e o atalho "Portfólio" usam esse valor para não cobrir os ícones.
  */
 export function DesktopIcons({ icons }: { readonly icons: readonly DesktopIcon[] }) {
   const { t } = useI18n();
-  const interactive = icons.some((icon) => icon.href);
+  const navRef = useRef<HTMLElement>(null);
+  const [opened, setOpened] = useState<DesktopIcon | null>(null);
+
+  useLayoutEffect(() => {
+    const nav = navRef.current;
+    if (!nav) return;
+    const root = document.documentElement;
+    const measure = () => {
+      // Borda direita do ícone mais à direita (0 se a lista estiver escondida).
+      let right = 0;
+      for (const item of nav.querySelectorAll('li')) {
+        const box = item.getBoundingClientRect();
+        if (box.width > 0) right = Math.max(right, box.right);
+      }
+      root.style.setProperty('--desktop-icons-span', `${Math.ceil(right)}px`);
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(nav);
+    window.addEventListener('resize', measure);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', measure);
+      root.style.removeProperty('--desktop-icons-span');
+    };
+  }, [icons.length]);
 
   return (
-    <nav
-      className="desktop-icons"
-      aria-label={interactive ? t.desktopShortcuts : undefined}
-      aria-hidden={interactive ? undefined : true}
-    >
+    <nav ref={navRef} className="desktop-icons" aria-label={t.desktopShortcuts}>
       <ul className="desktop-icons__list">
         {icons.map((icon) => (
-          <li key={icon.id} aria-hidden={icon.href ? undefined : true}>
-            {icon.href ? <IconLink icon={icon} href={icon.href} /> : <IconFace icon={icon} />}
+          <li key={icon.id}>
+            {icon.href ? (
+              <IconLink icon={icon} href={icon.href} />
+            ) : (
+              <IconButton icon={icon} onOpen={() => setOpened(icon)} />
+            )}
           </li>
         ))}
       </ul>
+      <AeroDialog open={opened !== null} title={opened?.label ?? ''} onClose={() => setOpened(null)}>
+        {opened ? <TemplateWindow icon={opened} /> : null}
+      </AeroDialog>
     </nav>
+  );
+}
+
+/** Conteúdo provisório da janela de um ícone (até o conteúdo real existir). */
+function TemplateWindow({ icon }: { readonly icon: DesktopIcon }) {
+  const { t } = useI18n();
+  return (
+    <div className="desktop-template">
+      <div className="desktop-template__head">
+        <span className="desktop-template__icon">
+          <IconImage icon={icon} size={64} />
+        </span>
+        <div>
+          <p className="desktop-template__name">{icon.label}</p>
+          <span className="badge desktop-template__badge">{t.comingSoon}</span>
+        </div>
+      </div>
+      <p>{t.desktopTemplate(icon.label)}</p>
+      <div className="desktop-template__placeholder" aria-hidden="true">
+        {t.underConstruction}
+      </div>
+    </div>
   );
 }
 
@@ -87,18 +142,18 @@ function IconLink({ icon, href }: { readonly icon: DesktopIcon; readonly href: s
   );
 }
 
-function IconFace({ icon }: { readonly icon: DesktopIcon }) {
+function IconButton({ icon, onOpen }: { readonly icon: DesktopIcon; readonly onOpen: () => void }) {
   return (
-    <span className="desktop-icon">
+    <button type="button" className="desktop-icon desktop-icon--link" aria-haspopup="dialog" onClick={onOpen}>
       <IconImage icon={icon} />
       <span className="desktop-icon__label">{icon.label}</span>
-    </span>
+    </button>
   );
 }
 
-function IconImage({ icon }: { readonly icon: DesktopIcon }) {
+function IconImage({ icon, size = 48 }: { readonly icon: DesktopIcon; readonly size?: number }) {
   if (icon.image) {
-    return <img className="desktop-icon__image" src={icon.image} alt="" width={48} height={48} draggable={false} />;
+    return <img className="desktop-icon__image" src={icon.image} alt="" width={size} height={size} draggable={false} />;
   }
   return <IconArt kind={icon.kind} />;
 }

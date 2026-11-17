@@ -69,12 +69,13 @@ html.window-away {
   }
 }
 
-/* Com ícones na área de trabalho (≥ 1024 px): a janela não os cobre. Margem
+/* Com ícones na área de trabalho (≥ 1024 px): a janela não os cobre (a largura
+   ocupada, que cresce em telas baixas, vem de DesktopIcons.tsx). Margem
    simétrica para continuar centralizada. */
 @media (min-width: 64em) {
   .desktop-stage--with-icons {
-    padding-left: max(clamp(12px, 4vw, 48px), calc(var(--desktop-icons-width) + 20px));
-    padding-right: max(clamp(12px, 4vw, 48px), calc(var(--desktop-icons-width) + 20px));
+    padding-left: max(clamp(12px, 4vw, 48px), calc(var(--desktop-icons-span, 98px) + 14px));
+    padding-right: max(clamp(12px, 4vw, 48px), calc(var(--desktop-icons-span, 98px) + 14px));
   }
 }
 

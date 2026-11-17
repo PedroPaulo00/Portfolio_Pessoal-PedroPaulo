@@ -151,8 +151,9 @@ export interface DesktopIcon<M extends Mode = 'view'> {
   /** Imagem própria (importada de src/assets/), no lugar do desenho de `kind`. */
   readonly image?: string;
   /**
-   * Destino ao clicar. Sem `href`, o ícone é só cenário (sem clique nem foco).
-   * Aceita URL externa (abre em nova aba) ou rota interna como '#projetos'.
+   * Destino ao clicar: URL externa (abre em nova aba) ou rota interna como
+   * '#projetos'. Sem `href`, o clique abre uma janela-modelo ("em breve") com
+   * o ícone e o nome, até o conteúdo de verdade ser definido.
    */
   readonly href?: string;
 }
