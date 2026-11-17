@@ -114,6 +114,13 @@ const pt = {
   // Área de trabalho e navegação
   desktopShortcuts: 'Atalhos da área de trabalho',
   comingSoon: 'Em breve',
+  msn: {
+    title: 'Windows Live Messenger',
+    alt: 'Janela do Windows Live Messenger, com a tela de entrada, os emoticons e o menu de status',
+    knock: 'Chamar a atenção (toc toc)',
+    nudgeButton: 'Chamar a atenção',
+    hint: 'Clique na mão para chamar a atenção, como no MSN.',
+  },
   surferStop: (what: string) => `${what} pela tela. Clique para ele ir embora`,
   clippy: {
     label: 'Clippy, o assistente',
@@ -369,6 +376,13 @@ const en: UiStrings = {
 
   desktopShortcuts: 'Desktop shortcuts',
   comingSoon: 'Coming soon',
+  msn: {
+    title: 'Windows Live Messenger',
+    alt: 'Windows Live Messenger window, with the sign-in screen, the emoticons and the status menu',
+    knock: 'Send a nudge (knock knock)',
+    nudgeButton: 'Send a nudge',
+    hint: 'Click the hand to send a nudge, just like on MSN.',
+  },
   surferStop: (what) => `${what} across the screen. Click to make him go away`,
   clippy: {
     label: 'Clippy, the assistant',

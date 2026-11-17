@@ -250,6 +250,117 @@ def key_out_teal(frame: Image.Image) -> Image.Image:
     return rgba
 
 
+def key_out_nudge(frame: Image.Image) -> Image.Image:
+    """Quadro do "toc toc" (GIF do MSN) → mão sem fundo. Tira a moldura de 1 px e
+    as barras pretas laterais do GIF e o fundo lilás (azul ~100 acima do vermelho
+    e do verde; a mão fica abaixo de ~60), com borda suave e sem halo."""
+    bg = (154, 149, 253)
+    rgba = frame.convert("RGBA")
+    px = rgba.load()
+    w, h = rgba.size
+    for y in range(h):
+        for x in range(w):
+            r, g, b, _ = px[x, y]
+            if x < 146 or x > w - 147 or y < 3 or y > h - 4 or (r < 40 and g < 40 and b < 40):
+                px[x, y] = (0, 0, 0, 0)
+                continue
+            blue = b - max(r, g)
+            a = 1.0 if blue <= 62 else 0.0 if blue >= 88 else 1 - (blue - 62) / 26
+            if a <= 0:
+                px[x, y] = (0, 0, 0, 0)
+                continue
+            if a < 1:
+                r, g, b = (max(0, min(255, round((c - (1 - a) * k) / a))) for c, k in zip((r, g, b), bg))
+            px[x, y] = (r, g, b, round(a * 255))
+    return rgba
+
+
+def messenger() -> None:
+    """Janela do MSN (ícone da área de trabalho): a imagem aparada e o "toc toc".
+
+    A mão parada da imagem é coberta pela mão do GIF, esticada para o mesmo
+    tamanho; ao clicar, os quadros da batida tocam por cima (folha de quadros,
+    controlada pelo site). Gera também msn-toc.json com a posição da mão (em %
+    da imagem), a sequência e os tempos dos quadros e os momentos das batidas."""
+    import json
+
+    png = Image.open(SRC / "desktop/msn_conteudo.png").convert("RGBA")
+    trim = png.getchannel("A").point(lambda v: 255 if v > 8 else 0).getbbox()
+    content = png.crop(trim)
+    save(content, "desktop/msn-conteudo.webp", format="WEBP", quality=88, method=6)
+    tw, th = content.size
+
+    # Quadros 10 a 31: mão parada (10) → três batidas (14, 20, 26) → de volta.
+    gif = Image.open(SRC / "desktop/toc_toc.gif")
+    first, last, impacts = 10, 31, (14, 20, 26)
+    frames, durations, starts, clock = [], [], {}, 0
+    for index in range(gif.n_frames):
+        gif.seek(index)
+        starts[index] = clock
+        duration = gif.info.get("duration", 30)
+        if first <= index <= last:
+            frames.append(key_out_nudge(gif))
+            durations.append(duration)
+        clock += duration
+    union = (146, 22, 814, 521)  # caixa que contém a mão em todos esses quadros
+    idle = (228, 25, 692, 512)  # mão parada (quadro 10) dentro do GIF
+    target = (571, 354, 909, 652)  # mão parada na imagem do MSN
+    sx = (target[2] - target[0]) / (idle[2] - idle[0])
+    sy = (target[3] - target[1]) / (idle[3] - idle[1])
+    grow = 1.04  # um pouco maior: cobre a borda da mão da imagem
+    cx, cy = (target[0] + target[2]) / 2, (target[1] + target[3]) / 2
+    left = target[0] - (idle[0] - union[0]) * sx
+    top = target[1] - (idle[1] - union[1]) * sy
+    width, height = (union[2] - union[0]) * sx, (union[3] - union[1]) * sy
+    left, top = cx + (left - cx) * grow, cy + (top - cy) * grow
+    width, height = width * grow, height * grow
+
+    # Quadros únicos (os repetidos viram o mesmo índice) numa folha em grade.
+    fw, fh = round(width * 0.8), round(height * 0.8)  # folha mais leve; nítida no tamanho exibido
+    unique, sequence = [], []
+    for frame in frames:
+        cropped = frame.crop(union).resize((fw, fh), Image.LANCZOS)
+        data = cropped.tobytes()
+        match = next((i for i, u in enumerate(unique) if u.tobytes() == data), None)
+        if match is None:
+            unique.append(cropped)
+            match = len(unique) - 1
+        sequence.append(match)
+    columns = 6
+    rows = -(-len(unique) // columns)
+    sheet = Image.new("RGBA", (fw * columns, fh * rows), (0, 0, 0, 0))
+    for i, frame in enumerate(unique):
+        sheet.paste(frame, ((i % columns) * fw, (i // columns) * fh))
+    save(sheet, "desktop/msn-toc.webp", format="WEBP", quality=86, method=6)
+
+    pct = lambda value, total: round(value / total * 100, 3)  # noqa: E731
+    meta = {
+        "frameWidth": fw,
+        "frameHeight": fh,
+        "columns": columns,
+        "rows": rows,
+        "sequence": sequence,
+        "durations": durations,
+        "impacts": [starts[i] - starts[first] for i in impacts],
+        "hand": {
+            "left": pct(left - trim[0], tw),
+            "top": pct(top - trim[1], th),
+            "width": pct(width, tw),
+            "height": pct(height, th),
+        },
+        # Botão "Send a nudge" da imagem (também chama a atenção).
+        "nudgeButton": {
+            "left": pct(1054 - trim[0], tw),
+            "top": pct(148 - trim[1], th),
+            "width": pct(84, tw),
+            "height": pct(64, th),
+        },
+    }
+    out = ROOT / "desktop/msn-toc.json"
+    out.write_text(json.dumps(meta, indent=2) + chr(10), encoding="utf-8")
+    print(f"{'desktop/msn-toc.json':34} {len(unique)} quadros únicos de {len(sequence)}")
+
+
 def save(image: Image.Image, relative: str, **options) -> None:
     out = ROOT / relative
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -340,6 +451,7 @@ def main() -> None:
     frames[0].save(target, format="WEBP", save_all=True, append_images=frames[1:], duration=durations,
                    loop=0, quality=85, method=6, lossless=False, allow_mixed=True)
     print(f"{'desktop/clippy-assistente.webp':<35}{target.stat().st_size // 1024:>4} KB")
+    messenger()
     save(square(Image.open(SRC / "desktop/portfolio.png")).resize((192, 192), Image.LANCZOS),
          "desktop/portfolio.png", optimize=True)
 

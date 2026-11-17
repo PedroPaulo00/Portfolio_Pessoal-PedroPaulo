@@ -455,7 +455,7 @@ export const portfolio: PortfolioData<'source'> = {
     },
     { id: 'computador', label: { pt: 'Meu computador', en: 'Computer' }, kind: 'computador', image: computadorIcon },
     { id: 'arquivos', label: { pt: 'Arquivos', en: 'Files' }, kind: 'arquivos', image: arquivosIcon },
-    { id: 'msn', label: 'MSN', kind: 'template', image: msnIcon },
+    { id: 'msn', label: 'MSN', kind: 'template', image: msnIcon, app: 'messenger' },
     { id: 'media-player', label: 'Media Player', kind: 'template', image: mediaPlayerIcon },
     { id: 'the-sims-2', label: 'The Sims 2', kind: 'template', image: theSimsIcon },
     { id: 'cs-16', label: 'CS 1.6', kind: 'template', image: cs16Icon },

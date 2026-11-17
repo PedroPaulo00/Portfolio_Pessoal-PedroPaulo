@@ -6,6 +6,7 @@ import { parseHash } from '../../lib/router';
 import type { DesktopIcon, DesktopIconKind } from '../../types/portfolio';
 import { AeroDialog } from '../ui/AeroDialog';
 import { Assistant } from './Assistant';
+import { Messenger } from './Messenger';
 import { Surfer } from './Surfer';
 import './desktop-icons.css';
 
@@ -102,8 +103,15 @@ export function DesktopIcons({ icons, windowOpen, onOpenWindow }: DesktopIconsPr
           </li>
         ))}
       </ul>
-      <AeroDialog open={opened !== null} title={opened?.label ?? ''} onClose={() => setOpened(null)}>
-        {opened?.content ? (
+      <AeroDialog
+        open={opened !== null}
+        wide={opened?.app === 'messenger'}
+        title={opened?.app === 'messenger' ? t.msn.title : (opened?.label ?? '')}
+        onClose={() => setOpened(null)}
+      >
+        {opened?.app === 'messenger' ? (
+          <Messenger />
+        ) : opened?.content ? (
           <div className="desktop-window">
             <img
               className="desktop-window__image"

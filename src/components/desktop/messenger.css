@@ -1,0 +1,57 @@
+/* ==========================================================================
+   Janela do MSN [EXT]: a imagem do Windows Live Messenger e a mão do "chamar
+   a atenção" por cima (quadros controlados em Messenger.tsx).
+   ========================================================================== */
+
+.msn {
+  display: grid;
+  gap: 8px;
+  padding: 12px 12px 4px;
+}
+/* A imagem inteira cabe na janela sem rolar (descontando título e rodapé). */
+.msn__stage {
+  position: relative;
+  width: min(100%, calc((100dvh - var(--taskbar-height, 40px) - 200px) * 1.4837));
+  aspect-ratio: 1322 / 891;
+  margin: 0 auto;
+  user-select: none;
+}
+.msn__image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+}
+.msn__hand,
+.msn__hotspot {
+  position: absolute;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.msn__hand {
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 4px 6px rgba(20, 20, 80, 0.25));
+  transition: filter 160ms ease;
+}
+@media (hover: hover) {
+  .msn__hand:hover {
+    filter: drop-shadow(0 4px 6px rgba(20, 20, 80, 0.25)) brightness(1.06);
+  }
+}
+.msn__hotspot {
+  border-radius: 4px;
+}
+.msn__hand:focus-visible,
+.msn__hotspot:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.msn__hint {
+  margin: 0;
+  font-size: var(--text-small);
+  text-align: center;
+  color: var(--text-secondary);
+}

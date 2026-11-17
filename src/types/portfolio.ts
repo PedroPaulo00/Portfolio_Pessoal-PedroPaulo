@@ -168,6 +168,8 @@ export interface DesktopIcon<M extends Mode = 'view'> {
    * com o balão de dicas, no lugar de abrir uma janela.
    */
   readonly assistant?: string;
+  /** Janela própria feita em código (ex.: 'messenger', o MSN com o "toc toc"). */
+  readonly app?: 'messenger';
 }
 
 export interface DesktopIconContent<M extends Mode = 'view'> {
