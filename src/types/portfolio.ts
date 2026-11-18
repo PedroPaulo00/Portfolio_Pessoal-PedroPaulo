@@ -169,7 +169,9 @@ export interface DesktopIcon<M extends Mode = 'view'> {
    */
   readonly assistant?: string;
   /** Janela própria feita em código (ex.: 'messenger', o MSN com o "toc toc"). */
-  readonly app?: 'messenger';
+  readonly app?: 'messenger' | 'media-player';
+  /** Vídeos do Media Player (app 'media-player'), na ordem de reprodução. */
+  readonly playlist?: readonly string[];
 }
 
 export interface DesktopIconContent<M extends Mode = 'view'> {

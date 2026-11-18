@@ -361,6 +361,36 @@ def messenger() -> None:
     print(f"{'desktop/msn-toc.json':34} {len(unique)} quadros únicos de {len(sequence)}")
 
 
+def media_player_skin() -> None:
+    """Skin do Windows Media Player (ícone da área de trabalho): o preto de fora
+    e a tela da cabeça viram transparentes. O vídeo fica atrás da skin, e a
+    moldura verde o recorta no formato exato da tela."""
+    from collections import deque
+
+    from PIL import ImageFilter
+
+    skin = Image.open(SRC / "desktop/win_media_player.png").convert("RGBA")
+    w, h = skin.size
+    px = skin.load()
+    mask = Image.new("L", (w, h), 255)
+    m = mask.load()
+
+    def dark(x: int, y: int) -> bool:
+        return max(px[x, y][:3]) <= 34
+
+    seeds = [(x, y) for x in range(w) for y in (0, h - 1)] + [(x, y) for y in range(h) for x in (0, w - 1)]
+    seeds.append((200, 150))  # centro da tela
+    queue = deque(seeds)
+    while queue:
+        x, y = queue.popleft()
+        if not (0 <= x < w and 0 <= y < h) or m[x, y] == 0 or not dark(x, y):
+            continue
+        m[x, y] = 0
+        queue.extend(((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)))
+    skin.putalpha(mask.filter(ImageFilter.GaussianBlur(0.6)))
+    save(skin, "desktop/media-player-skin.webp", format="WEBP", quality=92, method=6)
+
+
 def save(image: Image.Image, relative: str, **options) -> None:
     out = ROOT / relative
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -452,6 +482,7 @@ def main() -> None:
                    loop=0, quality=85, method=6, lossless=False, allow_mixed=True)
     print(f"{'desktop/clippy-assistente.webp':<35}{target.stat().st_size // 1024:>4} KB")
     messenger()
+    media_player_skin()
     save(square(Image.open(SRC / "desktop/portfolio.png")).resize((192, 192), Image.LANCZOS),
          "desktop/portfolio.png", optimize=True)
 

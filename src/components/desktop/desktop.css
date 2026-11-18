@@ -114,6 +114,25 @@
   height: 100%;
   align-items: center;
   min-width: 0;
+  /* Muitas janelas abertas: os botões encolhem (e, no limite, o excesso é
+     cortado na horizontal, sem cortar a miniatura que abre para cima). */
+  overflow-x: clip;
+}
+/* Botões das janelas abertas pelos ícones: encolhem para caber. */
+.taskbar__task:has(.taskbar__item--app) {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+.taskbar__item--app {
+  min-width: 0;
+}
+.taskbar__item-icon {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.45));
+  -webkit-user-drag: none;
 }
 .taskbar__task[hidden] {
   display: none;
@@ -709,5 +728,49 @@
 @media (pointer: coarse) {
   .language-button {
     min-width: 44px;
+  }
+}
+
+/* Toque: os botões das janelas dos ícones podem ficar mais estreitos que 44 px
+   quando há muitos abertos (o ícone continua inteiro). */
+@media (pointer: coarse) {
+  .taskbar__item.taskbar__item--app {
+    min-width: 36px;
+  }
+}
+
+/* Celular: sobra pouco espaço entre o Iniciar e a bandeja. Com muitas janelas
+   abertas, os botões mantêm o tamanho e a fileira desliza para o lado com o
+   dedo (sem barra de rolagem à vista), em vez de se amontoarem. A miniatura
+   (que abre para cima) não existe no celular, então nada é cortado. */
+@media (max-width: 37.49em) {
+  .taskbar__items {
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+  .taskbar__items::-webkit-scrollbar {
+    display: none;
+  }
+  .taskbar__task:has(.taskbar__item--app) {
+    flex: none;
+  }
+}
+
+/* Celular bem estreito (até 360 px): bandeja mais justa, sobrando espaço para
+   os botões das janelas abertas. */
+@media (max-width: 22.5em) {
+  .taskbar__tray {
+    gap: 0;
+    padding: 0 4px 0 6px;
+  }
+  .language-button,
+  .volume__button {
+    min-width: 38px;
+    width: 38px;
+  }
+  .taskbar__start {
+    width: 56px;
   }
 }

@@ -114,6 +114,17 @@ const pt = {
   // Área de trabalho e navegação
   desktopShortcuts: 'Atalhos da área de trabalho',
   comingSoon: 'Em breve',
+  mediaPlayer: {
+    title: 'Windows Media Player',
+    play: 'Reproduzir',
+    pause: 'Pausar',
+    stop: 'Parar',
+    previous: 'Vídeo anterior',
+    next: 'Próximo vídeo',
+    minimize: 'Minimizar',
+    close: 'Fechar',
+    track: (index: number, total: number) => `Vídeo ${index} de ${total}`,
+  },
   msn: {
     title: 'Windows Live Messenger',
     alt: 'Janela do Windows Live Messenger, com a tela de entrada, os emoticons e o menu de status',
@@ -376,6 +387,17 @@ const en: UiStrings = {
 
   desktopShortcuts: 'Desktop shortcuts',
   comingSoon: 'Coming soon',
+  mediaPlayer: {
+    title: 'Windows Media Player',
+    play: 'Play',
+    pause: 'Pause',
+    stop: 'Stop',
+    previous: 'Previous video',
+    next: 'Next video',
+    minimize: 'Minimize',
+    close: 'Close',
+    track: (index, total) => `Video ${index} of ${total}`,
+  },
   msn: {
     title: 'Windows Live Messenger',
     alt: 'Windows Live Messenger window, with the sign-in screen, the emoticons and the status menu',

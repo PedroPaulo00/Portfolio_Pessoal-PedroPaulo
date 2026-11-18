@@ -20,6 +20,10 @@ import cs16Icon from '../assets/desktop/cs16.png';
 import lixeiraContent from '../assets/desktop/lixeira-conteudo.webp';
 import lixeiraIcon from '../assets/desktop/lixeira.png';
 import mediaPlayerIcon from '../assets/desktop/media-player.png';
+import mediaPlayerVideo1 from '../assets/video/media-player-1.mp4';
+import mediaPlayerVideo2 from '../assets/video/media-player-2.mp4';
+import mediaPlayerVideo3 from '../assets/video/media-player-3.mp4';
+import mediaPlayerVideo4 from '../assets/video/media-player-4.mp4';
 import minecraftIcon from '../assets/desktop/minecraft.png';
 import msnIcon from '../assets/desktop/msn.png';
 import theSimsIcon from '../assets/desktop/thesims.png';
@@ -456,7 +460,16 @@ export const portfolio: PortfolioData<'source'> = {
     { id: 'computador', label: { pt: 'Meu computador', en: 'Computer' }, kind: 'computador', image: computadorIcon },
     { id: 'arquivos', label: { pt: 'Arquivos', en: 'Files' }, kind: 'arquivos', image: arquivosIcon },
     { id: 'msn', label: 'MSN', kind: 'template', image: msnIcon, app: 'messenger' },
-    { id: 'media-player', label: 'Media Player', kind: 'template', image: mediaPlayerIcon },
+    {
+      id: 'media-player',
+      label: 'Media Player',
+      kind: 'template',
+      image: mediaPlayerIcon,
+      app: 'media-player',
+      // Para mais vídeos: coloque o .mp4 em src/assets/video/, importe acima e
+      // acrescente aqui (anterior/próximo seguem esta ordem).
+      playlist: [mediaPlayerVideo1, mediaPlayerVideo2, mediaPlayerVideo3, mediaPlayerVideo4],
+    },
     { id: 'the-sims-2', label: 'The Sims 2', kind: 'template', image: theSimsIcon },
     { id: 'cs-16', label: 'CS 1.6', kind: 'template', image: cs16Icon },
     { id: 'minecraft', label: 'Minecraft', kind: 'template', image: minecraftIcon },

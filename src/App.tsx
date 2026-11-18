@@ -335,6 +335,7 @@ export function App() {
               icons={content.desktopIcons}
               windowOpen={windowState === 'open'}
               onOpenWindow={() => (windowState === 'closed' ? reopenWindow() : setWindowState('open'))}
+              poweredOn={booted && power === null}
             />
           ) : null}
           {windowState === 'closed' ? (

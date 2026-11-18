@@ -8,7 +8,7 @@
  * do visitante, o navegador libera o áudio na hora; se ainda assim bloquear, o
  * som começa na interação seguinte.
  */
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react';
 import type { SoundConfig } from '../types/portfolio';
 
 const VOLUME_KEY = 'portfolio-aero:volume';
@@ -17,6 +17,25 @@ const UNLOCK_EVENTS = ['pointerdown', 'keydown', 'touchend'] as const;
 /** Entrada e saída suaves da música, em segundos. */
 const FADE_IN = 2;
 const FADE_OUT = 0.4;
+
+/*
+ * "Abaixar a música" (ducking): outra fonte de som do site (ex.: o vídeo do
+ * Media Player) pede silêncio enquanto toca. A música some suavemente e volta
+ * quando ninguém mais pede. O volume escolhido pelo visitante não muda.
+ */
+const duckers = new Set<string>();
+const duckListeners = new Set<() => void>();
+export function duckAmbient(source: string, on: boolean): void {
+  const before = duckers.size > 0;
+  if (on) duckers.add(source);
+  else duckers.delete(source);
+  if (before !== duckers.size > 0) duckListeners.forEach((listener) => listener());
+}
+const subscribeDuck = (listener: () => void) => {
+  duckListeners.add(listener);
+  return () => duckListeners.delete(listener);
+};
+const isDucked = () => duckers.size > 0;
 
 export type AmbientStatus = 'idle' | 'loading' | 'waiting-interaction' | 'playing' | 'muted' | 'error';
 
@@ -278,6 +297,8 @@ export function useAmbientSound(config: SoundConfig): AmbientSound {
   const wanted = useRef(false);
 
   const effectiveGain = muted ? 0 : toGain(volume);
+  const ducked = useSyncExternalStore(subscribeDuck, isDucked, () => false);
+  const duckedRef = useRef(ducked);
 
   // O player nasce parado: só toca depois de play().
   useEffect(() => {
@@ -310,6 +331,7 @@ export function useAmbientSound(config: SoundConfig): AmbientSound {
     const instance = player.current;
     if (!instance || instance.active || readBool(MUTED_KEY)) return;
     instance.play(toGain(readNumber(VOLUME_KEY, config.defaultVolume)));
+    if (duckedRef.current) instance.fadeTo(0);
   }, [config.defaultVolume]);
 
   const stop = useCallback(() => {
@@ -328,11 +350,21 @@ export function useAmbientSound(config: SoundConfig): AmbientSound {
       if (effectiveGain > 0 && wanted.current) instance.play(effectiveGain);
       return;
     }
-    instance.fadeTo(effectiveGain);
+    if (!duckedRef.current) instance.fadeTo(effectiveGain);
     setStatus((current) =>
       current === 'playing' || current === 'muted' ? (effectiveGain === 0 ? 'muted' : 'playing') : current,
     );
   }, [effectiveGain]);
+
+  // Outra fonte de som pediu silêncio (ou liberou): saída e volta suaves.
+  useEffect(() => {
+    duckedRef.current = ducked;
+    const instance = player.current;
+    if (!instance?.active) return;
+    instance.fadeTo(ducked ? 0 : effectiveGain, ducked ? 0.5 : 1.2);
+    // effectiveGain fica de fora: mudar o volume com a música abaixada não a traz de volta.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ducked]);
 
   const setVolume = useCallback((next: number) => {
     const clamped = Math.round(Math.min(100, Math.max(0, next)));

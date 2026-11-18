@@ -1,11 +1,24 @@
-import { useId, useLayoutEffect, useRef, useState, type JSX, type MouseEvent, type Ref } from 'react';
+import {
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type JSX,
+  type MouseEvent,
+  type Ref,
+} from 'react';
 import { createPortal } from 'react-dom';
 import { useI18n } from '../../i18n/I18n';
+import type { UiStrings } from '../../i18n/ui';
+import { publishTasks, type Task } from '../../lib/tasks';
 import { useNavigation } from '../../lib/navigation';
 import { parseHash } from '../../lib/router';
 import type { DesktopIcon, DesktopIconKind } from '../../types/portfolio';
 import { AeroDialog } from '../ui/AeroDialog';
 import { Assistant } from './Assistant';
+import { MediaPlayer } from './MediaPlayer';
 import { Messenger } from './Messenger';
 import { Surfer } from './Surfer';
 import './desktop-icons.css';
@@ -25,46 +38,128 @@ interface DesktopIconsProps {
   readonly windowOpen: boolean;
   /** Abre (ou restaura) a janela do portfólio, a pedido do assistente. */
   readonly onOpenWindow: () => void;
+  /** Computador ligado: ao desligar ou reiniciar, o que estiver aberto aqui fecha (e para de tocar). */
+  readonly poweredOn: boolean;
 }
 
-export function DesktopIcons({ icons, windowOpen, onOpenWindow }: DesktopIconsProps) {
+export function DesktopIcons({ icons, windowOpen, onOpenWindow, poweredOn }: DesktopIconsProps) {
   const { t } = useI18n();
   const navRef = useRef<HTMLElement>(null);
-  const [opened, setOpened] = useState<DesktopIcon | null>(null);
-  // Ícone com `surf` em ação: a imagem passeia pela tela até ser clicada.
+  // Onde as janelas e personagens moram (o contêiner da área de trabalho, fora da
+  // faixa dos ícones, que forma uma camada própria abaixo da barra de tarefas).
+  const [host, setHost] = useState<Element | null>(null);
+  // Janelas abertas pelos ícones (Lixeira, MSN, modelos...), cada uma minimizável.
+  const [windows, setWindows] = useState<readonly { readonly icon: DesktopIcon; readonly minimized: boolean }[]>([]);
+  // Tarefa na frente das outras (a última clicada ou aberta).
+  const [front, setFront] = useState<string | null>(null);
+  // BonziBuddy surfando (até ser clicado).
   const [surfing, setSurfing] = useState<{
     readonly icon: DesktopIcon;
     readonly from: DOMRect;
-    readonly host: Element;
+    readonly minimized: boolean;
+  } | null>(null);
+  // Clippy: fica até ser ocultado; clicar de novo no ícone reabre o balão (`summon`).
+  const [assistant, setAssistant] = useState<{
+    readonly icon: DesktopIcon;
+    readonly summon: number;
+    readonly minimized: boolean;
+  } | null>(null);
+  // Media Player: aberto ou minimizado (o vídeo segue tocando), até fechar.
+  const [player, setPlayer] = useState<{
+    readonly icon: DesktopIcon;
+    readonly anchor: DOMRect;
+    readonly minimized: boolean;
   } | null>(null);
 
-  // Ícone com `assistant` (Clippy): fica no canto até ser ocultado. Clicar de
-  // novo no ícone só reabre o balão (`summon`).
-  const [assistant, setAssistant] = useState<{
-    readonly image: string;
-    readonly host: Element;
-    readonly summon: number;
-  } | null>(null);
+  // Desligar/reiniciar: fecha tudo o que os ícones abriram.
+  const [wasOn, setWasOn] = useState(poweredOn);
+  if (wasOn !== poweredOn) {
+    setWasOn(poweredOn);
+    if (!poweredOn) {
+      setPlayer(null);
+      setAssistant(null);
+      setSurfing(null);
+      setWindows([]);
+    }
+  }
 
   const openIcon = (icon: DesktopIcon, button: HTMLElement) => {
+    setHost((current) => current ?? button.closest('.os') ?? document.body);
+    if (icon.app === 'media-player' && icon.playlist?.length) {
+      // Minimizado: o ícone restaura; já aberto: só vem para a frente.
+      const anchor = button.getBoundingClientRect();
+      setPlayer((current) => (current ? { ...current, minimized: false } : { icon, anchor, minimized: false }));
+      setFront('media-player');
+      return;
+    }
     if (icon.assistant) {
-      const image = icon.assistant;
       setAssistant((current) =>
-        current
-          ? { ...current, summon: current.summon + 1 }
-          : { image, host: button.closest('.os') ?? document.body, summon: 0 },
+        current ? { ...current, summon: current.summon + 1, minimized: false } : { icon, summon: 0, minimized: false },
       );
       return;
     }
-    if (!icon.surf) {
-      setOpened(icon);
+    if (icon.surf) {
+      const from = button.getBoundingClientRect();
+      setSurfing((current) => (current ? { ...current, minimized: false } : { icon, from, minimized: false }));
       return;
     }
-    if (surfing) return; // já está na tela
-    // Fora da faixa dos ícones (que forma uma camada própria, abaixo da barra de
-    // tarefas): no contêiner da área de trabalho, para passar por cima de tudo.
-    setSurfing({ icon, from: button.getBoundingClientRect(), host: button.closest('.os') ?? document.body });
+    // Janela: abre (ou restaura, se já aberta) e vem para a frente.
+    setWindows((current) =>
+      current.some((w) => w.icon.id === icon.id)
+        ? current.map((w) => (w.icon.id === icon.id ? { ...w, minimized: false } : w))
+        : [...current, { icon, minimized: false }],
+    );
+    setFront(`window:${icon.id}`);
   };
+
+  const setWindowMinimized = (id: string, minimized: boolean) =>
+    setWindows((current) => current.map((w) => (w.icon.id === id ? { ...w, minimized } : w)));
+
+  // Barra de tarefas: um botão para cada coisa aberta pelos ícones.
+  useEffect(() => {
+    const tasks: Task[] = windows.map(({ icon, minimized }) => ({
+      id: `window:${icon.id}`,
+      label: windowTitle(icon, t),
+      ...(icon.image ? { image: icon.image } : {}),
+      minimized,
+      toggle: () => {
+        setWindows((current) => current.map((w) => (w.icon.id === icon.id ? { ...w, minimized: !minimized } : w)));
+        if (minimized) setFront(`window:${icon.id}`);
+      },
+    }));
+    if (player) {
+      tasks.push({
+        id: 'media-player',
+        label: t.mediaPlayer.title,
+        ...(player.icon.image ? { image: player.icon.image } : {}),
+        minimized: player.minimized,
+        toggle: () => {
+          setPlayer((current) => (current ? { ...current, minimized: !current.minimized } : current));
+          if (player.minimized) setFront('media-player');
+        },
+      });
+    }
+    if (assistant) {
+      tasks.push({
+        id: 'assistant',
+        label: assistant.icon.label,
+        ...(assistant.icon.image ? { image: assistant.icon.image } : {}),
+        minimized: assistant.minimized,
+        toggle: () => setAssistant((current) => (current ? { ...current, minimized: !current.minimized } : current)),
+      });
+    }
+    if (surfing) {
+      tasks.push({
+        id: 'surfer',
+        label: surfing.icon.label,
+        ...(surfing.icon.image ? { image: surfing.icon.image } : {}),
+        minimized: surfing.minimized,
+        toggle: () => setSurfing((current) => (current ? { ...current, minimized: !current.minimized } : current)),
+      });
+    }
+    publishTasks(tasks);
+  }, [windows, player, assistant, surfing, t]);
+  useEffect(() => () => publishTasks([]), []);
 
   useLayoutEffect(() => {
     const nav = navRef.current;
@@ -103,52 +198,85 @@ export function DesktopIcons({ icons, windowOpen, onOpenWindow }: DesktopIconsPr
           </li>
         ))}
       </ul>
-      <AeroDialog
-        open={opened !== null}
-        wide={opened?.app === 'messenger'}
-        title={opened?.app === 'messenger' ? t.msn.title : (opened?.label ?? '')}
-        onClose={() => setOpened(null)}
-      >
-        {opened?.app === 'messenger' ? (
-          <Messenger />
-        ) : opened?.content ? (
-          <div className="desktop-window">
-            <img
-              className="desktop-window__image"
-              src={opened.content.image}
-              alt={opened.content.alt}
-              decoding="async"
-            />
-          </div>
-        ) : opened ? (
-          <TemplateWindow icon={opened} />
-        ) : null}
-      </AeroDialog>
-      {surfing?.icon.surf
+      {host
         ? createPortal(
-            <Surfer
-              image={surfing.icon.surf.image}
-              alt={surfing.icon.surf.alt}
-              from={surfing.from}
-              onGone={() => setSurfing(null)}
-            />,
-            surfing.host,
-          )
-        : null}
-      {assistant
-        ? createPortal(
-            <Assistant
-              image={assistant.image}
-              windowOpen={windowOpen}
-              onOpenWindow={onOpenWindow}
-              summon={assistant.summon}
-              onGone={() => setAssistant(null)}
-            />,
-            assistant.host,
+            <>
+              {windows.map(({ icon, minimized }, index) => (
+                <AeroDialog
+                  key={icon.id}
+                  open
+                  modal={false}
+                  minimized={minimized}
+                  wide={icon.app === 'messenger'}
+                  title={windowTitle(icon, t)}
+                  // Em cascata, como no Windows; a da frente fica por cima.
+                  style={
+                    {
+                      '--window-offset': `${(index % 5) * 22}px ${(index % 5) * 22}px`,
+                      '--window-z': front === `window:${icon.id}` ? 28 : 24,
+                    } as CSSProperties
+                  }
+                  onActivate={() => setFront(`window:${icon.id}`)}
+                  onMinimize={() => setWindowMinimized(icon.id, true)}
+                  onClose={() => setWindows((current) => current.filter((w) => w.icon.id !== icon.id))}
+                >
+                  {icon.app === 'messenger' ? (
+                    <Messenger />
+                  ) : icon.content ? (
+                    <div className="desktop-window">
+                      <img
+                        className="desktop-window__image"
+                        src={icon.content.image}
+                        alt={icon.content.alt}
+                        decoding="async"
+                      />
+                    </div>
+                  ) : (
+                    <TemplateWindow icon={icon} />
+                  )}
+                </AeroDialog>
+              ))}
+              {player?.icon.playlist ? (
+                <MediaPlayer
+                  playlist={player.icon.playlist}
+                  minimized={player.minimized}
+                  anchor={player.anchor}
+                  front={front === 'media-player'}
+                  onActivate={() => setFront('media-player')}
+                  onMinimize={() => setPlayer((current) => (current ? { ...current, minimized: true } : current))}
+                  onClose={() => setPlayer(null)}
+                />
+              ) : null}
+              {surfing?.icon.surf ? (
+                <Surfer
+                  image={surfing.icon.surf.image}
+                  alt={surfing.icon.surf.alt}
+                  from={surfing.from}
+                  minimized={surfing.minimized}
+                  onGone={() => setSurfing(null)}
+                />
+              ) : null}
+              {assistant?.icon.assistant ? (
+                <Assistant
+                  image={assistant.icon.assistant}
+                  windowOpen={windowOpen}
+                  onOpenWindow={onOpenWindow}
+                  summon={assistant.summon}
+                  minimized={assistant.minimized}
+                  onGone={() => setAssistant(null)}
+                />
+              ) : null}
+            </>,
+            host,
           )
         : null}
     </nav>
   );
+}
+
+/** Título da janela de um ícone (o do MSN é o nome do programa). */
+function windowTitle(icon: DesktopIcon, t: UiStrings): string {
+  return icon.app === 'messenger' ? t.msn.title : icon.label;
 }
 
 /** Conteúdo provisório da janela de um ícone (até o conteúdo real existir). */

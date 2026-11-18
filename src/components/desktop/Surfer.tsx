@@ -10,6 +10,8 @@ interface SurferProps {
   readonly from: DOMRect | null;
   /** Já saiu de cena (depois da animação de sumir). */
   readonly onGone: () => void;
+  /** Minimizado pela barra de tarefas: some e para; ao restaurar, volta do ícone. */
+  readonly minimized?: boolean;
 }
 
 /** Destinos do passeio, recalculados a cada trecho (a tela pode mudar de tamanho). */
@@ -38,7 +40,7 @@ const easeInOut = (t: number) => 0.5 - Math.cos(Math.PI * t) / 2;
  * (ou apertar Esc); aí ele some com um "puf". Fica acima da janela e da barra.
  * Com "reduzir movimento", não passeia: fica parado sobre a barra de tarefas.
  */
-export function Surfer({ image, alt, from, onGone }: SurferProps) {
+export function Surfer({ image, alt, from, onGone, minimized = false }: SurferProps) {
   const { t } = useI18n();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const bodyRef = useRef<HTMLSpanElement>(null);
@@ -52,7 +54,7 @@ export function Surfer({ image, alt, from, onGone }: SurferProps) {
   useEffect(() => {
     const button = buttonRef.current;
     const body = bodyRef.current;
-    if (!button || !body || leaving) return;
+    if (!button || !body || leaving || minimized) return;
 
     const size = () => Math.round(Math.min(140, Math.max(84, window.innerWidth * 0.2)));
     const taskbar = () =>
@@ -142,7 +144,7 @@ export function Surfer({ image, alt, from, onGone }: SurferProps) {
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [from, leaving]);
+  }, [from, leaving, minimized]);
 
   // Clique (ou Esc): para o passeio e some.
   const leave = () => setLeaving(true);
@@ -162,7 +164,8 @@ export function Surfer({ image, alt, from, onGone }: SurferProps) {
     <button
       ref={buttonRef}
       type="button"
-      className={`surfer${leaving ? ' surfer--leaving' : ''}`}
+      className={`surfer${leaving ? ' surfer--leaving' : ''}${minimized ? ' surfer--minimized' : ''}`}
+      inert={minimized}
       aria-label={t.surferStop(alt)}
       title={t.surferStop(alt)}
       onClick={leave}

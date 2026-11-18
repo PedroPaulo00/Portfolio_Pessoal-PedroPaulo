@@ -59,6 +59,10 @@
 .surfer--leaving {
   cursor: default;
 }
+/* Minimizado pela barra de tarefas. */
+.surfer--minimized {
+  visibility: hidden;
+}
 
 @media (prefers-reduced-motion: no-preference) {
   .surfer__image {

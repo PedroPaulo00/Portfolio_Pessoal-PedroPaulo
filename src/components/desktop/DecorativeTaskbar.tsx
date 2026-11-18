@@ -1,5 +1,6 @@
-import type { PointerEvent, ReactNode, Ref } from 'react';
+import { useEffect, useRef, type PointerEvent, type ReactNode, type Ref } from 'react';
 import { useI18n } from '../../i18n/I18n';
+import { useTasks } from '../../lib/tasks';
 import type { Profile, Section } from '../../types/portfolio';
 import type { WindowState } from '../window/AeroWindow';
 import { BrandMark } from '../ui/BrandMark';
@@ -46,6 +47,17 @@ export function DecorativeTaskbar({
   // Nome da janela (o mesmo da barra de título); a aba do navegador mantém o nome completo.
   const title = t.portfolioShortcut;
   const minimized = windowState === 'minimized';
+  // Janelas e personagens abertos pelos ícones da área de trabalho.
+  const tasks = useTasks();
+  // Celular (fileira que desliza): uma tarefa nova fica à vista na barra.
+  const itemsRef = useRef<HTMLDivElement>(null);
+  const taskCount = tasks.length;
+  const lastCount = useRef(taskCount);
+  useEffect(() => {
+    const items = itemsRef.current;
+    if (items && taskCount > lastCount.current) items.scrollTo({ left: items.scrollWidth });
+    lastCount.current = taskCount;
+  }, [taskCount]);
 
   // Brilho que acompanha o ponteiro sobre o botão, como no Windows 7.
   const trackGlow = (event: PointerEvent<HTMLButtonElement>) => {
@@ -57,7 +69,7 @@ export function DecorativeTaskbar({
     <div className="taskbar" role="region" aria-label={t.taskbar}>
       <div className="taskbar__glass" aria-hidden="true" />
       <div className="taskbar__start">{startButton}</div>
-      <div className="taskbar__items">
+      <div ref={itemsRef} className="taskbar__items">
         {/* Leitores de tela: avisa que o conteúdo saiu de cena e como voltar. */}
         <span className="sr-only" role="status">
           {minimized ? t.windowMinimized : ''}
@@ -105,6 +117,24 @@ export function DecorativeTaskbar({
             </div>
           </div>
         </div>
+        {tasks.map((task) => (
+          <div className="taskbar__task" key={task.id}>
+            <button
+              type="button"
+              data-task={task.id}
+              className={`taskbar__item taskbar__item--app ${task.minimized ? 'is-minimized' : 'is-active'}`}
+              aria-label={task.minimized ? t.restoreWindow(task.label) : t.minimizeWindow(task.label)}
+              title={task.label}
+              onClick={task.toggle}
+              onPointerMove={trackGlow}
+            >
+              {task.image ? (
+                <img className="taskbar__item-icon" src={task.image} alt="" width={24} height={24} draggable={false} />
+              ) : null}
+              <span className="taskbar__item-label">{task.label}</span>
+            </button>
+          </div>
+        ))}
       </div>
       <div className="taskbar__tray">
         <span className="taskbar__tray-decor" aria-hidden="true">

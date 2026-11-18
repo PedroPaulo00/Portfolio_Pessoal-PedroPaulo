@@ -265,6 +265,88 @@
   }
 }
 
+/* ---------- Diálogo em modo janela (aberto pelos ícones da área de trabalho) ----------
+   Não bloqueia a tela: fica sobre a área de trabalho, aparece na barra de
+   tarefas e pode ser minimizado (encolhe em direção à barra). */
+.aero-dialog--window {
+  position: fixed;
+  inset: 0 0 calc(var(--taskbar-height, 40px) + env(safe-area-inset-bottom, 0px));
+  z-index: var(--window-z, 24);
+  height: fit-content;
+  margin: auto;
+  translate: var(--window-offset, 0 0);
+  transition:
+    opacity 220ms ease,
+    scale 260ms cubic-bezier(0.5, 0, 0.9, 0.5),
+    translate 260ms cubic-bezier(0.5, 0, 0.9, 0.5),
+    visibility 0s;
+}
+.aero-dialog--window.is-minimized {
+  opacity: 0;
+  scale: 0.2;
+  translate: 0 45vh;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 220ms ease,
+    scale 260ms cubic-bezier(0.5, 0, 0.9, 0.5),
+    translate 260ms cubic-bezier(0.5, 0, 0.9, 0.5),
+    visibility 0s 260ms;
+}
+/* Botão "−" das janelas, ao lado do fechar (vidro claro dos botões do Windows 7). */
+.dialog-minimize {
+  flex: none;
+  display: grid;
+  place-items: center;
+  min-width: 28px;
+  min-height: 21px;
+  margin-right: -1px;
+  padding: 0;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-top: 0;
+  border-radius: 0 0 0 var(--control-radius);
+  background: linear-gradient(rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.35) 50%, rgba(220, 235, 245, 0.25) 50%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.98),
+    -1px 0 0 rgba(255, 255, 255, 0.98);
+  cursor: pointer;
+}
+.dialog-minimize span {
+  width: 9px;
+  height: 3px;
+  margin-top: 6px;
+  background: #fff;
+  border: 1px solid #2b4d66;
+  border-radius: 1px;
+}
+@media (hover: hover) {
+  .dialog-minimize:hover {
+    background:
+      radial-gradient(circle at bottom, rgba(120, 220, 255, 0.9), transparent 70%),
+      linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.45) 50%, rgba(180, 225, 250, 0.5) 50%);
+  }
+}
+.dialog-minimize:active {
+  background: linear-gradient(rgba(150, 190, 215, 0.9), rgba(90, 140, 175, 0.9));
+}
+.dialog-minimize:focus-visible {
+  outline-color: #003a5c;
+}
+.aero-dialog--window .dialog-minimize + .dialog-close {
+  margin-left: 0;
+  border-radius: 0 0 var(--control-radius) 0;
+}
+/* Os dois botões juntos, no canto direito (o título não ocupa a largura toda). */
+.aero-dialog--window .dialog-minimize {
+  margin-left: auto;
+}
+@media (pointer: coarse) {
+  .dialog-minimize {
+    min-width: 40px;
+    min-height: 36px;
+  }
+}
+
 /* ---------- Telas estreitas (base; refinado no Grupo 4) ---------- */
 .command-bar {
   flex-wrap: wrap;

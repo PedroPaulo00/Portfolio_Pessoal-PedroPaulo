@@ -17,6 +17,8 @@ interface AssistantProps {
   readonly summon: number;
   /** Saiu de cena (depois da animação de sumir). */
   readonly onGone: () => void;
+  /** Minimizado pela barra de tarefas: some até ser restaurado. */
+  readonly minimized?: boolean;
 }
 
 interface Option {
@@ -48,7 +50,7 @@ function clamp(x: number, y: number) {
  * seção muda, conta curiosidades do site e pode ser arrastado para qualquer
  * lugar. Clicar nele mostra ou esconde o balão; "Ocultar" o faz ir embora.
  */
-export function Assistant({ image, windowOpen, onOpenWindow, summon, onGone }: AssistantProps) {
+export function Assistant({ image, windowOpen, onOpenWindow, summon, onGone, minimized = false }: AssistantProps) {
   const { t } = useI18n();
   const c = t.clippy;
   const { route, navigate } = useNavigation();
@@ -163,7 +165,8 @@ export function Assistant({ image, windowOpen, onOpenWindow, summon, onGone }: A
 
   return (
     <div
-      className={`assistant${leaving ? ' assistant--leaving' : ''}`}
+      className={`assistant${leaving ? ' assistant--leaving' : ''}${minimized ? ' assistant--minimized' : ''}`}
+      inert={minimized}
       style={{ transform: `translate3d(${pos.x}px, ${pos.y}px, 0)` }}
       onKeyDown={(event) => {
         if (event.key === 'Escape' && balloon) {

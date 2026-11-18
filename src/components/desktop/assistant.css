@@ -337,3 +337,8 @@
     transform: translateY(30px) scale(0.2);
   }
 }
+
+/* Minimizado pela barra de tarefas. */
+.assistant--minimized {
+  visibility: hidden;
+}
