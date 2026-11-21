@@ -8,13 +8,14 @@ interface OrbActionProps {
   readonly label: string;
   readonly glyph: ReactNode;
   readonly size?: number;
+  readonly tone?: 'green';
 }
 
 /** Orbe + rótulo visível ao lado. Ação de navegação: renderiza um link real. */
-export function OrbLink({ variant, label, glyph, size = 44, to }: OrbActionProps & { readonly to: Route }) {
+export function OrbLink({ variant, label, glyph, size = 44, to, tone }: OrbActionProps & { readonly to: Route }) {
   return (
     <RouteLink to={to} className="orb-action orb-host">
-      <Orb variant={variant} size={size}>
+      <Orb variant={variant} size={size} {...(tone ? { tone } : {})}>
         {glyph}
       </Orb>
       <span className="orb-action__label">{label}</span>

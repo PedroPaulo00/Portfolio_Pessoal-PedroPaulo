@@ -114,7 +114,7 @@ export function SpotifyFavorites() {
                         title={preview === track.id ? t.closePreview(track.name) : t.playPreview(track.name)}
                         onClick={() => setPreview(preview === track.id ? null : track.id)}
                       >
-                        <Orb variant={9} size={40}>
+                        <Orb variant={9} tone="green" size={40}>
                           {preview === track.id ? PREVIEW_STOP : PREVIEW_PLAY}
                         </Orb>
                       </button>
@@ -158,7 +158,9 @@ export function SpotifyFavorites() {
                       <span className="sp-fav-artists__photo">
                         <Artwork src={artist.image} size={96} round />
                         <span className="sp-fav-artists__rank" aria-hidden="true">
-                          {index + 1}
+                          <Orb variant={9} tone="green" size={26}>
+                            {index + 1}
+                          </Orb>
                         </span>
                       </span>
                       <span className="sp-artist__name">

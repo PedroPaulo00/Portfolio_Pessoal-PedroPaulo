@@ -14,14 +14,16 @@ interface OrbProps {
   readonly size?: number;
   /** Símbolo opcional, desenhado na grade de 72 (≈ 40–50% do diâmetro). */
   readonly children?: ReactNode;
+  /** Tom verde (Spotify): mesma forma e brilho, cores trocadas. Aplica-se a qualquer variante. */
+  readonly tone?: 'green';
 }
 
 /** Disco decorativo. O nome acessível pertence ao botão que o contém (.orb-host). */
-export function Orb({ variant, size = 72, children }: OrbProps) {
+export function Orb({ variant, size = 72, children, tone }: OrbProps) {
   const style = { width: size, height: size, '--orb-scale': size / 72 } as CSSProperties;
   return (
     <span className="orb-fit" style={style} aria-hidden="true">
-      <span className={`variant-orb v${variant}`}>
+      <span className={`variant-orb v${variant}${tone === 'green' ? ' orb-green' : ''}`}>
         {children ? <span className="orb-glyph">{children}</span> : null}
       </span>
     </span>

@@ -81,7 +81,13 @@ export function HeroSection({ profile, sections, featured }: HeroSectionProps) {
           <p className="hero__role">{profile.role}</p>
           <p className="hero__tagline">{profile.tagline}</p>
           <div className="hero__actions">
-            <OrbLink variant={1} label={t.viewProjects} glyph={glyphs.folder} to={{ section: 'projetos' }} />
+            <OrbLink
+              variant={1}
+              tone="green"
+              label={t.viewProjects}
+              glyph={glyphs.folder}
+              to={{ section: 'projetos' }}
+            />
             <OrbLink variant={9} label={t.getInTouch} glyph={glyphs.mail} to={{ section: 'contato' }} />
           </div>
         </div>
