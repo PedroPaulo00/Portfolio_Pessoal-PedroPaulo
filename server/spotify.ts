@@ -9,6 +9,7 @@
  */
 import type {
   SpotifyArtist,
+  SpotifyFavorites,
   SpotifyLink,
   SpotifyNowPlaying,
   SpotifyPlaylist,
@@ -137,14 +138,14 @@ async function getJson(token: string, path: string): Promise<unknown> {
 }
 
 /**
- * Perfil, mais ouvidos e playlists mudam devagar: buscados no máximo a cada
- * SLOW_MS. Só "tocando agora" e "últimas músicas" vão ao Spotify a cada
- * atualização (2 chamadas em vez de 6).
+ * Perfil e playlists mudam devagar: buscados no máximo a cada SLOW_MS. Só
+ * "tocando agora" e "últimas músicas" vão ao Spotify a cada atualização.
+ * (O top 10 é escolhido pelo dono e vem de /api/spotify-favorites.)
  */
 const SLOW_MS = 60 * 60_000;
-let slowCache: { readonly at: number; readonly data: readonly [unknown, unknown, unknown, unknown] } | null = null;
+let slowCache: { readonly at: number; readonly data: readonly [unknown, unknown] } | null = null;
 
-async function slowParts(token: string): Promise<readonly [unknown, unknown, unknown, unknown]> {
+async function slowParts(token: string): Promise<readonly [unknown, unknown]> {
   if (slowCache && Date.now() - slowCache.at < SLOW_MS) return slowCache.data;
   const keep = (index: number) => (error: unknown) => {
     if (error instanceof RateLimited) throw error;
@@ -152,9 +153,7 @@ async function slowParts(token: string): Promise<readonly [unknown, unknown, unk
   };
   const data = await Promise.all([
     getJson(token, '/me'), // obrigatório
-    getJson(token, '/me/top/artists?limit=8&time_range=short_term').catch(keep(1)),
-    getJson(token, '/me/top/tracks?limit=10&time_range=short_term').catch(keep(2)),
-    getJson(token, '/me/playlists?limit=20').catch(keep(3)),
+    getJson(token, '/me/playlists?limit=20').catch(keep(1)),
   ] as const);
   slowCache = { at: Date.now(), data };
   return data;
@@ -168,7 +167,7 @@ export async function getSpotifySnapshot(env: SpotifyCredentials): Promise<Spoti
     if (error instanceof RateLimited) throw error;
     return null;
   };
-  const [[me, artists, tracks, playlists], current, recent] = await Promise.all([
+  const [[me, playlists], current, recent] = await Promise.all([
     slowParts(token),
     getJson(token, '/me/player/currently-playing').catch(ignore),
     getJson(token, '/me/player/recently-played?limit=10').catch(ignore),
@@ -215,11 +214,6 @@ export async function getSpotifySnapshot(env: SpotifyCredentials): Promise<Spoti
     profile,
     nowPlaying,
     recent: recentItems,
-    topArtists: arr(obj(artists).items).map(artist),
-    topTracks: arr(obj(tracks).items).flatMap((t) => {
-      const mapped = track(t);
-      return mapped ? [mapped] : [];
-    }),
     playlists: publicPlaylists,
     generatedAt: new Date().toISOString(),
   };
@@ -281,6 +275,83 @@ export async function handleSpotifyRequest(env: SpotifyEnv): Promise<Response> {
     if (lastGood && Date.now() - lastGood.at < STALE_MS) {
       return new Response(lastGood.body, { status: 200, headers: { ...HEADERS, 'Cache-Control': 'no-store' } });
     }
+    return new Response(JSON.stringify({ error: 'upstream' }), {
+      status: 502,
+      headers: { ...HEADERS, 'Cache-Control': 'no-store' },
+    });
+  }
+}
+
+/* ------------------------- top 10 (favoritos) ----------------------------- */
+
+/**
+ * GET /api/spotify-favorites?tracks=ID,ID&artists=ID,ID — dados públicos das
+ * músicas e artistas escolhidos pelo dono (capas, nomes e fotos), na ordem
+ * pedida. Só aceita IDs do Spotify (22 caracteres), no máximo 10 de cada.
+ * Isso muda quase nunca: cache longo na borda e na instância da função.
+ */
+const SPOTIFY_ID = /^[A-Za-z0-9]{22}$/;
+const FAVORITES_MS = 12 * 60 * 60_000;
+const FAVORITES_HEADERS = {
+  ...HEADERS,
+  'Cache-Control': 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800, stale-if-error=604800',
+};
+const favoritesCache = new Map<string, { readonly at: number; readonly body: string }>();
+
+function favoriteIds(value: string | null): string[] {
+  const ids = (value ?? '').split(',').map((id) => id.trim());
+  return [...new Set(ids.filter((id) => SPOTIFY_ID.test(id)))].slice(0, 10);
+}
+
+/**
+ * Busca em lote (`/tracks?ids=`); se o Spotify recusar o lote (sem ser excesso
+ * de chamadas), busca um por um. A resposta mantém a ordem dos IDs pedidos.
+ */
+async function lookup(token: string, kind: 'tracks' | 'artists', ids: readonly string[]): Promise<unknown[]> {
+  if (ids.length === 0) return [];
+  let items: unknown[];
+  try {
+    items = arr(obj(await getJson(token, `/${kind}?ids=${ids.join(',')}`))[kind]);
+  } catch (error) {
+    if (error instanceof RateLimited) throw error;
+    items = await Promise.all(ids.map((id) => getJson(token, `/${kind}/${id}`).catch(() => null)));
+  }
+  const byId = new Map(items.map((item) => [str(obj(item).id), item] as const));
+  return ids.map((id) => byId.get(id)).filter((item) => item !== undefined && item !== null);
+}
+
+export async function handleSpotifyFavoritesRequest(env: SpotifyEnv, requestUrl: string): Promise<Response> {
+  if (!isConfigured(env)) {
+    return new Response(JSON.stringify({ error: 'not-configured' }), { status: 503, headers: HEADERS });
+  }
+  const params = new URL(requestUrl, 'http://localhost').searchParams;
+  const trackIds = favoriteIds(params.get('tracks'));
+  const artistIds = favoriteIds(params.get('artists'));
+  const key = `${trackIds.join(',')}|${artistIds.join(',')}`;
+  const cached = favoritesCache.get(key);
+  if (cached && Date.now() - cached.at < FAVORITES_MS) {
+    return new Response(cached.body, { status: 200, headers: FAVORITES_HEADERS });
+  }
+  try {
+    const token = await accessToken(env);
+    const [tracks, artists] = await Promise.all([
+      lookup(token, 'tracks', trackIds),
+      lookup(token, 'artists', artistIds),
+    ]);
+    const favorites: SpotifyFavorites = {
+      tracks: tracks.flatMap((item) => {
+        const mapped = track(item);
+        return mapped ? [mapped] : [];
+      }),
+      artists: artists.map(artist),
+    };
+    const body = JSON.stringify(favorites);
+    favoritesCache.set(key, { at: Date.now(), body });
+    return new Response(body, { status: 200, headers: FAVORITES_HEADERS });
+  } catch (error) {
+    if (!(error instanceof RateLimited)) cachedToken = null;
+    console.error('[spotify-favorites]', error instanceof RateLimited ? error.message : error);
+    if (cached) return new Response(cached.body, { status: 200, headers: { ...HEADERS, 'Cache-Control': 'no-store' } });
     return new Response(JSON.stringify({ error: 'upstream' }), {
       status: 502,
       headers: { ...HEADERS, 'Cache-Control': 'no-store' },

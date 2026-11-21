@@ -23,9 +23,12 @@ PUBLIC = ROOT.parent.parent / "public"
 # Foto de perfil e recorte (esquerda, topo, direita, base). None = imagem inteira,
 # centralizada num quadrado. A foto anterior (minha_foto.jpg, extraída de
 # minha_foto.CR2) usava o recorte (1320, 308, 3300, 2288).
-PHOTO = "foto.png"
-# Enquadra você e o alienígena (a foto tem 1371×1148). As anteriores continuam na pasta.
-PHOTO_CROP = (60, 0, 1208, 1148)
+PHOTO = "foto_tela_inicial.jpg"
+# Quadrado centrado no rosto (a foto tem 1007×1049). As anteriores continuam na
+# pasta (foto.png, com o alienígena, usava o recorte (60, 0, 1208, 1148)).
+PHOTO_CROP = (70, 110, 980, 1020)
+# Foto da apresentação do TCC (destaque no Início).
+TCC_PHOTO = "foto_tcc.jpg"
 
 # Logos dos projetos (originais/projetos/logos/) → projetos/logos/, 2× de 64 px.
 # Projeto sem logo próprio usa o template gerado aqui (projetos/logos/template.png).
@@ -433,6 +436,9 @@ def main() -> None:
     photo = Image.open(SRC / "profile" / PHOTO).convert("RGB")
     photo = photo.crop(PHOTO_CROP) if PHOTO_CROP else cover(photo, (min(photo.size), min(photo.size)))
     save(photo.resize((240, 240), Image.LANCZOS), "profile/foto.webp", format="WEBP", quality=86, method=6)
+    tcc = Image.open(SRC / "profile" / TCC_PHOTO).convert("RGB")
+    save(tcc.resize((560, round(560 * tcc.height / tcc.width)), Image.LANCZOS), "profile/foto-tcc.webp",
+         format="WEBP", quality=84, method=6)
 
     # Botão Iniciar.
     save(square(Image.open(SRC / "brands" / "Windows_logo.png")).resize((96, 96), Image.LANCZOS),

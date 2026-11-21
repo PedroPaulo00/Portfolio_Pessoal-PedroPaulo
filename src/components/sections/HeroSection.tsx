@@ -2,7 +2,7 @@ import msnFrame from '../../assets/profile/msn-frame.svg';
 import { useI18n } from '../../i18n/I18n';
 import { RouteLink } from '../../lib/navigation';
 import { useVisitCount } from '../../lib/visits';
-import type { Profile, Section } from '../../types/portfolio';
+import type { FeaturedPhoto, Profile, Section } from '../../types/portfolio';
 import { SpotifyCard } from '../spotify/SpotifyCard';
 import { BrandMark } from '../ui/BrandMark';
 import { Icon } from '../ui/Icon';
@@ -11,9 +11,11 @@ import { OrbLink, glyphs } from '../ui/OrbButton';
 interface HeroSectionProps {
   readonly profile: Profile;
   readonly sections: readonly Section[];
+  /** Destaque com foto (a apresentação do TCC), abaixo da apresentação. */
+  readonly featured?: FeaturedPhoto | undefined;
 }
 
-export function HeroSection({ profile, sections }: HeroSectionProps) {
+export function HeroSection({ profile, sections, featured }: HeroSectionProps) {
   const { t, intl } = useI18n();
   const { count: visits, owner } = useVisitCount();
   const shortcuts = sections.filter((section) => section.id !== 'inicio');
@@ -84,6 +86,30 @@ export function HeroSection({ profile, sections }: HeroSectionProps) {
           </div>
         </div>
       </div>
+
+      {featured ? (
+        <section className="hero-feature" aria-labelledby="hero-feature-title">
+          <figure className="hero-feature__photo">
+            <img
+              src={featured.image.src}
+              alt={featured.image.alt}
+              width={280}
+              height={280}
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
+          <div className="hero-feature__text">
+            <h2 id="hero-feature-title" className="hero-feature__title">
+              {featured.title}
+            </h2>
+            <p>{featured.text}</p>
+            <RouteLink to={{ section: 'projetos', category: 'academico' }} className="aero-button">
+              {t.seeTccProject}
+            </RouteLink>
+          </div>
+        </section>
+      ) : null}
 
       <SpotifyCard />
 

@@ -1,6 +1,6 @@
 import { defineConfig, loadEnv, type Connect, type Plugin } from 'vite';
 import react from '@vitejs/plugin-react';
-import { handleSpotifyRequest, type SpotifyEnv } from './server/spotify.ts';
+import { handleSpotifyFavoritesRequest, handleSpotifyRequest, type SpotifyEnv } from './server/spotify.ts';
 import { handleVisitsRequest, type VisitsEnv } from './server/visits.ts';
 
 /**
@@ -36,7 +36,10 @@ function spotifyApi(): Plugin {
   let env: SpotifyEnv = {};
   const middleware: Connect.NextHandleFunction = (req, res, next) => {
     if (!req.url?.startsWith('/api/spotify')) return next();
-    handleSpotifyRequest(env)
+    const handler = req.url.startsWith('/api/spotify-favorites')
+      ? handleSpotifyFavoritesRequest(env, req.url)
+      : handleSpotifyRequest(env);
+    handler
       .then(async (response) => {
         res.statusCode = response.status;
         response.headers.forEach((value, key) => res.setHeader(key, value));

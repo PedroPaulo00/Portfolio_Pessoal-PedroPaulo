@@ -93,8 +93,29 @@ export interface Education<M extends Mode = 'view'> {
   readonly stage?: Prose<M>;
 }
 
+/** Tipo de item da ficha rápida do Sobre (define o ícone). */
+export type AboutFactKind = 'born' | 'lives' | 'study' | 'languages' | 'passion' | 'focus';
+
+export interface AboutFact<M extends Mode = 'view'> {
+  readonly kind: AboutFactKind;
+  readonly label: Prose<M>;
+  /** Sem valor, o item não aparece no site (para preencher depois). */
+  readonly value?: Prose<M>;
+}
+
+/** Foto em destaque no Início (ex.: a apresentação do TCC). */
+export interface FeaturedPhoto<M extends Mode = 'view'> {
+  readonly image: ProjectImage<M>;
+  readonly title: Prose<M>;
+  readonly text: Prose<M>;
+}
+
 export interface About<M extends Mode = 'view'> {
   readonly paragraphs: readonly Prose<M>[];
+  /** Ficha rápida: onde nasceu, onde mora, o que estuda... */
+  readonly facts?: readonly AboutFact<M>[];
+  /** Carrossel de fotos. Vazio: mostra vagas "foto em breve". */
+  readonly photos?: readonly ProjectImage<M>[];
   readonly interests: readonly Prose<M>[];
   readonly education?: Education<M>;
   /** Experiências e conquistas publicáveis (estágios, prêmios, certificados). */
@@ -128,6 +149,15 @@ export interface SpotifyConfig {
   readonly showPlaylists: boolean;
   /** Exibe o número de seguidores no cartão "Meu perfil". */
   readonly showFollowers: boolean;
+  /**
+   * Meu top 10, escolhido à mão: IDs ou links do Spotify (até 10 de cada), na
+   * ordem. Capas, nomes e fotos vêm do Spotify pelo `endpoint`.
+   */
+  readonly favorites?: {
+    readonly endpoint: string;
+    readonly tracks: readonly string[];
+    readonly artists: readonly string[];
+  };
 }
 
 export interface SoundConfig {
@@ -190,6 +220,8 @@ export interface PortfolioData<M extends Mode = 'view'> {
   readonly contact: Contact<M>;
   readonly spotify: SpotifyConfig;
   readonly sound: SoundConfig;
+  /** Destaque com foto no Início, abaixo da apresentação. */
+  readonly featured?: FeaturedPhoto<M>;
   /** Ícones da área de trabalho, de cima para baixo (só em telas ≥ 1024 px). */
   readonly desktopIcons: readonly DesktopIcon<M>[];
   /** Política de privacidade (rota #privacidade, fora da navegação principal). */

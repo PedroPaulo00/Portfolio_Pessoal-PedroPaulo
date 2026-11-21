@@ -410,7 +410,9 @@ export function App() {
                 <main className="window-main" id="conteudo" ref={mainRef}>
                   {/* A chave por destino remonta a vista e dispara a transição de entrada. */}
                   <div className="view" key={routeHref(route)}>
-                    {route.section === 'inicio' ? <HeroSection profile={profile} sections={sections} /> : null}
+                    {route.section === 'inicio' ? (
+                      <HeroSection profile={profile} sections={sections} featured={content.featured} />
+                    ) : null}
                     {route.section === 'projetos' ? (
                       <ProjectsSection
                         section={section}
@@ -421,7 +423,9 @@ export function App() {
                         view={projectView}
                       />
                     ) : null}
-                    {route.section === 'sobre' ? <AboutSection section={section} about={about} /> : null}
+                    {route.section === 'sobre' ? (
+                      <AboutSection section={section} about={about} profile={profile} />
+                    ) : null}
                     {route.section === 'tecnologias' ? <SkillsSection section={section} skills={skills} /> : null}
                     {route.section === 'spotify' && portfolio.spotify.enabled ? (
                       <SpotifySection section={section} showPlaylists={portfolio.spotify.showPlaylists} />

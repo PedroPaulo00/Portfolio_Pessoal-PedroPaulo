@@ -5,6 +5,7 @@
  */
 const files = import.meta.glob<string>('../assets/tech/*.{svg,png}', { eager: true, query: '?url', import: 'default' });
 
+// i18n-exempt: as chaves são os nomes dos itens (em português e em inglês).
 const byName: Record<string, string> = {
   JavaScript: 'javascript.svg',
   TypeScript: 'typescript.svg',
@@ -33,6 +34,17 @@ const byName: Record<string, string> = {
   'OpenAI Codex': 'openai.png',
   ChatGPT: 'chatgpt.png',
   localStorage: 'localstorage.png',
+  // Design e IHC: ícones próprios (desenhados para o portfólio), nos dois idiomas.
+  'Prototipação de interfaces': 'prototipacao.svg',
+  'Interface prototyping': 'prototipacao.svg',
+  Responsividade: 'responsividade.svg',
+  'Responsive design': 'responsividade.svg',
+  Glassmorphism: 'glassmorphism.svg',
+  Skeuomorfismo: 'skeuomorfismo.svg',
+  Skeuomorphism: 'skeuomorfismo.svg',
+  'Frutiger Aero': 'frutiger-aero.svg',
+  'Heurísticas de usabilidade': 'heuristicas.svg',
+  'Usability heuristics': 'heuristicas.svg',
 };
 
 export function techIcon(name: string): string | undefined {

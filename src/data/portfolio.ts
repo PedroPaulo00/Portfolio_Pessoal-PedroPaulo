@@ -35,6 +35,7 @@ import florDigital1 from '../assets/projetos/flor-digital-1.webp';
 import florDigital2 from '../assets/projetos/flor-digital-2.webp';
 import florDigitalThumb from '../assets/projetos/flor-digital-thumb.webp';
 import photo from '../assets/profile/foto.webp';
+import fotoTcc from '../assets/profile/foto-tcc.webp';
 import aquanautaLogo from '../assets/projetos/logos/aquanauta.png';
 import diaraLogo from '../assets/projetos/logos/diara.png';
 import foldaeroLogo from '../assets/projetos/logos/foldaero.png';
@@ -329,6 +330,38 @@ export const portfolio: PortfolioData<'source'> = {
         en: 'Outside of code, the greatest passion of my life is music: it is with me in almost everything I do, including while I program. That is why this portfolio has a section showing what I have been listening to on Spotify.',
       },
     ],
+    // Ficha rápida (cartão no topo do Sobre). Item sem `value` não aparece:
+    // preencha onde nasceu e onde mora quando quiser mostrar.
+    facts: [
+      {
+        kind: 'born',
+        label: { pt: 'Natural de', en: 'Hometown' },
+        value: { pt: 'Guarapuava, Paraná - Brasil', en: 'Guarapuava, Paraná - Brazil' },
+      },
+      {
+        kind: 'study',
+        label: { pt: 'Estudo', en: 'Studying' },
+        value: { pt: 'Ciência da Computação na UNICENTRO', en: 'Computer Science at UNICENTRO' },
+      },
+      {
+        kind: 'focus',
+        label: { pt: 'Foco', en: 'Focus' },
+        value: { pt: 'Web, mobile e design de interfaces', en: 'Web, mobile and interface design' },
+      },
+      {
+        kind: 'languages',
+        label: { pt: 'Idiomas', en: 'Languages' },
+        value: { pt: 'Português, inglês e espanhol', en: 'Portuguese, English and Spanish' },
+      },
+      {
+        kind: 'passion',
+        label: { pt: 'Maior paixão', en: 'Greatest passion' },
+        value: { pt: 'Música', en: 'Music' },
+      },
+    ],
+    // Carrossel de fotos do Sobre. Vazio = vagas "foto em breve". Para adicionar:
+    // coloque a imagem em src/assets/, importe no topo e acrescente { src, alt }.
+    photos: [],
     education: {
       course: {
         pt: 'Bacharelado em Ciência da Computação — Universidade Estadual do Centro-Oeste (UNICENTRO)',
@@ -428,13 +461,62 @@ export const portfolio: PortfolioData<'source'> = {
   },
 
   // Perfil e atividade do Spotify, servidos pela função /api/spotify (veja docs/GUIA.md).
-  // Público: perfil, tocando agora, últimas músicas e mais ouvidos do mês.
+  // Público: perfil, tocando agora, últimas músicas e o meu top 10 (preferidos, escolhidos à mão).
+  // Destaque com foto no Início: a apresentação do TCC.
+  featured: {
+    image: {
+      src: fotoTcc,
+      alt: {
+        pt: 'Pedro Paulo de Lima em pé diante da projeção com o título do TCC, Aquanauta, durante a apresentação',
+        en: 'Pedro Paulo de Lima standing in front of the projected title of his thesis, Aquanauta, during the presentation',
+      },
+    },
+    title: { pt: 'Apresentação do meu TCC', en: 'Presenting my thesis' },
+    text: {
+      pt: 'Apresentando o Aquanauta, uma aplicação de bem-estar digital para promoção da saúde durante o uso prolongado do computador, no curso de Ciência da Computação da UNICENTRO.',
+      en: 'Presenting Aquanauta, a digital well-being app that promotes health during long hours at the computer, in the Computer Science program at UNICENTRO.',
+    },
+  },
+
   spotify: {
     enabled: true,
     endpoint: '/api/spotify',
     refreshSeconds: 30,
     showPlaylists: false,
     showFollowers: false,
+    // Meu top 10 (aba Spotify): cole os links do Spotify (Compartilhar → Copiar
+    // link), na ordem. Vazio = 10 vagas "em breve".
+    favorites: {
+      endpoint: '/api/spotify-favorites',
+      // Ordem: 1 a 10. Mimesis, Last of a Dying Breed, Man of the Year, LMLY,
+      // Center Mass, Bad Omens, CAROUSEL, RAWFEAR, Gimme Love e REDRED.
+      tracks: [
+        '0nLkVbVlIYIPsCTUYYiOuu',
+        '7b9FXvaDafdfqKuoq9ai5Q',
+        '6shJnGf3t1jV284X9wY0uV',
+        '3kPoV6L9vXpbxoM4Ux0KnX',
+        '2BHSRlGgJwzTPfYvAax28m',
+        '6QcOEPC0bX799hITIgj3vU',
+        '6axFhlgJgvquwOyRhw18BS',
+        '43ee3gqWBlPKe2MeGJ2S6I',
+        '2SObiSlRVadbqwNbByuEF3',
+        '2fCwv2ppU5nTRTckomIGsd',
+      ],
+      // Twenty One Pilots, Joji, 5 Seconds of Summer, Balu Brigada, South Arcade,
+      // Fontaines D.C., Olivia Rodrigo, Tove Lo, Damiano David e BENEE.
+      artists: [
+        '3YQKmKGau1PzlVlkL1iodx',
+        '3MZsBdqDrRTJihTHQrO6Dq',
+        '5Rl15oVamLq7FbSb0NNBNy',
+        '6O9vGMmTwzihULICPCsNf2',
+        '3vEL65ycUboLH76pgdtqlF',
+        '3SXwqSqAoBz9WCI9PDQzY6',
+        '1McMsnEElThX1knmY4oliG',
+        '4NHQUGzhtTLFvgF5SZesLK',
+        '7AaGbSgUxJFuZ49VvclNH6',
+        '0Cp8WN4V8Tu4QJQwCN5Md4',
+      ],
+    },
   },
 
   // Som de fundo (som_fundo_novo.mp3). Toca e repete sem fim só o trecho de
@@ -486,7 +568,7 @@ export const portfolio: PortfolioData<'source'> = {
   // Política de privacidade (rota #privacidade). Revise se algo mudar no site
   // (ex.: um formulário de contato ou outra ferramenta de estatísticas).
   privacy: {
-    updated: '2026-11-13',
+    updated: '2026-11-20',
     intro: {
       pt: 'Este portfólio foi feito para ser visitado sem que você precise entregar dados pessoais. Esta página explica o que é guardado, por quem e por quê, de acordo com a Lei Geral de Proteção de Dados (LGPD).',
       en: 'This portfolio is designed so you can visit it without handing over personal data. This page explains what is stored, by whom and why, in line with Brazil’s General Data Protection Law (LGPD).',
@@ -536,8 +618,8 @@ export const portfolio: PortfolioData<'source'> = {
         title: { pt: 'Links externos', en: 'External links' },
         paragraphs: [
           {
-            pt: 'Os links para GitHub, Instagram, demonstrações de projetos e outros serviços levam a sites de terceiros, que têm políticas de privacidade próprias.',
-            en: 'Links to GitHub, Instagram, project demos and other services lead to third-party sites, which have their own privacy policies.',
+            pt: 'Os links para GitHub, Instagram, demonstrações de projetos e outros serviços levam a sites de terceiros, que têm políticas de privacidade próprias. As prévias de músicas da aba Spotify usam o player do próprio Spotify, que só é carregado quando você pede uma prévia e segue a política de privacidade do Spotify.',
+            en: 'Links to GitHub, Instagram, project demos and other services lead to third-party sites, which have their own privacy policies. The song previews in the Spotify tab use Spotify’s own player, which only loads when you ask for a preview and follows Spotify’s privacy policy.',
           },
         ],
       },

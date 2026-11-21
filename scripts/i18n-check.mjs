@@ -4,7 +4,7 @@
  *   npm run i18n:check      (também roda dentro de `npm run check`)
  *
  * Analisa src/ com o compilador do TypeScript e acusa, fora dos arquivos de
- * tradução (src/i18n/ e src/data/portfolio.ts):
+ * tradução (src/i18n/, src/data/portfolio.ts e src/data/skillInfo.ts):
  *   - texto solto no JSX (<p>Olá</p>);
  *   - atributos lidos pelo visitante com texto fixo (aria-label, title, alt,
  *     placeholder…);
@@ -18,7 +18,13 @@ import ts from 'typescript';
 
 const ROOT = new URL('..', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
 const SRC = join(ROOT, 'src');
-const SKIP = [/[\\/]i18n[\\/]/, /[\\/]data[\\/]portfolio\.ts$/, /[\\/]data[\\/]spotify-demo\.ts$/, /\.d\.ts$/];
+const SKIP = [
+  /[\\/]i18n[\\/]/,
+  /[\\/]data[\\/]portfolio\.ts$/,
+  /[\\/]data[\\/]skillInfo\.ts$/,
+  /[\\/]data[\\/]spotify-demo\.ts$/,
+  /\.d\.ts$/,
+];
 const USER_ATTRS = new Set([
   'aria-label',
   'aria-description',

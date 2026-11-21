@@ -345,3 +345,11 @@ Fora do escopo da V1:
 - **Detalhes do projeto:** página própria para cada projeto, em rota `#projetos/<id>` (hoje a galeria fica na janela Detalhes).
 - **Testes:** testes de ponta a ponta versionados no repositório (Playwright + axe), executados em CI.
 - **Navegadores:** conferir em Safari (iOS/macOS) e Firefox reais. As listras do título usam fundo fixo, que o Safari para iPhone não suporta.
+
+### Sobre, Início, Tecnologias e top 10 do Spotify (atualização)
+
+- **Foto do Início:** `originais/profile/foto_tela_inicial.jpg` (recorte em `PHOTO_CROP`, no `optimize-images.py`). A mesma foto aparece no menu Iniciar e na ficha do Sobre.
+- **Destaque do TCC no Início:** `featured` no `portfolio.ts`, com a foto `foto_tcc.jpg` (gerada como `profile/foto-tcc.webp`), um título, um texto e o botão "Ver o projeto".
+- **Sobre:** cartões separados. A **ficha rápida** (`about.facts`) só mostra os itens com `value`: preencha "Nasci em" e "Moro em" para eles aparecerem. O **carrossel** (`about.photos`) mostra 5 vagas "foto em breve" enquanto estiver vazio. Para adicionar fotos: coloque a imagem em `src/assets/`, importe no topo do `portfolio.ts` e acrescente `{ src, alt }`.
+- **Tecnologias:** clicar num item abre uma explicação curta, logo abaixo dele. Os textos ficam em `src/data/skillInfo.ts`, em português e inglês. Os itens de Design e IHC têm ícones próprios em `src/assets/tech/`.
+- **Spotify, meu top 10:** cole os links do Spotify (Compartilhar → Copiar link) em `spotify.favorites.tracks` e `spotify.favorites.artists`, no `portfolio.ts`, na ordem. Capas, nomes e fotos dos artistas vêm do Spotify pela função `/api/spotify-favorites`, com cache de um dia. Cada música tem um botão de prévia que abre o player oficial do Spotify, e a música de fundo do site se cala enquanto ele está aberto. Sem lista, aparecem 10 vagas "em breve". A aba não mostra mais "Mais ouvidos nas últimas 4 semanas".

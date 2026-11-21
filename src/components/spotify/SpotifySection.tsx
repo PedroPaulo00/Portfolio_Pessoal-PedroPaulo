@@ -1,14 +1,16 @@
 import spotifyLogo from '../../assets/brands/spotify-logo.png';
+import { portfolio } from '../../data/portfolio';
 import { useI18n } from '../../i18n/I18n';
 import { useSpotify, useSpotifyRefresh } from '../../lib/spotify';
 import type { Section } from '../../types/portfolio';
 import { SectionHeader } from '../sections/SectionHeader';
-import { Artwork, NowPlaying, SpotifyLinkOut, TrackRow, duration, useTimeAgo } from './SpotifyParts';
+import { Artwork, NowPlaying, SpotifyLinkOut, TrackRow, useTimeAgo } from './SpotifyParts';
+import { SpotifyFavorites } from './SpotifyFavorites';
 import './spotify.css';
 
 /**
- * Aba Spotify: Meu perfil, Minha atividade (tocando agora + recentes),
- * Mais ouvidos nas últimas 4 semanas e, se ativado, Playlists públicas.
+ * Aba Spotify: Meu perfil, Minha atividade (tocando agora + recentes), Meu top 10
+ * (músicas e artistas escolhidos à mão) e, se ativado, Playlists públicas.
  */
 export function SpotifySection({
   section,
@@ -122,46 +124,6 @@ export function SpotifySection({
             </section>
           </div>
 
-          {/* ---------- Mais ouvidos ---------- */}
-          {state.data.topArtists.length > 0 || state.data.topTracks.length > 0 ? (
-            <section className="sp-top" aria-labelledby="sp-top-title">
-              <h2 id="sp-top-title" className="group-title sp-top__title">
-                {t.topTitle}
-              </h2>
-              {state.data.topArtists.length > 0 ? (
-                <>
-                  <h3 className="sp-subtitle">{t.artists}</h3>
-                  <ul className="sp-artists">
-                    {state.data.topArtists.map((artist, index) => (
-                      <li key={artist.id}>
-                        <SpotifyLinkOut href={artist.url} className="sp-artist">
-                          <Artwork src={artist.image} size={96} round />
-                          <span className="sp-artist__name">
-                            <span className="sr-only">{t.rank(index + 1)}</span>
-                            {artist.name}
-                          </span>
-                          {artist.genres[0] ? <span className="sp-artist__genre">{artist.genres[0]}</span> : null}
-                        </SpotifyLinkOut>
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              ) : null}
-              {state.data.topTracks.length > 0 ? (
-                <>
-                  <h3 className="sp-subtitle">{t.tracks}</h3>
-                  <ol className="sp-list sp-list--columns">
-                    {state.data.topTracks.map((track, index) => (
-                      <li key={track.id}>
-                        <TrackRow track={track} index={index + 1} meta={duration(track.durationMs)} />
-                      </li>
-                    ))}
-                  </ol>
-                </>
-              ) : null}
-            </section>
-          ) : null}
-
           {/* ---------- Playlists ---------- */}
           {showPlaylists && state.data.playlists.length > 0 ? (
             <section className="sp-playlists" aria-labelledby="sp-playlists-title">
@@ -185,6 +147,9 @@ export function SpotifySection({
           ) : null}
         </>
       ) : null}
+
+      {/* ---------- Meu top 10 (escolhido à mão; independe da atividade) ---------- */}
+      {portfolio.spotify.favorites ? <SpotifyFavorites /> : null}
     </div>
   );
 }

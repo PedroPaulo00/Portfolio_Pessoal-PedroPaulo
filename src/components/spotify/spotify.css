@@ -575,3 +575,178 @@ a.sp-playlist:active {
     padding-block: 3px;
   }
 }
+
+/* ---------- Meu top 10 ----------
+   Músicas à esquerda (lista numerada com prévia) e artistas à direita (fotos
+   redondas com a posição num selo verde). No celular, uma coluna. */
+.sp-top__columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: start;
+}
+@container main (max-width: 46rem) {
+  .sp-top__columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.sp-fav-tracks {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sp-fav-tracks > li {
+  border: 1px solid transparent;
+  border-radius: 6px;
+}
+.sp-fav-tracks > li.is-open {
+  padding-bottom: 6px;
+  background: linear-gradient(var(--selection-top), var(--selection-bottom));
+  border-color: var(--selection-border);
+}
+.sp-fav-track {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 56px;
+  padding: 6px 8px;
+}
+.sp-fav-track__text {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+@media (hover: hover) {
+  a.sp-fav-track__text:hover .sp-track__name {
+    text-decoration: underline;
+  }
+}
+/* Botão de prévia: círculo verde do Spotify com "play" (ou "parar" aberto). */
+.sp-preview-button {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid #148a3d;
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 20%, rgba(255, 255, 255, 0.55), transparent 70%),
+    linear-gradient(#3fe07a, #1db954 55%, #14953f);
+  box-shadow: 0 1px 3px rgba(0, 60, 20, 0.35);
+  cursor: pointer;
+  transition:
+    transform 140ms ease,
+    filter 140ms ease;
+}
+@media (hover: hover) {
+  .sp-preview-button:hover {
+    filter: brightness(1.08);
+    transform: scale(1.06);
+  }
+}
+.sp-preview-button:active {
+  transform: scale(0.95);
+}
+.sp-preview-button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.sp-preview-button__play {
+  margin-left: 3px;
+  border-left: 11px solid #fff;
+  border-top: 7px solid transparent;
+  border-bottom: 7px solid transparent;
+}
+.sp-preview-button__stop {
+  width: 11px;
+  height: 11px;
+  background: #fff;
+  border-radius: 2px;
+}
+.sp-embed {
+  display: block;
+  width: calc(100% - 12px);
+  margin: 0 6px;
+  border: 0;
+  border-radius: 12px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sp-embed {
+    animation: item-in 260ms var(--ease) backwards;
+  }
+}
+/* Vagas "em breve" (lista ainda não escolhida) e carregando. */
+.sp-fav-track--slot {
+  color: var(--text-secondary);
+}
+.sp-slot-art {
+  display: block;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 1px dashed var(--divider);
+  border-radius: 4px;
+  background: linear-gradient(135deg, var(--surface), var(--sidebar));
+}
+.sp-slot-art--round {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+}
+.sp-slot-text {
+  font-size: var(--text-small);
+  font-style: italic;
+}
+.sp-artist--slot .sp-artist__name {
+  font-style: italic;
+  color: var(--text-secondary);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .is-loading .sp-slot-art {
+    animation: sp-slot-pulse 1.2s ease-in-out infinite;
+  }
+}
+@keyframes sp-slot-pulse {
+  50% {
+    opacity: 0.45;
+  }
+}
+.sp-fav-artists {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.sp-fav-artists__photo {
+  position: relative;
+  display: inline-block;
+  line-height: 0;
+}
+.sp-fav-artists__rank {
+  position: absolute;
+  right: -2px;
+  bottom: 2px;
+  display: grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 5px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(#3fe07a, #1db954 55%, #14953f);
+  border: 2px solid #fff;
+  border-radius: 999px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+.sp-top__note {
+  margin: 0 0 var(--space-4);
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+}

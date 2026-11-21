@@ -28,10 +28,13 @@ export function localize(data: PortfolioData<'source'>, locale: Locale): Portfol
   });
 
   const { logo, photo, ...profile } = data.profile;
-  const { education, highlights, languages, ...about } = data.about;
+  const { education, highlights, languages, facts, photos, ...about } = data.about;
+
+  // O destaque é traduzido abaixo; fora do espalhamento para não vazar o formato bilíngue.
+  const { featured, ...base } = data;
 
   return {
-    ...data,
+    ...base,
     profile: {
       ...profile,
       role: text(profile.role),
@@ -54,8 +57,27 @@ export function localize(data: PortfolioData<'source'>, locale: Locale): Portfol
           }
         : {}),
       ...(highlights ? { highlights: highlights.map(text) } : {}),
+      ...(facts
+        ? {
+            facts: facts.map((fact) => ({
+              kind: fact.kind,
+              label: text(fact.label),
+              ...(fact.value ? { value: text(fact.value) } : {}),
+            })),
+          }
+        : {}),
+      ...(photos ? { photos: photos.map(image) } : {}),
       ...(languages ? { languages: languages.map(text) } : {}),
     },
+    ...(featured
+      ? {
+          featured: {
+            image: image(featured.image),
+            title: text(featured.title),
+            text: text(featured.text),
+          },
+        }
+      : {}),
     skills: data.skills.map((group) => ({ title: text(group.title), items: group.items.map(name) })),
     contact: {
       ...data.contact,

@@ -57,9 +57,16 @@ export interface SpotifySnapshot {
   readonly profile: SpotifyProfile;
   readonly nowPlaying: SpotifyNowPlaying | null;
   readonly recent: readonly SpotifyRecent[];
-  readonly topArtists: readonly SpotifyArtist[];
-  readonly topTracks: readonly SpotifyTrack[];
   readonly playlists: readonly SpotifyPlaylist[];
   /** ISO 8601: momento em que o servidor montou a resposta. */
   readonly generatedAt: string;
+}
+
+/**
+ * Top 10 escolhido pelo dono (músicas e artistas), entregue por
+ * /api/spotify-favorites na ordem pedida. Itens que o Spotify não encontrar somem.
+ */
+export interface SpotifyFavorites {
+  readonly tracks: readonly SpotifyTrack[];
+  readonly artists: readonly SpotifyArtist[];
 }
