@@ -60,6 +60,8 @@ export interface Project<M extends Mode = 'view'> {
   /** Sem URL, o botão correspondente não é exibido. */
   readonly repositoryUrl?: string;
   readonly demoUrl?: string;
+  /** Artigo/relatório (ex.: o artigo do TCC). O botão pede confirmação antes de sair do site. */
+  readonly articleUrl?: string;
   readonly details?: Prose<M>;
   /** Capturas exibidas na janela Detalhes (formato livre). */
   readonly gallery?: readonly ProjectImage<M>[];

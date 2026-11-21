@@ -209,6 +209,11 @@ const pt = {
   opensImage: ' (abre a imagem em nova aba)',
   technologiesUsed: 'Tecnologias usadas',
   demo: 'Demonstração',
+  tccArticle: 'Artigo do TCC',
+  redirectTitle: 'Abrir link externo',
+  redirectText: () =>
+    'Você vai sair do portfólio e abrir o artigo do TCC no Google Drive, em uma nova aba. Deseja continuar?',
+  redirectContinue: 'Continuar',
   repository: 'Repositório',
   details: 'Detalhes',
   ofProject: (name: string) => ` de ${name}`,
@@ -494,6 +499,11 @@ const en: UiStrings = {
   opensImage: ' (opens the image in a new tab)',
   technologiesUsed: 'Technologies used',
   demo: 'Demo',
+  tccArticle: 'Thesis article',
+  redirectTitle: 'Open external link',
+  redirectText: () =>
+    'You are about to leave the portfolio and open the thesis article on Google Drive, in a new tab. Continue?',
+  redirectContinue: 'Continue',
   repository: 'Repository',
   details: 'Details',
   ofProject: (name) => ` of ${name}`,

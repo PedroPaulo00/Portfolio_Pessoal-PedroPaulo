@@ -1,5 +1,6 @@
 import { useI18n } from '../../i18n/I18n';
 import type { Project } from '../../types/portfolio';
+import { ArticleLink } from './ArticleLink';
 import { ProjectThumbnail } from './ProjectThumbnail';
 
 interface ProjectCardProps {
@@ -14,7 +15,7 @@ interface ProjectCardProps {
 export function ProjectCard({ project, onShowDetails }: ProjectCardProps) {
   const { t } = useI18n();
   const titleId = `projeto-${project.id}`;
-  const hasActions = Boolean(project.repositoryUrl || project.demoUrl || project.details);
+  const hasActions = Boolean(project.repositoryUrl || project.demoUrl || project.details || project.articleUrl);
 
   return (
     <article className="project-card" aria-labelledby={titleId}>
@@ -66,6 +67,7 @@ export function ProjectCard({ project, onShowDetails }: ProjectCardProps) {
                 </span>
               </a>
             ) : null}
+            {project.articleUrl ? <ArticleLink url={project.articleUrl} projectName={project.name} /> : null}
             {project.details ? (
               <button
                 type="button"

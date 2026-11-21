@@ -5,6 +5,7 @@ import type { ProjectView } from '../../lib/projectView';
 import type { Project, ProjectCategory, Section } from '../../types/portfolio';
 import { AeroDialog } from '../ui/AeroDialog';
 import { Icon } from '../ui/Icon';
+import { ArticleLink } from './ArticleLink';
 import { ProjectCard } from './ProjectCard';
 import { ProjectThumbnail } from './ProjectThumbnail';
 import { SectionHeader } from './SectionHeader';
@@ -125,6 +126,7 @@ export function ProjectsSection({ section, projects, category, query, onClearQue
                   <span className="sr-only">{t.opensNewTab}</span>
                 </a>
               ) : null}
+              {detailed.articleUrl ? <ArticleLink url={detailed.articleUrl} /> : null}
             </>
           ) : null
         }

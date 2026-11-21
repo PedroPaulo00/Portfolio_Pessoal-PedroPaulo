@@ -3,7 +3,20 @@ import { portfolio } from '../../data/portfolio';
 import { useI18n } from '../../i18n/I18n';
 import { duckAmbient } from '../../lib/ambient';
 import type { SpotifyFavorites as Favorites } from '../../types/spotify';
+import { Orb } from '../ui/Orb';
 import { Artists, Artwork, SpotifyLinkOut } from './SpotifyParts';
+
+/** Glifos brancos na grade do orbe: tocar e parar. */
+const PREVIEW_PLAY = (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M8 5.5v13l11-6.5Z" fill="currentColor" />
+  </svg>
+);
+const PREVIEW_STOP = (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <rect x="6.5" y="6.5" width="11" height="11" rx="1.5" fill="currentColor" />
+  </svg>
+);
 
 const SLOTS = 10;
 
@@ -95,15 +108,15 @@ export function SpotifyFavorites() {
                       </SpotifyLinkOut>
                       <button
                         type="button"
-                        className="sp-preview-button"
+                        className="sp-preview-button orb-host"
                         aria-expanded={preview === track.id}
                         aria-label={preview === track.id ? t.closePreview(track.name) : t.playPreview(track.name)}
                         title={preview === track.id ? t.closePreview(track.name) : t.playPreview(track.name)}
                         onClick={() => setPreview(preview === track.id ? null : track.id)}
                       >
-                        <span
-                          className={preview === track.id ? 'sp-preview-button__stop' : 'sp-preview-button__play'}
-                        />
+                        <Orb variant={9} size={40}>
+                          {preview === track.id ? PREVIEW_STOP : PREVIEW_PLAY}
+                        </Orb>
                       </button>
                     </div>
                     {preview === track.id ? (

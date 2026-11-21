@@ -128,6 +128,8 @@ export const portfolio: PortfolioData<'source'> = {
       },
       stack: ['Electron', 'JavaScript', 'HTML5', 'CSS3', 'Node.js', 'localStorage'],
       status: 'concluido',
+      // Artigo do TCC (Google Drive): o botão pede confirmação antes de abrir.
+      articleUrl: 'https://drive.google.com/file/d/1U15mf-N3OZpTMGDtZW2CBChxeqQ5ujMi/view',
       repositoryUrl: 'https://github.com/PedroPaulo00/TCC_AQUANAUTA',
       demoUrl: 'https://tcc-aquanauta.vercel.app/',
       thumbnail: {
@@ -503,7 +505,7 @@ export const portfolio: PortfolioData<'source'> = {
         '2fCwv2ppU5nTRTckomIGsd',
       ],
       // Twenty One Pilots, Joji, 5 Seconds of Summer, Balu Brigada, South Arcade,
-      // Fontaines D.C., Olivia Rodrigo, Tove Lo, Damiano David e BENEE.
+      // Fontaines D.C., Olivia Rodrigo, Tove Lo, Blusher e The Weeknd.
       artists: [
         '3YQKmKGau1PzlVlkL1iodx',
         '3MZsBdqDrRTJihTHQrO6Dq',
@@ -513,8 +515,8 @@ export const portfolio: PortfolioData<'source'> = {
         '3SXwqSqAoBz9WCI9PDQzY6',
         '1McMsnEElThX1knmY4oliG',
         '4NHQUGzhtTLFvgF5SZesLK',
-        '7AaGbSgUxJFuZ49VvclNH6',
-        '0Cp8WN4V8Tu4QJQwCN5Md4',
+        '7AZm56bjPk0tYl6LTyJu9N',
+        '1Xyo4u8uXC1ZmMpatF05PJ',
       ],
     },
   },

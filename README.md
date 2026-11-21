@@ -20,10 +20,10 @@ Portfólio pessoal de **Pedro Paulo de Lima**, desenvolvedor de software e gradu
 
 - **Janela Aero navegável:** voltar/avançar sincronizados com o navegador, barra de localização, pesquisa de projetos e menu Iniciar com tema claro/escuro (com papel de parede de dia e de noite) e três modos de vidro.
 - **Início** com foto, apresentação e destaque da apresentação do TCC.
-- **Projetos** com filtro por categoria, busca, modos de exibição como os do Explorer (ícones grandes, lista, detalhes...) e janela de detalhes com galeria de capturas.
-- **Sobre** em cartões: ficha rápida, carrossel de fotos, história, conquistas, formação, interesses e idiomas.
+- **Projetos** com filtro por categoria, busca, modos de exibição como os do Explorer (ícones grandes, lista, detalhes...) e janela de detalhes com galeria de capturas. O Aquanauta tem o botão **Artigo do TCC**, que pede confirmação antes de levar ao artigo no Google Drive.
+- **Sobre** em cartões: ficha rápida (de onde sou, o que estudo, foco, idiomas e paixão), carrossel de fotos, história, conquistas, formação, interesses e idiomas.
 - **Tecnologias** em grupos, com ícone em cada item. Ao clicar, uma explicação curta do que é a ferramenta.
-- **Spotify ao vivo:** perfil, música tocando agora e últimas faixas, servidos por uma função serverless (as credenciais nunca chegam ao navegador). Mais o **top 10 de músicas e de artistas preferidos**, com capas e fotos vindas do Spotify e prévia de cada música pelo player oficial.
+- **Spotify ao vivo:** perfil, música tocando agora e últimas faixas, servidos por uma função serverless (as credenciais nunca chegam ao navegador). Mais o **top 10 de músicas e de artistas preferidos** (escolhidos à mão, não os mais ouvidos), com capas e fotos vindas do Spotify e prévia de cada música pelo player oficial, aberta por um orbe verde.
 - **Contador de visitas** discreto no Início, sem contar o próprio dono.
 - **Bilíngue:** idioma detectado pelo navegador, troca pelo indicador PT/EN da barra de tarefas. O build falha se algum texto ficar em uma língua só.
 
@@ -82,7 +82,8 @@ Todo o conteúdo fica em `src/data/portfolio.ts`, em português e inglês. O [gu
 
 - trocar fotos, papéis de parede e ícones (`npm run images`);
 - preencher o carrossel de fotos do Sobre e a ficha rápida;
-- escolher o top 10 do Spotify (cole os links na ordem);
+- escolher o top 10 do Spotify (cole os links ou IDs na ordem);
+- adicionar um botão de artigo, com confirmação, a um projeto (`articleUrl`);
 - acrescentar vídeos ao Media Player;
 - configurar os ícones da área de trabalho (janela, imagem, personagem ou assistente);
 - adicionar uma ferramenta e a explicação dela em Tecnologias.
