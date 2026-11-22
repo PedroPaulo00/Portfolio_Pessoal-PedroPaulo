@@ -63,8 +63,8 @@ export const portfolio: PortfolioData<'source'> = {
       en: 'Software Developer | Computer Science Undergraduate',
     },
     tagline: {
-      pt: 'Sou graduando em Ciência da Computação pela UNICENTRO, com foco em desenvolvimento web, mobile e experiências digitais. Gosto de criar aplicações que combinem funcionalidade, usabilidade e identidade visual, como o Aquanauta e o FoldAero. Tenho interesse em oportunidades de desenvolvimento de software e em projetos que valorizem a experiência do usuário.',
-      en: 'I am a Computer Science undergraduate at UNICENTRO, focused on web and mobile development and digital experiences. I enjoy building applications that combine functionality, usability and visual identity, such as Aquanauta and FoldAero. I am interested in software development opportunities and in projects that value the user experience.',
+      pt: 'Estudo Ciência da Computação na UNICENTRO e trabalho principalmente com web, mobile e experiências digitais. Gosto de criar aplicativos que sejam úteis, fáceis de usar e com identidade visual própria, como o Aquanauta e o FoldAero. Estou aberto a oportunidades de desenvolvimento de software e a projetos que deem valor à experiência de quem usa.',
+      en: 'I’m studying Computer Science at UNICENTRO and mostly work on web, mobile and digital experiences. I like building apps that are useful, easy to use and visually distinctive, like Aquanauta and FoldAero. I’m open to software development opportunities and to projects that care about the user experience.',
     },
     logo: { src: logo, alt: { pt: '', en: '' } },
     photo: { src: photo, alt: { pt: 'Foto de Pedro Paulo de Lima', en: 'Photo of Pedro Paulo de Lima' } },
@@ -105,8 +105,8 @@ export const portfolio: PortfolioData<'source'> = {
       label: { pt: 'Spotify', en: 'Spotify' },
       title: { pt: 'O que estou ouvindo', en: 'What I’m listening to' },
       description: {
-        pt: 'Música é a minha maior paixão na vida e está presente em todos os meus dias. Acompanhe o que estou escutando agora!',
-        en: 'Music is the greatest passion of my life and is part of every single day. See what I’m listening to right now!',
+        pt: 'Música é a minha maior paixão e está presente em todos os meus dias. Veja o que estou ouvindo agora!',
+        en: 'Music is my biggest passion and it’s part of every single day. See what I’m listening to right now!',
       },
     },
     {
@@ -123,7 +123,7 @@ export const portfolio: PortfolioData<'source'> = {
       name: { pt: 'Aquanauta (TCC)', en: 'Aquanauta (Undergraduate thesis)' },
       category: 'academico',
       summary: {
-        pt: 'Aplicação desktop de bem-estar digital criada no meu TCC para incentivar hábitos saudáveis durante o uso prolongado do computador. Reúne monitoramento de atividade, ciclos Pomodoro e lembretes de hidratação, alongamento, descanso ocular e organização da rotina.',
+        pt: 'Aplicativo desktop de bem-estar digital que criei no meu TCC para incentivar hábitos saudáveis em quem passa muito tempo no computador. Reúne monitoramento de atividade, ciclos Pomodoro e lembretes de hidratação, alongamento, descanso dos olhos e organização da rotina.',
         en: 'A digital well-being desktop app built for my undergraduate thesis to encourage healthy habits during long computer sessions. It combines activity monitoring, Pomodoro cycles and reminders for hydration, stretching, eye rest and daily routine.',
       },
       stack: ['Electron', 'JavaScript', 'HTML5', 'CSS3', 'Node.js', 'localStorage'],
@@ -163,8 +163,8 @@ export const portfolio: PortfolioData<'source'> = {
         },
       ],
       details: {
-        pt: 'Projeto de TCC em Ciência da Computação na UNICENTRO, desenvolvido com arquitetura Electron e módulos JavaScript independentes. Integra monitoramento de atividade, notificações contextuais, Pomodoro configurável, agenda, controle de medicamentos e mascote interativa.\n\nA interface utiliza gradientes, transparências e animações inspirados no Frutiger Aero e no Windows Vista/7. Os dados são mantidos localmente, sem depender de conexão.\n\nO desenvolvimento foi incremental e incluiu testes manuais e uma inspeção heurística individual baseada nas dez heurísticas de Nielsen; testes com usuários reais ficaram como possibilidade futura.',
-        en: 'Undergraduate thesis project in Computer Science at UNICENTRO, built on an Electron architecture with independent JavaScript modules. It brings together activity monitoring, contextual notifications, a configurable Pomodoro timer, a planner, medication tracking and an interactive mascot.\n\nThe interface uses gradients, transparency and animations inspired by Frutiger Aero and Windows Vista/7. All data is stored locally, with no need for a connection.\n\nDevelopment was incremental and included manual testing and an individual heuristic evaluation based on Nielsen’s ten heuristics; testing with real users was left as future work.',
+        pt: 'Projeto de TCC em Ciência da Computação na UNICENTRO, desenvolvido com arquitetura Electron e módulos JavaScript independentes. Integra monitoramento de atividade, notificações contextuais, Pomodoro configurável, agenda, controle de medicamentos e mascote interativa.\n\nA interface usa gradientes, transparências e animações inspirados no Frutiger Aero e no Windows Vista/7. Os dados ficam guardados no próprio computador, sem precisar de internet.\n\nFui desenvolvendo aos poucos, com testes manuais e uma avaliação heurística feita por mim, baseada nas dez heurísticas de Nielsen. Os testes com usuários reais ficam para uma próxima etapa.',
+        en: 'Undergraduate thesis project in Computer Science at UNICENTRO, built on an Electron architecture with independent JavaScript modules. It brings together activity monitoring, contextual notifications, a configurable Pomodoro timer, a planner, medication tracking and an interactive mascot.\n\nThe interface uses gradients, transparency and animations inspired by Frutiger Aero and Windows Vista/7. All data is stored locally, so no internet connection is needed.\n\nI built it step by step, with manual testing and a heuristic evaluation I ran myself, based on Nielsen’s ten heuristics. Testing with real users is left for a next stage.',
       },
     },
     {
@@ -282,8 +282,8 @@ export const portfolio: PortfolioData<'source'> = {
       status: 'em-andamento',
       repositoryUrl: 'https://github.com/PedroPaulo00/FoldAero',
       details: {
-        pt: 'Primeiro aplicativo da AquariusFresh Lab, projeto independente de desenvolvimento de software. O app organiza mídias armazenadas no próprio dispositivo, sem enviá-las para servidores. Utiliza Capacitor para combinar interface web e recursos nativos: leitura da galeria, criação de miniaturas, abertura de vídeos, renomeação e exclusão com confirmação do sistema.\n\nO desafio central é conciliar as diferenças entre Android e iOS com uma interface responsiva, funcional e inspirada no Frutiger Aero.',
-        en: 'The first app from AquariusFresh Lab, an independent software development project. The app organizes media stored on the device itself, without uploading it to servers. It uses Capacitor to combine a web interface with native features: reading the gallery, generating thumbnails, opening videos, and renaming and deleting with system confirmation.\n\nThe core challenge is reconciling the differences between Android and iOS with a responsive, functional interface inspired by Frutiger Aero.',
+        pt: 'Primeiro aplicativo da AquariusFresh Lab, projeto independente de desenvolvimento de software. O app organiza mídias armazenadas no próprio dispositivo, sem enviá-las para servidores. Usa o Capacitor para combinar interface web e recursos nativos: leitura da galeria, criação de miniaturas, abertura de vídeos, renomeação e exclusão com confirmação do sistema.\n\nO maior desafio é conciliar as diferenças entre Android e iOS numa interface responsiva, funcional e inspirada no Frutiger Aero.',
+        en: 'The first app from AquariusFresh Lab, an independent software development project. The app organizes media stored on the device itself, without uploading it to servers. It uses Capacitor to combine a web interface with native features: reading the gallery, generating thumbnails, opening videos, and renaming and deleting with system confirmation.\n\nThe biggest challenge is reconciling the differences between Android and iOS in a responsive, functional interface inspired by Frutiger Aero.',
       },
     },
     {
@@ -292,7 +292,7 @@ export const portfolio: PortfolioData<'source'> = {
       name: 'Flor Digital',
       category: 'pessoal',
       summary: {
-        pt: 'Projeto criativo na web com elementos visuais e animações de inspiração aquática, baseado em uma experiência interativa com arte e texto. Explora programação front-end como forma de expressão visual.',
+        pt: 'Projeto criativo na web, com visuais e animações de inspiração aquática, que funciona como uma experiência interativa de arte e texto. Explora a programação front-end como forma de expressão visual.',
         en: 'A creative web project with ocean-inspired visuals and animations, built as an interactive experience with art and text. It explores front-end programming as a form of visual expression.',
       },
       stack: ['HTML5', 'CSS3', 'JavaScript', 'Canvas'],
@@ -311,8 +311,8 @@ export const portfolio: PortfolioData<'source'> = {
         },
       ],
       details: {
-        pt: 'Projeto recreativo que explora composição de cenas, tipografia monoespaçada, transições, animações e conteúdo desenhado em Canvas. Demonstra interesse por interfaces personalizadas e pela combinação de design e programação além de aplicações utilitárias.',
-        en: 'A playful project that explores scene composition, monospaced typography, transitions, animations and content drawn on Canvas. It shows an interest in custom interfaces and in combining design and programming beyond utility apps.',
+        pt: 'Projeto feito por diversão, que explora composição de cenas, tipografia monoespaçada, transições, animações e desenhos em Canvas. Mostra o meu interesse por interfaces personalizadas e por unir design e programação, indo além dos aplicativos utilitários.',
+        en: 'A project made for fun that explores scene composition, monospaced typography, transitions, animations and drawings on Canvas. It shows my interest in custom interfaces and in combining design and programming, going beyond utility apps.',
       },
     },
   ],
@@ -320,16 +320,16 @@ export const portfolio: PortfolioData<'source'> = {
   about: {
     paragraphs: [
       {
-        pt: 'Meu interesse por tecnologia começou na infância e foi fortalecido pelo exemplo da minha irmã, doutora e professora de Ciência da Computação. Ao longo da graduação na UNICENTRO, explorei diferentes áreas da Computação e me identifiquei principalmente com desenvolvimento web, mobile e design de interfaces. No meu TCC, desenvolvi o Aquanauta, uma aplicação desktop de bem-estar digital que reúne monitoramento de atividade, lembretes, organização da rotina e uma interface inspirada no Frutiger Aero.',
-        en: 'My interest in technology began in childhood and grew stronger through the example of my sister, who holds a PhD and teaches Computer Science. Throughout my degree at UNICENTRO I explored different areas of computing and connected most with web and mobile development and interface design. For my undergraduate thesis I built Aquanauta, a digital well-being desktop app that brings together activity monitoring, reminders, routine planning and a Frutiger Aero-inspired interface.',
+        pt: 'Meu interesse por tecnologia começou na infância e ganhou força com o exemplo da minha irmã, doutora e professora de Ciência da Computação. Durante a graduação na UNICENTRO, passei por várias áreas da Computação e me identifiquei mais com desenvolvimento web, mobile e design de interfaces. No TCC, criei o Aquanauta, um aplicativo desktop de bem-estar digital com monitoramento de atividade, lembretes, organização da rotina e uma interface inspirada no Frutiger Aero.',
+        en: 'My interest in technology started in childhood and grew with the example of my sister, who has a PhD and teaches Computer Science. During my degree at UNICENTRO I tried out different areas of computing and connected most with web, mobile and interface design. For my thesis I built Aquanauta, a digital well-being desktop app with activity monitoring, reminders, routine planning and a Frutiger Aero-inspired interface.',
       },
       {
-        pt: 'Costumo desenvolver de forma iterativa: planejo a estrutura, implemento por funcionalidades, testo e refino a experiência até alcançar um resultado consistente. Valorizo organização do código, manutenção, responsividade, atenção à interface e decisões técnicas que resolvam problemas reais. Também utilizo ferramentas de IA como apoio ao desenvolvimento, mantendo o foco em compreender, revisar e validar as soluções.',
-        en: 'I work iteratively: I plan the structure, build feature by feature, then test and refine the experience until the result is consistent. I value well-organized, maintainable code, responsiveness, attention to the interface and technical decisions that solve real problems. I also use AI tools to support development, while staying focused on understanding, reviewing and validating the solutions.',
+        pt: 'Costumo trabalhar por etapas: planejo a estrutura, construo funcionalidade por funcionalidade, testo e vou refinando até o resultado ficar consistente. Dou valor a código organizado e fácil de manter, à responsividade, a uma interface bem cuidada e a decisões técnicas que resolvam problemas reais. Também uso ferramentas de IA como apoio, sempre me preocupando em entender, revisar e validar o que elas sugerem.',
+        en: 'I like to work in steps: I plan the structure, build feature by feature, then test and refine until the result feels consistent. I care about clean, maintainable code, responsiveness, a well-crafted interface and technical decisions that solve real problems. I also use AI tools as support, always making sure I understand, review and validate what they suggest.',
       },
       {
-        pt: 'Fora do código, minha maior paixão na vida é a música: ela me acompanha em praticamente tudo o que faço, inclusive enquanto programo. Por isso este portfólio tem uma seção mostrando o que ando ouvindo no Spotify.',
-        en: 'Outside of code, the greatest passion of my life is music: it is with me in almost everything I do, including while I program. That is why this portfolio has a section showing what I have been listening to on Spotify.',
+        pt: 'Fora do código, minha maior paixão é a música: ela está comigo em quase tudo o que faço, inclusive enquanto programo. Por isso este portfólio tem uma seção com o que ando ouvindo no Spotify.',
+        en: 'Outside of code, my biggest passion is music: it’s with me in almost everything I do, including while I program. That’s why this portfolio has a section showing what I’ve been listening to on Spotify.',
       },
     ],
     // Ficha rápida (cartão no topo do Sobre). Item sem `value` não aparece:
@@ -448,8 +448,8 @@ export const portfolio: PortfolioData<'source'> = {
 
   contact: {
     intro: {
-      pt: 'Tenho interesse em oportunidades e colaborações em desenvolvimento web, mobile e aplicações desktop, especialmente projetos que unam tecnologia e experiência do usuário. Entre em contato para conversar sobre ideias, projetos ou oportunidades.',
-      en: 'I am interested in opportunities and collaborations in web, mobile and desktop development, especially projects that bring technology and user experience together. Get in touch to talk about ideas, projects or opportunities.',
+      pt: 'Tenho interesse em oportunidades e parcerias em desenvolvimento web, mobile e desktop, principalmente em projetos que juntem tecnologia e uma boa experiência de uso. Me chame para conversar sobre ideias, projetos ou oportunidades!',
+      en: 'I’m interested in opportunities and collaborations in web, mobile and desktop development, especially projects that bring technology and user experience together. Reach out to talk about ideas, projects or opportunities!',
     },
     email: 'pppedro95@gmail.com',
     secondaryEmail: 'pedropaulo0720@outlook.com',
@@ -475,8 +475,8 @@ export const portfolio: PortfolioData<'source'> = {
     },
     title: { pt: 'Apresentação do meu TCC', en: 'Presenting my thesis' },
     text: {
-      pt: 'Apresentando o Aquanauta, uma aplicação de bem-estar digital para promoção da saúde durante o uso prolongado do computador, no curso de Ciência da Computação da UNICENTRO.',
-      en: 'Presenting Aquanauta, a digital well-being app that promotes health during long hours at the computer, in the Computer Science program at UNICENTRO.',
+      pt: 'Apresentando o Aquanauta, um aplicativo de bem-estar digital que cuida da saúde de quem passa muito tempo no computador, no curso de Ciência da Computação da UNICENTRO.',
+      en: 'Presenting Aquanauta, a digital well-being app that looks after the health of people who spend long hours at the computer, in the Computer Science program at UNICENTRO.',
     },
   },
 

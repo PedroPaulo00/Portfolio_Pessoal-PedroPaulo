@@ -100,7 +100,7 @@ const pt = {
   muted: 'Silenciado',
   unmute: 'Ativar som',
   mute: 'Silenciar',
-  soundWaiting: 'O navegador libera o som após o primeiro clique ou tecla.',
+  soundWaiting: 'O navegador só libera o som depois do primeiro clique ou toque.',
   soundError: 'Não foi possível carregar o som.',
 
   // Barra de localização e pesquisa
@@ -132,7 +132,7 @@ const pt = {
     nudgeButton: 'Chamar a atenção',
     hint: 'Clique na mão para chamar a atenção, como no MSN.',
   },
-  surferStop: (what: string) => `${what} pela tela. Clique para ele ir embora`,
+  surferStop: (what: string) => `${what} pela tela. Clique para ele ir embora.`,
   clippy: {
     label: 'Clippy, o assistente',
     drag: 'Clique para mostrar ou esconder o balão. Arraste para mudar o Clippy de lugar.',
@@ -238,7 +238,7 @@ const pt = {
   highlights: 'Experiências e conquistas',
   quickFacts: 'Ficha rápida',
   myTop10: 'Meus preferidos',
-  top10Note: 'Meu top 10 de músicas e artistas. São os meus preferidos, escolhidos por mim, e não os mais ouvidos.',
+  top10Note: 'Meu top 10 de músicas e artistas. Não são os mais ouvidos: são os meus preferidos, escolhidos a dedo.',
   top10Tracks: 'Top 10 músicas preferidas',
   top10Artists: 'Top 10 artistas preferidos',
   playPreview: (name: string) => `Ouvir uma prévia de ${name}`,
@@ -395,7 +395,7 @@ const en: UiStrings = {
   muted: 'Muted',
   unmute: 'Unmute',
   mute: 'Mute',
-  soundWaiting: 'The browser enables sound after the first click or key press.',
+  soundWaiting: 'The browser only enables sound after the first click or tap.',
   soundError: 'Could not load the sound.',
 
   navigationHistory: 'Navigation history',
@@ -425,7 +425,7 @@ const en: UiStrings = {
     nudgeButton: 'Send a nudge',
     hint: 'Click the hand to send a nudge, just like on MSN.',
   },
-  surferStop: (what) => `${what} across the screen. Click to make him go away`,
+  surferStop: (what) => `${what} across the screen. Click to make him go away.`,
   clippy: {
     label: 'Clippy, the assistant',
     drag: 'Click to show or hide the balloon. Drag to move Clippy around.',
@@ -527,7 +527,7 @@ const en: UiStrings = {
   highlights: 'Experience and achievements',
   quickFacts: 'Quick facts',
   myTop10: 'My favorites',
-  top10Note: 'My top 10 songs and artists. These are my favorites, hand-picked by me, not my most played.',
+  top10Note: 'My top 10 songs and artists. Not the most played, just my favorites, hand-picked.',
   top10Tracks: 'Top 10 favorite songs',
   top10Artists: 'Top 10 favorite artists',
   playPreview: (name) => `Play a preview of ${name}`,
