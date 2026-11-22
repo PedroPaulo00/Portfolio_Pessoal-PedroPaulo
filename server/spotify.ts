@@ -307,7 +307,11 @@ function favoriteIds(value: string | null): string[] {
  * Busca em lote (`/tracks?ids=`); se o Spotify recusar o lote (sem ser excesso
  * de chamadas), busca um por um. A resposta mantém a ordem dos IDs pedidos.
  */
-async function lookup(token: string, kind: 'tracks' | 'artists', ids: readonly string[]): Promise<unknown[]> {
+async function lookup(
+  token: string,
+  kind: 'tracks' | 'artists' | 'albums',
+  ids: readonly string[],
+): Promise<unknown[]> {
   if (ids.length === 0) return [];
   let items: unknown[];
   try {
@@ -327,16 +331,22 @@ export async function handleSpotifyFavoritesRequest(env: SpotifyEnv, requestUrl:
   const params = new URL(requestUrl, 'http://localhost').searchParams;
   const trackIds = favoriteIds(params.get('tracks'));
   const artistIds = favoriteIds(params.get('artists'));
-  const key = `${trackIds.join(',')}|${artistIds.join(',')}`;
+  const albumIds = favoriteIds(params.get('albums'));
+  const key = `${trackIds.join(',')}|${artistIds.join(',')}|${albumIds.join(',')}`;
   const cached = favoritesCache.get(key);
   if (cached && Date.now() - cached.at < FAVORITES_MS) {
     return new Response(cached.body, { status: 200, headers: FAVORITES_HEADERS });
   }
   try {
     const token = await accessToken(env);
-    const [tracks, artists] = await Promise.all([
+    const [tracks, artists, albums] = await Promise.all([
       lookup(token, 'tracks', trackIds),
       lookup(token, 'artists', artistIds),
+      // A capa de fundo é enfeite: se falhar, os artistas aparecem sem ela.
+      lookup(token, 'albums', albumIds).catch((error: unknown) => {
+        if (error instanceof RateLimited) throw error;
+        return [];
+      }),
     ]);
     const favorites: SpotifyFavorites = {
       tracks: tracks.flatMap((item) => {
@@ -344,6 +354,10 @@ export async function handleSpotifyFavoritesRequest(env: SpotifyEnv, requestUrl:
         return mapped ? [mapped] : [];
       }),
       artists: artists.map(artist),
+      albums: albums.map((item) => {
+        const o = obj(item);
+        return { id: str(o.id), name: str(o.name), image: image(o.images) };
+      }),
     };
     const body = JSON.stringify(favorites);
     favoritesCache.set(key, { at: Date.now(), body });

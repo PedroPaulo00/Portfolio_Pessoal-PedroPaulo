@@ -69,4 +69,12 @@ export interface SpotifySnapshot {
 export interface SpotifyFavorites {
   readonly tracks: readonly SpotifyTrack[];
   readonly artists: readonly SpotifyArtist[];
+  /** Capas dos álbuns escolhidos como fundo dos artistas (pelo ID do álbum). */
+  readonly albums?: readonly SpotifyAlbumArt[];
+}
+
+export interface SpotifyAlbumArt {
+  readonly id: string;
+  readonly name: string;
+  readonly image: string | null;
 }

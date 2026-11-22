@@ -150,7 +150,11 @@ export function NowPlaying({
   const percent = track.durationMs ? (progress / track.durationMs) * 100 : 0;
 
   return (
-    <div className={`sp-now${compact ? ' sp-now--compact' : ''}`}>
+    <div className={`sp-now${compact ? ' sp-now--compact' : ''}${track.image && !compact ? ' has-backdrop' : ''}`}>
+      {/* Aba Spotify: a capa da música também vira o fundo, escurecida. */}
+      {track.image && !compact ? (
+        <span className="sp-now__backdrop" style={{ backgroundImage: `url("${track.image}")` }} aria-hidden="true" />
+      ) : null}
       <Artwork src={track.image} size={compact ? 56 : 112} label={t.coverOf(track.album)} />
       <div className="sp-now__body">
         <p className="sp-now__state">

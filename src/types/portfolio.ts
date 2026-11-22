@@ -153,12 +153,13 @@ export interface SpotifyConfig {
   readonly showFollowers: boolean;
   /**
    * Meu top 10, escolhido à mão: IDs ou links do Spotify (até 10 de cada), na
-   * ordem. Capas, nomes e fotos vêm do Spotify pelo `endpoint`.
+   * ordem. Capas, nomes e fotos vêm do Spotify pelo `endpoint`. Cada artista
+   * pode ter um `album` (ID ou link), cuja capa vira o fundo do ladrilho dele.
    */
   readonly favorites?: {
     readonly endpoint: string;
     readonly tracks: readonly string[];
-    readonly artists: readonly string[];
+    readonly artists: readonly (string | { readonly artist: string; readonly album?: string })[];
   };
 }
 

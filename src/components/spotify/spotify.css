@@ -103,6 +103,10 @@ a.sp-track:active {
   flex: none;
   max-width: 7.5rem;
   text-align: right;
+  /* "há 6 minutos": um pouco mais visível que os artistas. */
+  font-weight: 600;
+  color: var(--text);
+  opacity: 0.85;
 }
 
 /* ---------- Tocando agora ---------- */
@@ -207,6 +211,53 @@ a.sp-now__title:hover {
   display: block;
   height: 100%;
   background: linear-gradient(#7ff0a8, var(--sp-green) 50%, #13a046 51%, #2ccb67);
+}
+
+/* Ouvindo agora com a capa da música de fundo (escurecida, texto branco). */
+.sp-now.has-backdrop {
+  position: relative;
+  overflow: hidden;
+  border-color: #ffffff4d;
+  background: #000;
+}
+.sp-now__backdrop {
+  position: absolute;
+  inset: 0;
+  background: center / cover no-repeat;
+  transform: scale(1.05);
+}
+.sp-now__backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #000000d1, #000000a6 60%, #000000bf);
+}
+.sp-now.has-backdrop > :not(.sp-now__backdrop) {
+  position: relative;
+}
+.sp-now.has-backdrop .sp-art {
+  box-shadow:
+    0 0 0 1px #ffffff59,
+    0 4px 14px #0009;
+}
+.sp-now.has-backdrop .sp-now__body {
+  text-shadow: 0 1px 2px #000;
+}
+.sp-now.has-backdrop .sp-now__badge {
+  color: #1ed760;
+}
+.sp-now.has-backdrop .sp-now__badge.is-paused,
+.sp-now.has-backdrop .sp-now__artists,
+.sp-now.has-backdrop .sp-progress {
+  color: #ffffffd9;
+}
+.sp-now.has-backdrop .sp-now__title {
+  color: #fff;
+}
+.sp-now.has-backdrop .sp-progress__bar {
+  background: #ffffff2e;
+  border-color: #ffffff40;
+  box-shadow: none;
 }
 
 .sp-demo-tag {
@@ -342,6 +393,32 @@ a.sp-now__title:hover {
   justify-items: center;
   gap: var(--space-2);
   text-align: center;
+}
+/* Meu perfil: foto de show de fundo (originais/profile/fundo_meuperfil_spotify.png,
+   gerada por `npm run images`), escurecida para o texto branco aparecer. */
+.info-panel.sp-profile {
+  color: #fff;
+  text-shadow: 0 1px 2px #000;
+  background:
+    linear-gradient(#000000a6, #0000008c 40%, #000000d9),
+    url('../../assets/spotify/fundo-meuperfil.webp') 62% 12% / cover no-repeat,
+    #0b2a1c;
+  border-color: #ffffff4d;
+}
+.info-panel.sp-profile .group-title,
+.info-panel.sp-profile .sp-profile__stats dt {
+  color: #ffffffd9;
+}
+.info-panel.sp-profile .sp-profile__stats dd {
+  color: #1ed760;
+}
+.info-panel.sp-profile .aero-button {
+  text-shadow: none;
+}
+.info-panel.sp-profile .sp-art {
+  box-shadow:
+    0 0 0 2px #ffffffd9,
+    0 4px 14px #0009;
 }
 .sp-profile .group-title {
   justify-self: stretch;
@@ -611,6 +688,47 @@ a.sp-playlist:active {
   background: linear-gradient(var(--selection-top), var(--selection-bottom));
   border-color: var(--selection-border);
 }
+/* Fundo da faixa: o meio da capa da música, escurecido, com texto branco. */
+.sp-fav-tracks > li.has-backdrop {
+  position: relative;
+  overflow: hidden;
+  border-bottom-color: transparent;
+}
+.sp-fav-tracks__backdrop {
+  position: absolute;
+  inset: 0;
+  background: center / cover no-repeat;
+}
+.sp-fav-tracks__backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #000000d1, #000000a6 60%, #000000bf);
+}
+.has-backdrop > .sp-fav-track,
+.has-backdrop > .sp-embed {
+  position: relative;
+}
+.has-backdrop .sp-fav-track,
+.has-backdrop .sp-track__index {
+  color: #fff;
+}
+.has-backdrop .sp-track__name {
+  font-weight: 600;
+}
+.has-backdrop .sp-track__artists {
+  color: #ffffffd9;
+}
+.has-backdrop .sp-fav-track__text {
+  text-shadow: 0 1px 2px #000;
+}
+.has-backdrop .sp-art {
+  box-shadow: 0 0 0 1px #ffffff59;
+}
+.sp-fav-tracks > li.has-backdrop.is-open {
+  border-color: var(--selection-border);
+}
+
 .sp-fav-track {
   display: flex;
   align-items: center;
@@ -709,10 +827,10 @@ a.sp-playlist:active {
 }
 .sp-fav-artists__rank {
   position: absolute;
-  right: -4px;
-  bottom: 0;
-  width: 26px;
-  height: 26px;
+  right: -6px;
+  bottom: -2px;
+  width: 34px;
+  height: 34px;
 }
 .sp-fav-artists__rank .orb-glyph {
   font:
@@ -733,9 +851,62 @@ a.sp-playlist:active {
   gap: var(--space-3);
 }
 .sp-fav-artists > li {
+  position: relative;
   min-width: 0;
   padding: 10px 6px 8px;
+  overflow: hidden;
   background: linear-gradient(var(--surface), var(--sidebar));
   border: 1px solid var(--divider);
   border-radius: 6px;
+}
+
+/* Fundo do ladrilho: capa de um álbum do artista (portfolio.ts → album),
+   escurecida embaixo para o nome continuar legível nos dois temas. */
+.sp-fav-artists__backdrop {
+  position: absolute;
+  inset: 0;
+  background: center / cover no-repeat;
+  transform: scale(1.04);
+}
+.sp-fav-artists__backdrop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(#00000045, #00000080 45%, #000000ed);
+}
+.sp-fav-artists > li.has-backdrop {
+  border-color: #ffffff59;
+  box-shadow: inset 0 1px #ffffff40;
+}
+.has-backdrop .sp-artist {
+  position: relative;
+  color: #fff;
+}
+.has-backdrop .sp-artist__name {
+  font-weight: 600;
+  text-shadow:
+    0 1px 2px #000,
+    0 0 8px #000c;
+}
+.has-backdrop .sp-fav-artists__photo .sp-art {
+  box-shadow:
+    0 0 0 2px #ffffffd9,
+    0 4px 12px #0009;
+}
+@media (hover: hover) {
+  .has-backdrop a.sp-artist:hover {
+    background: #ffffff26;
+    border-color: #ffffff66;
+  }
+}
+.has-backdrop a.sp-artist:active {
+  background: #ffffff38;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sp-fav-artists__backdrop {
+    transition: transform 0.4s ease;
+  }
+  .has-backdrop:hover .sp-fav-artists__backdrop {
+    transform: scale(1.1);
+  }
 }

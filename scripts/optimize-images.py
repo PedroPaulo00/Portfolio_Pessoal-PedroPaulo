@@ -439,6 +439,9 @@ def main() -> None:
     tcc = Image.open(SRC / "profile" / TCC_PHOTO).convert("RGB")
     save(tcc.resize((560, round(560 * tcc.height / tcc.width)), Image.LANCZOS), "profile/foto-tcc.webp",
          format="WEBP", quality=84, method=6)
+    # Fundo do cartão "Meu perfil" (aba Spotify): tamanho original (630 px), WebP.
+    spotify_bg = Image.open(SRC / "profile" / "fundo_meuperfil_spotify.png").convert("RGB")
+    save(spotify_bg, "spotify/fundo-meuperfil.webp", format="WEBP", quality=82, method=6)
 
     # Botão Iniciar.
     save(square(Image.open(SRC / "brands" / "Windows_logo.png")).resize((96, 96), Image.LANCZOS),

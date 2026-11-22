@@ -43,8 +43,15 @@ export function SpotifyFavorites() {
   const { t } = useI18n();
   const config = portfolio.spotify.favorites;
   const trackIds = (config?.tracks ?? []).map(spotifyId).filter((id): id is string => id !== null);
-  const artistIds = (config?.artists ?? []).map(spotifyId).filter((id): id is string => id !== null);
-  const query = `tracks=${trackIds.join(',')}&artists=${artistIds.join(',')}`;
+  // Artista → álbum cuja capa vira o fundo do ladrilho (opcional).
+  const albumOf = new Map<string, string>();
+  const artistIds = (config?.artists ?? []).flatMap((entry) => {
+    const id = spotifyId(typeof entry === 'string' ? entry : entry.artist);
+    const album = typeof entry === 'string' || !entry.album ? null : spotifyId(entry.album);
+    if (id && album) albumOf.set(id, album);
+    return id ? [id] : [];
+  });
+  const query = `tracks=${trackIds.join(',')}&artists=${artistIds.join(',')}&albums=${[...new Set(albumOf.values())].join(',')}`;
   const hasList = trackIds.length > 0 || artistIds.length > 0;
   const [state, setState] = useState<State>(() => (hasList ? { status: 'loading' } : { status: 'empty' }));
   const [preview, setPreview] = useState<string | null>(null);
@@ -72,6 +79,11 @@ export function SpotifyFavorites() {
 
   const tracks = state.status === 'ready' ? state.data.tracks : [];
   const artists = state.status === 'ready' ? state.data.artists : [];
+  const albumArt = new Map((state.status === 'ready' ? (state.data.albums ?? []) : []).map((a) => [a.id, a.image]));
+  const backdropOf = (artistId: string): string | null => {
+    const album = albumOf.get(artistId);
+    return album ? (albumArt.get(album) ?? null) : null;
+  };
 
   return (
     <section className="sp-top" aria-labelledby="sp-top-title">
@@ -91,7 +103,20 @@ export function SpotifyFavorites() {
           <ol className="sp-fav-tracks">
             {tracks.length > 0
               ? tracks.map((track, index) => (
-                  <li key={track.id} className={preview === track.id ? 'is-open' : undefined}>
+                  <li
+                    key={track.id}
+                    className={
+                      [track.image ? 'has-backdrop' : '', preview === track.id ? 'is-open' : ''].join(' ').trim() ||
+                      undefined
+                    }
+                  >
+                    {track.image ? (
+                      <span
+                        className="sp-fav-tracks__backdrop"
+                        style={{ backgroundImage: `url("${track.image}")` }}
+                        aria-hidden="true"
+                      />
+                    ) : null}
                     <div className="sp-fav-track">
                       <span className="sp-track__index" aria-hidden="true">
                         {index + 1}
@@ -152,24 +177,34 @@ export function SpotifyFavorites() {
           <h3 className="sp-subtitle">{t.top10Artists}</h3>
           <ol className="sp-artists sp-fav-artists">
             {artists.length > 0
-              ? artists.map((artist, index) => (
-                  <li key={artist.id}>
-                    <SpotifyLinkOut href={artist.url} className="sp-artist">
-                      <span className="sp-fav-artists__photo">
-                        <Artwork src={artist.image} size={96} round />
-                        <span className="sp-fav-artists__rank" aria-hidden="true">
-                          <Orb variant={9} tone="green" size={26}>
-                            {index + 1}
-                          </Orb>
+              ? artists.map((artist, index) => {
+                  const backdrop = backdropOf(artist.id);
+                  return (
+                    <li key={artist.id} className={backdrop ? 'has-backdrop' : undefined}>
+                      {backdrop ? (
+                        <span
+                          className="sp-fav-artists__backdrop"
+                          style={{ backgroundImage: `url("${backdrop}")` }}
+                          aria-hidden="true"
+                        />
+                      ) : null}
+                      <SpotifyLinkOut href={artist.url} className="sp-artist">
+                        <span className="sp-fav-artists__photo">
+                          <Artwork src={artist.image} size={96} round />
+                          <span className="sp-fav-artists__rank" aria-hidden="true">
+                            <Orb variant={9} tone="green" size={34}>
+                              {index + 1}
+                            </Orb>
+                          </span>
                         </span>
-                      </span>
-                      <span className="sp-artist__name">
-                        <span className="sr-only">{t.rank(index + 1)}</span>
-                        {artist.name}
-                      </span>
-                    </SpotifyLinkOut>
-                  </li>
-                ))
+                        <span className="sp-artist__name">
+                          <span className="sr-only">{t.rank(index + 1)}</span>
+                          {artist.name}
+                        </span>
+                      </SpotifyLinkOut>
+                    </li>
+                  );
+                })
               : Array.from({ length: SLOTS }, (_, index) => (
                   <li key={index}>
                     <div className={`sp-artist sp-artist--slot${state.status === 'loading' ? ' is-loading' : ''}`}>

@@ -490,33 +490,33 @@ export const portfolio: PortfolioData<'source'> = {
     // link), na ordem. Vazio = 10 vagas "em breve".
     favorites: {
       endpoint: '/api/spotify-favorites',
-      // Ordem: 1 a 10. Mimesis, SOJOURN, Last of a Dying Breed, Man of the Year,
-      // Center Mass, Bad Omens, CAROUSEL, California, LMLY e REDRED.
+      // Ordem: 1 a 10. SOJOURN, Mimesis, Last of a Dying Breed, Center Mass,
+      // Man of the Year, Bad Omens, CAROUSEL, California, LMLY e REDRED.
       tracks: [
-        '0nLkVbVlIYIPsCTUYYiOuu',
         '3xXJHuTxbSF69tfqg061iT',
+        '0nLkVbVlIYIPsCTUYYiOuu',
         '7b9FXvaDafdfqKuoq9ai5Q',
-        '6shJnGf3t1jV284X9wY0uV',
         '2BHSRlGgJwzTPfYvAax28m',
+        '6shJnGf3t1jV284X9wY0uV',
         '6QcOEPC0bX799hITIgj3vU',
         '6axFhlgJgvquwOyRhw18BS',
         '0nhjj0YiyxWv2oOYpwrfCR',
         '3kPoV6L9vXpbxoM4Ux0KnX',
         '2fCwv2ppU5nTRTckomIGsd',
       ],
-      // Twenty One Pilots, Joji, 5 Seconds of Summer, Balu Brigada, South Arcade,
-      // Fontaines D.C., Olivia Rodrigo, Tove Lo, Blusher e The Weeknd.
+      // Artistas, na ordem. `album` (ID ou link do álbum no Spotify) é opcional:
+      // a capa dele vira o fundo do ladrilho do artista.
       artists: [
-        '3YQKmKGau1PzlVlkL1iodx',
-        '3MZsBdqDrRTJihTHQrO6Dq',
-        '5Rl15oVamLq7FbSb0NNBNy',
-        '6O9vGMmTwzihULICPCsNf2',
-        '3vEL65ycUboLH76pgdtqlF',
-        '3SXwqSqAoBz9WCI9PDQzY6',
-        '1McMsnEElThX1knmY4oliG',
-        '4NHQUGzhtTLFvgF5SZesLK',
-        '7AZm56bjPk0tYl6LTyJu9N',
-        '1Xyo4u8uXC1ZmMpatF05PJ',
+        { artist: '3YQKmKGau1PzlVlkL1iodx', album: '1KFWgQTw3EMTQebaaepVBI' }, // Twenty One Pilots — Clancy
+        { artist: '3MZsBdqDrRTJihTHQrO6Dq', album: '0amPedWJXGfUKNw1cfNAnr' }, // Joji — BALLADS 1
+        { artist: '5Rl15oVamLq7FbSb0NNBNy', album: '6aPyqaE53xagYyLIYZjB1e' }, // 5 Seconds of Summer — 5SOS5
+        { artist: '6O9vGMmTwzihULICPCsNf2', album: '7GZtz7PZ16q4fNci27FIVG' }, // Balu Brigada — Find A Way (EP)
+        { artist: '3vEL65ycUboLH76pgdtqlF', album: '0vVoKZmi97XxytJghdjvHF' }, // South Arcade — F.A.M.O.U.S (single)
+        { artist: '3SXwqSqAoBz9WCI9PDQzY6', album: '0JICUfSKOdGqzE9FJSrNci' }, // Fontaines D.C. — Dopamine Chamber
+        { artist: '1McMsnEElThX1knmY4oliG', album: '3WZZF72ihlKPZBS4zSsNHl' }, // Olivia Rodrigo — you seem pretty sad for a girl so in love
+        { artist: '4NHQUGzhtTLFvgF5SZesLK', album: '0HO9NtwyP7ZqB1jZ70MJL6' }, // Tove Lo — Dirt Femme
+        { artist: '7AZm56bjPk0tYl6LTyJu9N', album: '2ZdaLdroDh69cI4FqsRo19' }, // Blusher — LAST MAN STANDING (single)
+        { artist: '1Xyo4u8uXC1ZmMpatF05PJ', album: '4yP0hdKOZPNshxUOjY0cZj' }, // The Weeknd — After Hours
       ],
     },
   },
