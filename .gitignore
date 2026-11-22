@@ -3,6 +3,8 @@ dist/
 *.local
 .DS_Store
 Thumbs.db
+# Cache do TypeScript (muda a cada build)
+*.tsbuildinfo
 
 # Originais pesados e documentos pessoais (não vão para o repositório)
 *.CR2
