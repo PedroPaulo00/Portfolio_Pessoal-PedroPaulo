@@ -490,18 +490,18 @@ export const portfolio: PortfolioData<'source'> = {
     // link), na ordem. Vazio = 10 vagas "em breve".
     favorites: {
       endpoint: '/api/spotify-favorites',
-      // Ordem: 1 a 10. Mimesis, Last of a Dying Breed, Man of the Year, LMLY,
-      // Center Mass, Bad Omens, CAROUSEL, RAWFEAR, Gimme Love e REDRED.
+      // Ordem: 1 a 10. Mimesis, SOJOURN, Last of a Dying Breed, Man of the Year,
+      // Center Mass, Bad Omens, CAROUSEL, California, LMLY e REDRED.
       tracks: [
         '0nLkVbVlIYIPsCTUYYiOuu',
+        '3xXJHuTxbSF69tfqg061iT',
         '7b9FXvaDafdfqKuoq9ai5Q',
         '6shJnGf3t1jV284X9wY0uV',
-        '3kPoV6L9vXpbxoM4Ux0KnX',
         '2BHSRlGgJwzTPfYvAax28m',
         '6QcOEPC0bX799hITIgj3vU',
         '6axFhlgJgvquwOyRhw18BS',
-        '43ee3gqWBlPKe2MeGJ2S6I',
-        '2SObiSlRVadbqwNbByuEF3',
+        '0nhjj0YiyxWv2oOYpwrfCR',
+        '3kPoV6L9vXpbxoM4Ux0KnX',
         '2fCwv2ppU5nTRTckomIGsd',
       ],
       // Twenty One Pilots, Joji, 5 Seconds of Summer, Balu Brigada, South Arcade,
