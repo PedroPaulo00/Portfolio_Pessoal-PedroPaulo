@@ -394,6 +394,24 @@ def media_player_skin() -> None:
     save(skin, "desktop/media-player-skin.webp", format="WEBP", quality=92, method=6)
 
 
+def club_penguin() -> None:
+    """Pinguim do Club Penguin (aba Spotify, abaixo do "Meu perfil", só no
+    computador): GIF transparente → WebP animado, 2× de ~235 px de largura."""
+    gif = Image.open(SRC / "spotify" / "gif_clubpenguin.gif")
+    width = 470
+    height = round(gif.height * width / gif.width)
+    frames, durations = [], []
+    for index in range(gif.n_frames):
+        gif.seek(index)
+        frames.append(gif.convert("RGBA").resize((width, height), Image.LANCZOS))
+        durations.append(gif.info.get("duration", 80))
+    target = ROOT / "spotify/club-penguin.webp"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    frames[0].save(target, format="WEBP", save_all=True, append_images=frames[1:], duration=durations,
+                   loop=0, quality=85, method=6, lossless=False, allow_mixed=True)
+    print(f"{'spotify/club-penguin.webp':<35}{target.stat().st_size // 1024:>4} KB")
+
+
 def save(image: Image.Image, relative: str, **options) -> None:
     out = ROOT / relative
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -442,6 +460,13 @@ def main() -> None:
     # Fundo do cartão "Meu perfil" (aba Spotify): tamanho original (630 px), WebP.
     spotify_bg = Image.open(SRC / "profile" / "fundo_meuperfil_spotify.png").convert("RGB")
     save(spotify_bg, "spotify/fundo-meuperfil.webp", format="WEBP", quality=82, method=6)
+    club_penguin()
+    # Fundo do destaque do TCC no Início: o GIF de água vira vídeo (video/fundo-tcc.mp4,
+    # feito com ffmpeg, veja docs/GUIA.md); aqui sai só o 1º quadro, usado enquanto o
+    # vídeo carrega e para quem pede menos animação.
+    tcc_bg = Image.open(SRC / "profile" / "fundo_telainicial_aquanauta.gif")
+    tcc_bg.seek(0)
+    save(tcc_bg.convert("RGB"), "profile/fundo-tcc.webp", format="WEBP", quality=78, method=6)
 
     # Botão Iniciar.
     save(square(Image.open(SRC / "brands" / "Windows_logo.png")).resize((96, 96), Image.LANCZOS),

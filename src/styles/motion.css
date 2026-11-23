@@ -682,7 +682,10 @@ a.contact-item:active,
     animation: command-in 260ms var(--ease-aero) 80ms backwards;
   }
 
-  /* ---------- Status "Online": um pulso de presença ao abrir o Início ---------- */
+  /* ---------- Status "Online": bolinha pulsando sem parar ---------- */
+  .presence__dot {
+    animation: presence-glow 1800ms ease-in-out infinite;
+  }
   .presence__dot::after {
     content: '';
     position: absolute;
@@ -690,7 +693,7 @@ a.contact-item:active,
     border-radius: 50%;
     box-shadow: 0 0 0 2px rgba(118, 216, 65, 0.7);
     opacity: 0;
-    animation: presence-ping 1400ms ease-out 500ms;
+    animation: presence-ping 1800ms ease-out 500ms infinite;
     pointer-events: none;
   }
 
@@ -774,6 +777,14 @@ a.contact-item:active,
 @keyframes command-in {
   from {
     opacity: 0;
+  }
+}
+@keyframes presence-glow {
+  50% {
+    filter: brightness(1.18);
+    box-shadow:
+      0 0 1px 1px rgba(130, 225, 95, 0.75),
+      0 0 7px 3px rgba(165, 238, 150, 0.6);
   }
 }
 @keyframes presence-ping {

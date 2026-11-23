@@ -63,40 +63,44 @@ export function SpotifySection({
           ) : null}
 
           <div className="sp-grid">
-            {/* ---------- Meu perfil ---------- */}
-            <section className="info-panel sp-profile" aria-labelledby="sp-profile-title">
-              <h2 id="sp-profile-title" className="group-title">
-                {t.myProfile}
-              </h2>
-              <Artwork src={state.data.profile.image} size={120} round label={t.photoOf(state.data.profile.name)} />
-              <p className="sp-profile__name">{state.data.profile.name}</p>
-              {typeof followers === 'number' || showPlaylists ? (
-                <dl className="sp-profile__stats">
-                  {typeof followers === 'number' ? (
-                    <div>
-                      <dt>{t.followers}</dt>
-                      <dd>{followers.toLocaleString(intl)}</dd>
-                    </div>
-                  ) : null}
-                  {showPlaylists ? (
-                    <div>
-                      <dt>{t.publicPlaylists}</dt>
-                      <dd>{state.data.playlists.length}</dd>
-                    </div>
-                  ) : null}
-                </dl>
-              ) : null}
-              {state.data.profile.url ? (
-                <a
-                  className="aero-button aero-button--primary"
-                  href={state.data.profile.url}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {t.openProfile}
-                </a>
-              ) : null}
-            </section>
+            {/* ---------- Meu perfil (+ pinguim do Club Penguin, só no computador) ---------- */}
+            <div className="sp-side">
+              <section className="info-panel sp-profile" aria-labelledby="sp-profile-title">
+                <h2 id="sp-profile-title" className="group-title">
+                  {t.myProfile}
+                </h2>
+                <Artwork src={state.data.profile.image} size={120} round label={t.photoOf(state.data.profile.name)} />
+                <p className="sp-profile__name">{state.data.profile.name}</p>
+                {typeof followers === 'number' || showPlaylists ? (
+                  <dl className="sp-profile__stats">
+                    {typeof followers === 'number' ? (
+                      <div>
+                        <dt>{t.followers}</dt>
+                        <dd>{followers.toLocaleString(intl)}</dd>
+                      </div>
+                    ) : null}
+                    {showPlaylists ? (
+                      <div>
+                        <dt>{t.publicPlaylists}</dt>
+                        <dd>{state.data.playlists.length}</dd>
+                      </div>
+                    ) : null}
+                  </dl>
+                ) : null}
+                {state.data.profile.url ? (
+                  <a
+                    className="aero-button aero-button--primary"
+                    href={state.data.profile.url}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {t.openProfile}
+                  </a>
+                ) : null}
+              </section>
+              {/* Enfeite: imagem de fundo via CSS, para o celular nem baixar o arquivo. */}
+              <span className="sp-side__penguin" aria-hidden="true" />
+            </div>
 
             {/* ---------- Minha atividade ---------- */}
             <section className="sp-activity" aria-labelledby="sp-activity-title">

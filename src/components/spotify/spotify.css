@@ -335,6 +335,36 @@ a.sp-now__title:hover {
 .sp-card__activity {
   min-width: 0;
 }
+/* Perfil do Início: a mesma foto de show do "Meu perfil", numa faixa baixa.
+   Enquadramento mais alto (rosto do vocalista) e um pouco mais escuro, porque
+   o nome fica sobre a imagem inteira, não só embaixo. */
+.sp-card__profile {
+  padding: 8px 10px;
+  color: #fff;
+  text-shadow: 0 1px 2px #000;
+  background:
+    linear-gradient(90deg, #000000c7, #00000099 55%, #0000008c),
+    url('../../assets/spotify/fundo-meuperfil.webp') 62% 18% / cover no-repeat,
+    #0b2a1c;
+  border-color: #ffffff4d;
+}
+.sp-card__profile .sp-card__meta {
+  color: #ffffffd9;
+}
+.sp-card__profile .sp-art {
+  box-shadow:
+    0 0 0 2px #ffffffd9,
+    0 2px 8px #0009;
+}
+@media (hover: hover) {
+  a.sp-card__profile:hover {
+    background:
+      linear-gradient(90deg, #000000a6, #00000073 55%, #00000066),
+      url('../../assets/spotify/fundo-meuperfil.webp') 62% 18% / cover no-repeat,
+      #0b2a1c;
+    border-color: #ffffff80;
+  }
+}
 .sp-card__more {
   justify-self: start;
 }
@@ -632,6 +662,36 @@ a.sp-playlist:active {
   .sp-grid {
     grid-template-columns: minmax(14rem, 17rem) minmax(0, 1fr);
     gap: var(--space-6);
+  }
+}
+
+/* Coluna do perfil. O pinguim do Club Penguin preenche o espaço vazio abaixo
+   do "Meu perfil" só no computador (duas colunas + mouse). No celular e no
+   tablet ele fica oculto e a imagem nem é baixada (é fundo via CSS). */
+.sp-side {
+  display: grid;
+  gap: var(--space-4);
+  align-content: start;
+  min-width: 0;
+}
+.sp-side__penguin {
+  display: none;
+}
+@container main (min-width: 46rem) {
+  @media (hover: hover) and (pointer: fine) {
+    /* A coluna estica até a altura da atividade; o pinguim fica no meio do
+       espaço que sobra abaixo do perfil. */
+    .sp-side {
+      align-self: stretch;
+      grid-template-rows: auto 1fr;
+    }
+    .sp-side__penguin {
+      align-self: center;
+      display: block;
+      width: 100%;
+      aspect-ratio: 470 / 381;
+      background: url('../../assets/spotify/club-penguin.webp') center / contain no-repeat;
+    }
   }
 }
 

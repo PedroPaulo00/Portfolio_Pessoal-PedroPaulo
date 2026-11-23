@@ -1,4 +1,5 @@
 import msnFrame from '../../assets/profile/msn-frame.svg';
+import featureVideo from '../../assets/video/fundo-tcc.mp4';
 import { useI18n } from '../../i18n/I18n';
 import { RouteLink } from '../../lib/navigation';
 import { useVisitCount } from '../../lib/visits';
@@ -95,6 +96,21 @@ export function HeroSection({ profile, sections, featured }: HeroSectionProps) {
 
       {featured ? (
         <section className="hero-feature" aria-labelledby="hero-feature-title">
+          {/* Fundo animado (água), sem som. Quem pede menos animação fica com a
+              imagem parada do CSS (o 1º quadro). */}
+          {window.matchMedia('(prefers-reduced-motion: reduce)').matches ? null : (
+            <video
+              className="hero-feature__video"
+              src={featureVideo}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="auto"
+              aria-hidden="true"
+              tabIndex={-1}
+            />
+          )}
           <figure className="hero-feature__photo">
             <img
               src={featured.image.src}
