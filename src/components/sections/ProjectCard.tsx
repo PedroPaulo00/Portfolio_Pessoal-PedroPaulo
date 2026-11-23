@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { useI18n } from '../../i18n/I18n';
 import type { Project } from '../../types/portfolio';
 import { ArticleLink } from './ArticleLink';
@@ -18,7 +19,11 @@ export function ProjectCard({ project, onShowDetails }: ProjectCardProps) {
   const hasActions = Boolean(project.repositoryUrl || project.demoUrl || project.details || project.articleUrl);
 
   return (
-    <article className="project-card" aria-labelledby={titleId}>
+    <article
+      className={`project-card${project.color ? ' project-card--tinted' : ''}`}
+      aria-labelledby={titleId}
+      style={project.color ? ({ '--project-color': project.color } as CSSProperties) : undefined}
+    >
       <ProjectThumbnail project={project} />
       <div className="project-card__body">
         <div className="project-card__meta">

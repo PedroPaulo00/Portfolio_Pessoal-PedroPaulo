@@ -120,6 +120,7 @@ export const portfolio: PortfolioData<'source'> = {
     {
       id: 'aquanauta',
       logo: aquanautaLogo,
+      color: '#1fa89a', // cor mais presente no logo/capturas: tinge o fundo do card
       name: { pt: 'Aquanauta (TCC)', en: 'Aquanauta (Undergraduate thesis)' },
       category: 'academico',
       summary: {
@@ -170,6 +171,7 @@ export const portfolio: PortfolioData<'source'> = {
     {
       id: 'sistrafa',
       logo: sistrafaLogo,
+      color: '#14c98c', // cor mais presente no logo/capturas: tinge o fundo do card
       name: { pt: 'SISTRAFA (Estágio-Pesquisa)', en: 'SISTRAFA (Research internship)' },
       category: 'academico',
       summary: {
@@ -240,6 +242,7 @@ export const portfolio: PortfolioData<'source'> = {
     {
       id: 'diara',
       logo: diaraLogo,
+      color: '#1e9bf0', // cor mais presente no logo/capturas: tinge o fundo do card
       name: 'Diara (PET-Saúde Digital - GT04)',
       category: 'academico',
       summary: {
@@ -264,6 +267,7 @@ export const portfolio: PortfolioData<'source'> = {
     {
       id: 'foldaero',
       logo: foldaeroLogo,
+      color: '#79b829', // cor mais presente no logo/capturas: tinge o fundo do card
       name: 'FoldAero',
       category: 'pessoal',
       summary: {
@@ -289,6 +293,7 @@ export const portfolio: PortfolioData<'source'> = {
     {
       id: 'flordigital',
       logo: florDigitalLogo,
+      color: '#1b2a44', // cor mais presente no logo/capturas: tinge o fundo do card
       name: 'Flor Digital',
       category: 'pessoal',
       summary: {
@@ -392,7 +397,7 @@ export const portfolio: PortfolioData<'source'> = {
       { pt: 'Desenvolvimento mobile', en: 'Mobile development' },
       { pt: 'Aplicações desktop', en: 'Desktop applications' },
       { pt: 'Design responsivo', en: 'Responsive design' },
-      { pt: 'Música (minha maior paixão)', en: 'Music (my greatest passion)' },
+      { pt: 'Nostalgia Digital', en: 'Digital nostalgia' },
       { pt: 'Inteligência artificial aplicada ao desenvolvimento', en: 'AI applied to software development' },
       {
         pt: 'Interfaces skeuomórficas, Frutiger Aero e glassmorphism',
@@ -400,9 +405,9 @@ export const portfolio: PortfolioData<'source'> = {
       },
     ],
     languages: [
-      { pt: 'Português (nativo)', en: 'Portuguese (native)' },
-      { pt: 'Inglês (fluente)', en: 'English (fluent)' },
-      { pt: 'Espanhol (compreensão)', en: 'Spanish (reading and listening)' },
+      { flag: 'br', label: { pt: 'Português (nativo)', en: 'Portuguese (native)' } },
+      { flag: 'us', label: { pt: 'Inglês (fluente)', en: 'English (fluent)' } },
+      { flag: 'es', label: { pt: 'Espanhol (compreensão)', en: 'Spanish (reading and listening)' } },
     ],
   },
 

@@ -33,6 +33,8 @@ TCC_PHOTO = "foto_tcc.jpg"
 # Logos dos projetos (originais/projetos/logos/) → projetos/logos/, 2× de 64 px.
 # Projeto sem logo próprio usa o template gerado aqui (projetos/logos/template.png).
 PROJECT_LOGOS = ("aquanauta", "sistrafa", "diara", "foldaero")
+# Logos cujo original tem fundo branco (recortado para ficar transparente).
+LOGO_CUT_WHITE = ("aquanauta",)
 
 # Ícones da área de trabalho: original → saída 96×96 (2× de 48 px).
 ICONS = {
@@ -461,6 +463,9 @@ def main() -> None:
     spotify_bg = Image.open(SRC / "profile" / "fundo_meuperfil_spotify.png").convert("RGB")
     save(spotify_bg, "spotify/fundo-meuperfil.webp", format="WEBP", quality=82, method=6)
     club_penguin()
+    # Fundo do cartão Formação (Sobre): prédio da UNICENTRO, tamanho original, WebP.
+    unicentro = Image.open(SRC / "profile" / "unicentro_fundo.jpeg").convert("RGB")
+    save(unicentro, "profile/fundo-unicentro.webp", format="WEBP", quality=80, method=6)
     # Fundo do destaque do TCC no Início: o GIF de água vira vídeo (video/fundo-tcc.mp4,
     # feito com ffmpeg, veja docs/GUIA.md); aqui sai só o 1º quadro, usado enquanto o
     # vídeo carrega e para quem pede menos animação.
@@ -533,7 +538,10 @@ def main() -> None:
 
     # Logos dos projetos e o template para quem ainda não tem.
     for name in PROJECT_LOGOS:
-        logo_img = square(Image.open(SRC / "projetos" / "logos" / f"{name}.png"))
+        logo_img = Image.open(SRC / "projetos" / "logos" / f"{name}.png")
+        if name in LOGO_CUT_WHITE:  # original com fundo branco: vira transparente
+            logo_img = cut_out_white(logo_img)
+        logo_img = square(logo_img)
         save(logo_img.resize((128, 128), Image.LANCZOS), f"projetos/logos/{name}.png", optimize=True)
     save(logo_template(), "projetos/logos/template.png", optimize=True)
 

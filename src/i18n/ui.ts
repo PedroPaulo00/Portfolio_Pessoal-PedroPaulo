@@ -67,8 +67,8 @@ const pt = {
   clockShows: (time: string) => `Relógio analógico: ${time}`,
   dateTimeSettings: 'Alterar configurações de data e hora...',
   windowMinimized: 'Janela minimizada. Para restaurar, use o botão da janela na barra de tarefas.',
-  languageButton: 'PT — idioma: Português. Mudar para English',
-  languageShort: 'PT',
+  languageButton: 'PT-BR — idioma: Português. Mudar para EN-US (English)',
+  languageShort: 'PT-BR',
 
   // Menu Iniciar
   menuOf: (name: string) => `Menu de ${name}`,
@@ -364,8 +364,8 @@ const en: UiStrings = {
   clockShows: (time) => `Analog clock: ${time}`,
   dateTimeSettings: 'Change date and time settings...',
   windowMinimized: 'Window minimized. To restore it, use the window button on the taskbar.',
-  languageButton: 'EN — language: English. Switch to Português',
-  languageShort: 'EN',
+  languageButton: 'EN-US — language: English. Switch to PT-BR (Português)',
+  languageShort: 'EN-US',
 
   menuOf: (name) => `${name}'s menu`,
   portfolioSections: 'Portfolio sections',

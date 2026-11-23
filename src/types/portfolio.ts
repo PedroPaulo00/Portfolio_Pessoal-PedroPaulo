@@ -54,6 +54,8 @@ export interface Project<M extends Mode = 'view'> {
   readonly stack: readonly Name<M>[];
   /** Logo do projeto (decorativo: o nome aparece ao lado). Importado de src/assets/projetos/logos/. */
   readonly logo?: string;
+  /** Cor do projeto (a mais presente no logo/capturas), em hex: tinge o fundo do card e dos detalhes. */
+  readonly color?: string;
   /** Sem imagem, o card exibe uma miniatura gerada no estilo Aero (com o logo, se houver). */
   readonly thumbnail?: ProjectImage<M>;
   readonly status?: ProjectStatus;
@@ -122,7 +124,15 @@ export interface About<M extends Mode = 'view'> {
   readonly education?: Education<M>;
   /** Experiências e conquistas publicáveis (estágios, prêmios, certificados). */
   readonly highlights?: readonly Prose<M>[];
-  readonly languages?: readonly Prose<M>[];
+  /** Idiomas, com a bandeira opcional ao lado (br, us ou es). */
+  readonly languages?: readonly Language<M>[];
+}
+
+export type LanguageFlag = 'br' | 'us' | 'es';
+
+export interface Language<M extends Mode = 'view'> {
+  readonly flag?: LanguageFlag;
+  readonly label: Prose<M>;
 }
 
 export interface Contact<M extends Mode = 'view'> {

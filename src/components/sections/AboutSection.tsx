@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { useI18n } from '../../i18n/I18n';
-import type { About, AboutFactKind, Profile, Section } from '../../types/portfolio';
+import type { About, AboutFactKind, LanguageFlag, Profile, Section } from '../../types/portfolio';
 import { PhotoCarousel } from './PhotoCarousel';
 import { SectionHeader } from './SectionHeader';
 
@@ -98,7 +98,7 @@ export function AboutSection({ section, about, profile }: AboutSectionProps) {
         </div>
         <div className="about__aside">
           {about.education ? (
-            <section className="about-card" aria-labelledby="about-education">
+            <section className="about-card about-card--education" aria-labelledby="about-education">
               <CardTitle id="about-education" icon="cap">
                 {t.education}
               </CardTitle>
@@ -127,7 +127,10 @@ export function AboutSection({ section, about, profile }: AboutSectionProps) {
               </CardTitle>
               <ul className="about-languages">
                 {languages.map((language) => (
-                  <li key={language}>{language}</li>
+                  <li key={language.label}>
+                    {language.flag ? <Flag code={language.flag} /> : null}
+                    {language.label}
+                  </li>
                 ))}
               </ul>
             </section>
@@ -267,6 +270,50 @@ const FACT_ICONS: Record<AboutFactKind, ReactNode> = {
         strokeWidth="1.6"
         strokeLinecap="round"
       />
+    </>
+  ),
+};
+
+/** Bandeirinha ao lado do idioma (decorativa: o nome do idioma já está escrito). */
+function Flag({ code }: { readonly code: LanguageFlag }) {
+  return (
+    <svg className="about-flag" viewBox="0 0 30 20" width={24} height={16} aria-hidden="true">
+      {FLAGS[code]}
+    </svg>
+  );
+}
+
+const US_STRIPES = Array.from({ length: 13 }, (_, index) =>
+  index % 2 === 0 ? <rect key={index} y={(index * 20) / 13} width="30" height={20 / 13} fill="#b22234" /> : null,
+);
+
+const FLAGS: Record<LanguageFlag, ReactNode> = {
+  // Brasil: verde, losango amarelo e círculo azul com a faixa branca.
+  br: (
+    <>
+      <rect width="30" height="20" fill="#009c3b" />
+      <path d="M15 2.2 27.6 10 15 17.8 2.4 10Z" fill="#ffdf00" />
+      <circle cx="15" cy="10" r="4.6" fill="#002776" />
+      <path d="M10.5 9.1c3-.9 6.3-.6 9 .9" stroke="#fff" strokeWidth="0.9" fill="none" />
+    </>
+  ),
+  // EUA: listras vermelhas e brancas e o cantão azul com estrelas.
+  us: (
+    <>
+      <rect width="30" height="20" fill="#fff" />
+      {US_STRIPES}
+      <rect width="13" height={(20 * 7) / 13} fill="#3c3b6e" />
+      {[2, 5, 8].map((y) =>
+        [2, 5, 8, 11].map((x) => <circle key={`${x}-${y}`} cx={x} cy={y + 0.6} r="0.75" fill="#fff" />),
+      )}
+    </>
+  ),
+  // Espanha: vermelho, amarelo (faixa dupla) e vermelho.
+  es: (
+    <>
+      <rect width="30" height="20" fill="#aa151b" />
+      <rect y="5" width="30" height="10" fill="#f1bf00" />
+      <rect x="7" y="7.6" width="3.4" height="4.8" rx="0.8" fill="#aa151b" opacity="0.8" />
     </>
   ),
 };

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type CSSProperties } from 'react';
 import { useI18n } from '../../i18n/I18n';
 import type { UiStrings } from '../../i18n/ui';
 import type { ProjectView } from '../../lib/projectView';
@@ -259,7 +259,10 @@ function ProjectDetails({ project }: { readonly project: Project }) {
 
   return (
     <div className="project-details">
-      <header className="project-details__head">
+      <header
+        className={`project-details__head${project.color ? ' project-details__head--tinted' : ''}`}
+        style={project.color ? ({ '--project-color': project.color } as CSSProperties) : undefined}
+      >
         {project.thumbnail ? (
           <img className="project-details__cover" src={project.thumbnail.src} alt="" aria-hidden="true" />
         ) : null}

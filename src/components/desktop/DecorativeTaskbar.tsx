@@ -136,6 +136,8 @@ export function DecorativeTaskbar({
           </div>
         ))}
       </div>
+      {/* O idioma (PT/EN) fica fora da bandeja segmentada: logo antes do risco que a delimita. */}
+      <div className="taskbar__language">{languageControl}</div>
       <div className="taskbar__tray">
         <span className="taskbar__tray-decor" aria-hidden="true">
           <span className="taskbar__tray-chevron" />
@@ -146,7 +148,6 @@ export function DecorativeTaskbar({
             <i />
           </span>
         </span>
-        {languageControl}
         {volumeControl}
         <TaskbarClock onOpenSettings={onOpenDateSettings} />
       </div>

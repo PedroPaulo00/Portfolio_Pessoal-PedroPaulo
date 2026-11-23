@@ -398,8 +398,16 @@
 }
 
 /* ---------- Bandeja: ícones decorativos, volume e relógio ---------- */
-.taskbar__tray {
+/* Idioma (PT/EN): empurra tudo para a direita e fica colado no risco da bandeja. */
+.taskbar__language {
+  flex: none;
+  height: 100%;
+  display: flex;
+  align-items: center;
   margin-left: auto;
+  padding-right: 2px;
+}
+.taskbar__tray {
   height: 100%;
   display: flex;
   align-items: center;
@@ -703,7 +711,7 @@
 /* Indicador de idioma (PT/EN), como a barra de idiomas do Windows 7: troca o
    idioma do site a cada clique. */
 .language-button {
-  min-width: 30px;
+  min-width: 52px;
   height: calc(var(--taskbar-height) - 10px);
   padding: 0 5px;
   font-size: var(--text-caption);
@@ -727,7 +735,7 @@
 }
 @media (pointer: coarse) {
   .language-button {
-    min-width: 44px;
+    min-width: 56px;
   }
 }
 
@@ -765,7 +773,10 @@
     gap: 0;
     padding: 0 4px 0 6px;
   }
-  .language-button,
+  .language-button {
+    min-width: 50px;
+    width: 50px;
+  }
   .volume__button {
     min-width: 38px;
     width: 38px;

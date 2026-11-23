@@ -257,6 +257,28 @@
   background: var(--sidebar);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
+/* Cor do projeto (portfolio.ts → color): o fundo do card ganha um tom dela,
+   mais forte em cima e suave embaixo. Misturado com a cor da superfície, fica
+   claro no tema claro e escuro no escuro, sem atrapalhar a leitura. */
+.project-card--tinted {
+  --tint-base: var(--surface);
+  background: linear-gradient(
+    color-mix(in srgb, var(--project-color) 24%, var(--tint-base)),
+    color-mix(in srgb, var(--project-color) 9%, var(--tint-base)) 55%
+  );
+  border-color: color-mix(in srgb, var(--project-color) 45%, var(--divider));
+}
+[data-theme='dark'] .project-card--tinted {
+  --tint-base: var(--sidebar);
+  background: linear-gradient(
+    color-mix(in srgb, var(--project-color) 30%, var(--tint-base)),
+    color-mix(in srgb, var(--project-color) 12%, var(--tint-base)) 55%
+  );
+}
+.project-card--tinted:hover,
+.project-card--tinted:focus-within {
+  border-color: color-mix(in srgb, var(--project-color) 75%, var(--divider));
+}
 
 .project-thumb {
   width: 100%;
@@ -523,6 +545,27 @@
   font-size: var(--text-small);
   color: var(--text-secondary);
 }
+/* Formação: foto do prédio da UNICENTRO de fundo (originais/profile/
+   unicentro_fundo.jpeg, via `npm run images`), escurecida para o texto branco. */
+.about-card--education {
+  color: #fff;
+  text-shadow: 0 1px 2px #000c;
+  background:
+    linear-gradient(#000000b3, #00000099 45%, #000000c7),
+    url('../../assets/profile/fundo-unicentro.webp') 55% 30% / cover no-repeat,
+    #3a3a1a;
+  border-color: #ffffff59;
+}
+.about-card--education .about-card__title {
+  color: #fff;
+  border-bottom-color: #ffffff4d;
+}
+.about-card--education .about-card__icon {
+  filter: drop-shadow(0 1px 2px #000);
+}
+.about-card--education .about__stage {
+  color: #ffffffe0;
+}
 .about-languages {
   display: grid;
   gap: 6px;
@@ -531,12 +574,23 @@
   list-style: none;
 }
 .about-languages li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   padding: 6px 10px;
   font-size: var(--text-small);
   background: var(--surface);
   border: 1px solid var(--divider);
   border-left: 3px solid var(--selection-border);
   border-radius: 3px;
+}
+/* Bandeirinha do idioma: como um ícone de 24×16, com brilho leve de vidro. */
+.about-flag {
+  flex: none;
+  border-radius: 2px;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.18),
+    0 1px 2px rgba(0, 0, 0, 0.2);
 }
 .info-panel {
   padding: var(--space-4);
@@ -1116,6 +1170,13 @@ a.contact-item:hover {
 }
 [data-theme='dark'] .project-details__head {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+/* Detalhes: a faixa de identidade também ganha a cor do projeto. */
+.project-details__head--tinted {
+  background: linear-gradient(
+    color-mix(in srgb, var(--project-color) 26%, var(--toolbar-top)),
+    color-mix(in srgb, var(--project-color) 14%, var(--toolbar-bottom))
+  );
 }
 .project-details__cover {
   position: absolute;

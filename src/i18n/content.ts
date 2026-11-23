@@ -67,7 +67,7 @@ export function localize(data: PortfolioData<'source'>, locale: Locale): Portfol
           }
         : {}),
       ...(photos ? { photos: photos.map(image) } : {}),
-      ...(languages ? { languages: languages.map(text) } : {}),
+      ...(languages ? { languages: languages.map((language) => ({ ...language, label: text(language.label) })) } : {}),
     },
     ...(featured
       ? {
