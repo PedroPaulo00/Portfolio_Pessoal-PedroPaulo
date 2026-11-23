@@ -430,6 +430,21 @@ def media_player_skin() -> None:
     save(skin, "desktop/media-player-skin.webp", format="WEBP", quality=92, method=6)
 
 
+def penguin_dance() -> None:
+    """Pinguim dançando (easter egg: clicar no pinguim da aba Spotify): GIF
+    transparente → WebP animado, no tamanho original (200×168)."""
+    gif = Image.open(SRC / "spotify" / "clubpenguin_dance.gif")
+    frames, durations = [], []
+    for index in range(gif.n_frames):
+        gif.seek(index)
+        frames.append(gif.convert("RGBA"))
+        durations.append(gif.info.get("duration", 40))
+    target = ROOT / "spotify/club-penguin-dance.webp"
+    frames[0].save(target, format="WEBP", save_all=True, append_images=frames[1:], duration=durations,
+                   loop=0, quality=85, method=6, lossless=False, allow_mixed=True)
+    print(f"{'spotify/club-penguin-dance.webp':<35}{target.stat().st_size // 1024:>4} KB")
+
+
 def club_penguin() -> None:
     """Pinguim do Club Penguin (aba Spotify, abaixo do "Meu perfil", só no
     computador): GIF transparente → WebP animado, 2× de ~235 px de largura."""
@@ -446,6 +461,48 @@ def club_penguin() -> None:
     frames[0].save(target, format="WEBP", save_all=True, append_images=frames[1:], duration=durations,
                    loop=0, quality=85, method=6, lossless=False, allow_mixed=True)
     print(f"{'spotify/club-penguin.webp':<35}{target.stat().st_size // 1024:>4} KB")
+
+
+def key_out_gradient(image: Image.Image, step: int = 26) -> Image.Image:
+    """Fundo em degradê -> transparente: cresce a partir das bordas enquanto a cor
+    muda pouco de um pixel para o vizinho; para nas partes brancas/claras (as
+    molduras das janelas do ícone do Flip 3D)."""
+    from collections import deque
+
+    rgba = image.convert("RGBA")
+    w, h = rgba.size
+    px = rgba.load()
+    bg = bytearray(w * h)
+    queue = deque([(x, y) for x in range(w) for y in (0, h - 1)] + [(x, y) for y in range(h) for x in (0, w - 1)])
+    for x, y in queue:
+        bg[y * w + x] = 1
+    while queue:
+        x, y = queue.popleft()
+        c = px[x, y]
+        for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+            if 0 <= nx < w and 0 <= ny < h and not bg[ny * w + nx]:
+                n = px[nx, ny]
+                light = n[0] > 150 and n[1] > 150 and n[2] > 150
+                if not light and abs(c[0] - n[0]) + abs(c[1] - n[1]) + abs(c[2] - n[2]) < step:
+                    bg[ny * w + nx] = 1
+                    queue.append((nx, ny))
+    mask = Image.new("L", (w, h), 255)
+    m = mask.load()
+    for y in range(h):
+        for x in range(w):
+            if bg[y * w + x]:
+                m[x, y] = 0
+    mask = mask.filter(ImageFilter.MinFilter(3)).filter(ImageFilter.GaussianBlur(0.8))
+    rgba.putalpha(mask)
+    return rgba.crop(mask.point(lambda v: 255 if v > 10 else 0).getbbox())
+
+
+def flip3d_icon(size: int = 96) -> Image.Image:
+    """Ícone do botão "Alternar entre janelas" (Flip 3D): sem o fundo azul, num
+    quadrado transparente, com uma leve nitidez extra."""
+    icon = key_out_gradient(Image.open(SRC / "desktop" / "flip_3d.png"))
+    icon = square(icon).resize((size, size), Image.LANCZOS)
+    return icon.filter(ImageFilter.UnsharpMask(radius=1, percent=60, threshold=2))
 
 
 def save(image: Image.Image, relative: str, **options) -> None:
@@ -497,6 +554,10 @@ def main() -> None:
     spotify_bg = Image.open(SRC / "profile" / "fundo_meuperfil_spotify.png").convert("RGB")
     save(spotify_bg, "spotify/fundo-meuperfil.webp", format="WEBP", quality=82, method=6)
     club_penguin()
+    penguin_dance()
+    # Lembrete do Aquanauta (easter egg: ficar 1 minuto parado): o aviso de hidratação do app.
+    reminder = Image.open(SRC / "projetos" / "aquanauta_print3.png").convert("RGBA")
+    save(reminder, "projetos/aquanauta-lembrete.webp", format="WEBP", quality=88, method=6)
     # Fundo do cartão Formação (Sobre): prédio da UNICENTRO, tamanho original, WebP.
     unicentro = Image.open(SRC / "profile" / "unicentro_fundo.jpeg").convert("RGB")
     save(unicentro, "profile/fundo-unicentro.webp", format="WEBP", quality=80, method=6)
@@ -578,6 +639,11 @@ def main() -> None:
         logo_img = square(logo_img)
         save(logo_img.resize((128, 128), Image.LANCZOS), f"projetos/logos/{name}.png", optimize=True)
     save(logo_template(), "projetos/logos/template.png", optimize=True)
+    # Ícone do Flip 3D (barra de tarefas).
+    save(flip3d_icon(), "desktop/flip3d.png", optimize=True)
+    # Papel de parede "A Noite Estrelada" (easter egg: digitar "van gogh" na busca).
+    save(Image.open(SRC / "projetos" / "logos" / "flordigital_vangogh.jpg").convert("RGB"),
+         "desktop/noite-estrelada.webp", format="WEBP", quality=82, method=6)
     # Flor Digital: o cipreste e o céu estrelado de "A Noite Estrelada" (Van Gogh),
     # recortados da imagem usada no próprio site do projeto.
     save(logo_painting("flordigital_vangogh.jpg", (80, 60, 560, 540)), "projetos/logos/flordigital.png", optimize=True)

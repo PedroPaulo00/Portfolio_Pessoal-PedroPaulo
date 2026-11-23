@@ -9,3 +9,5 @@ Thumbs.db
 # Originais pesados e documentos pessoais (não vão para o repositório)
 *.CR2
 docs/*.docx
+# Cache do Python (gerado ao rodar os scripts)
+__pycache__/

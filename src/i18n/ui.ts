@@ -5,6 +5,7 @@
  * nas duas línguas; `npm run check` acusa texto escrito direto no código.
  */
 import type { ProjectCategory, ProjectStatus } from '../types/portfolio';
+import type { AchievementId } from '../lib/achievements';
 
 const pt = {
   // Geral
@@ -157,6 +158,8 @@ const pt = {
     spotify: 'Parece que você está bisbilhotando as músicas do Pedro. Eu também faço isso.',
     contato: 'Parece que você quer falar com o Pedro. Os contatos estão aí na janela. Ele responde, prometo.',
     privacidade: 'Parece que você está lendo a política de privacidade. Quase ninguém faz isso. Respeito!',
+    angry: 'Parece que você está tentando se livrar de mim. Não vai conseguir.',
+    rival: 'Ah, ele de novo... Eu cheguei primeiro, viu?',
     tipTitle: 'Você sabia?',
     tips: [
       'Clique no relógio da barra de tarefas: tem um calendário de verdade lá.',
@@ -262,6 +265,79 @@ const pt = {
   talkOnWhatsApp: 'Chamar no WhatsApp',
   otherContacts: 'Outros contatos',
   viewServices: 'Ver serviços',
+
+  // Easter eggs
+  maximizeTip: 'Ela já está do tamanho perfeito.',
+  changeStatus: 'Mudar o status',
+  statusBusy: 'Ocupado',
+  statusAway: 'Ausente',
+  statusListening: (song: string) => `Ouvindo: ${song}`,
+  bsod: {
+    headline: 'Foi detectado um problema e o Windows foi desligado para evitar danos ao seu computador.',
+    code: 'PEDRO_PAULO_IS_TOO_COOL_EXCEPTION',
+    first:
+      'Se esta é a primeira vez que você vê esta tela de erro, reinicie o computador. Se esta tela aparecer de novo, siga estes passos:',
+    steps:
+      'Verifique se o excesso de cliques no relógio não danificou o computador. Se o problema continuar, pergunte ao dono do site.',
+    tech: 'Informações técnicas:',
+    press: 'Pressione qualquer tecla para continuar...',
+  },
+  eggs: {
+    graduationCountdown: (days: number) => `Faltam ${days} dias para julho de 2027!`,
+    graduationDone: 'Já é julho de 2027. Parabéns, formando!',
+    avanti: 'Avanti, Palestra!',
+    serieB: 'Nanicos 🤏',
+    movedToSerieB: 'Item movido para a pasta Times Minúsculos',
+  },
+  visualizer: {
+    open: 'Abrir no Windows Media Player',
+    track: 'Música de fundo do portfólio',
+    modes: ['Barras e ondas: Barras', 'Barras e ondas: Escopo', 'Alquimia: Aleatória'],
+    prev: 'Visualização anterior',
+    next: 'Próxima visualização',
+    silent: 'Sem som de fundo agora: a visualização segue o ritmo da música do Spotify.',
+  },
+  flip3d: {
+    open: 'Alternar entre janelas',
+    label: 'Flip 3D: janelas abertas',
+    hint: 'Role a roda do mouse ou use as setas para trocar. Enter abre, Esc fecha.',
+    empty: 'Nenhuma janela aberta. Esc fecha.',
+  },
+  // Conquistas (easter eggs)
+  achievementUnlocked: 'Conquista desbloqueada',
+  secretsFound: (found: number, total: number) => `${found} de ${total} segredos`,
+  secretsHint: 'Há segredos escondidos pelo site. Consegue achar todos?',
+  achievements: {
+    konami: { title: 'Código Konami', desc: 'Você digitou a sequência lendária.' },
+    bsod: { title: 'Tela azul', desc: 'Clicar no relógio com muita insistência quebra tudo.' },
+    flip3d: { title: 'Flip 3D', desc: 'Alternou entre as janelas como no Windows 7.' },
+    aeroshake: { title: 'Aero Shake', desc: 'Chacoalhou a janela e o resto sumiu.' },
+    solitaire: { title: 'Paciência', desc: 'Ganhou uma partida de Paciência.' },
+    minesweeper: { title: 'Campo Minado', desc: 'Desarmou o campo sem explodir.' },
+    screensaver: { title: 'Protetor de tela', desc: 'Ficou parado até as bolhas aparecerem.' },
+    nudge: { title: 'Toc toc!', desc: 'Chamou a atenção três vezes no MSN.' },
+    clippyAngry: { title: 'Clippy irritado', desc: 'Fechou o Clippy vezes demais.' },
+    clippyBonzi: { title: 'Rivalidade', desc: 'Colocou Clippy e BonziBuddy lado a lado.' },
+    msnStatus: { title: 'Status do MSN', desc: 'Trocou o status de presença.' },
+    wink: { title: 'Emoticon gigante', desc: 'Um sorriso atravessou a tela.' },
+    party: { title: 'Modo festa', desc: 'Transformou a área de trabalho numa balada.' },
+    visualizer: { title: 'Visualização', desc: 'Abriu a visualização do Media Player.' },
+    scratch: { title: 'Disco arranhado', desc: 'Arrastou o disco para trás.' },
+    headphones: { title: 'Fone de ouvido', desc: 'Reparou no fone na foto do perfil.' },
+    penguin: { title: 'Pé de valsa', desc: 'Fez o pinguim dançar.' },
+    rival: { title: 'Rivalidade eterna', desc: 'Mexeu com o escudo na Lixeira.' },
+    obr: { title: 'Seguidor de linha', desc: 'Viu o robô da OBR em ação.' },
+    guarapuava: { title: 'Terra do frio', desc: 'Fez nevar em Guarapuava.' },
+    graduation: { title: 'Formando', desc: 'Jogou o chapéu para o alto.' },
+    aquanauta: { title: 'Hidratação em dia', desc: 'Esperou o lembrete do Aquanauta.' },
+    console: { title: 'Curioso', desc: 'Abriu o console do navegador.' },
+    vangogh: { title: 'Noite estrelada', desc: 'Pediu um céu de Van Gogh.' },
+    matrix: { title: 'Siga o coelho branco', desc: 'Entrou na Matrix.' },
+    leet: { title: '1337', desc: 'Esteve aqui na hora certa.' },
+    birthday: { title: 'Parabéns!', desc: 'Visitou o site no aniversário do dono.' },
+    maximize: { title: 'Tamanho perfeito', desc: 'Tentou maximizar uma janela perfeita.' },
+    collector: { title: 'Colecionador', desc: 'Achou todos os segredos do site.' },
+  } satisfies Record<AchievementId, { title: string; desc: string }>,
 
   // Privacidade
   privacy: 'Privacidade',
@@ -461,6 +537,8 @@ const en: UiStrings = {
     contato:
       'It looks like you want to talk to Pedro. His contacts are right there in the window. He replies, I promise.',
     privacidade: 'It looks like you are reading the privacy policy. Almost nobody does that. Respect!',
+    angry: 'It looks like you are trying to get rid of me. You will not succeed.',
+    rival: 'Oh, him again... I got here first, you know.',
     tipTitle: 'Did you know?',
     tips: [
       'Click the clock on the taskbar: there is a real calendar in there.',
@@ -560,6 +638,77 @@ const en: UiStrings = {
   talkOnWhatsApp: 'Message on WhatsApp',
   otherContacts: 'Other contacts',
   viewServices: 'View services',
+
+  maximizeTip: 'It’s already the perfect size.',
+  changeStatus: 'Change status',
+  statusBusy: 'Busy',
+  statusAway: 'Away',
+  statusListening: (song) => `Listening to: ${song}`,
+  bsod: {
+    headline: 'A problem has been detected and Windows has been shut down to prevent damage to your computer.',
+    code: 'PEDRO_PAULO_IS_TOO_COOL_EXCEPTION',
+    first:
+      'If this is the first time you have seen this stop error screen, restart your computer. If this screen appears again, follow these steps:',
+    steps:
+      'Check that too many clicks on the clock have not damaged your computer. If problems continue, ask the owner of the site.',
+    tech: 'Technical information:',
+    press: 'Press any key to continue...',
+  },
+  eggs: {
+    graduationCountdown: (days) => `${days} days to go until July 2027!`,
+    graduationDone: 'It’s July 2027. Congratulations, graduate!',
+    avanti: 'Avanti, Palestra!',
+    serieB: 'Nanicos 🤏',
+    movedToSerieB: 'Item moved to the Tiny Teams folder',
+  },
+  visualizer: {
+    open: 'Open in Windows Media Player',
+    track: 'Portfolio background music',
+    modes: ['Bars and Waves: Bars', 'Bars and Waves: Scope', 'Alchemy: Random'],
+    prev: 'Previous visualization',
+    next: 'Next visualization',
+    silent: 'No background sound right now: the visualization follows the rhythm of the Spotify song.',
+  },
+  flip3d: {
+    open: 'Switch between windows',
+    label: 'Flip 3D: open windows',
+    hint: 'Scroll the mouse wheel or use the arrow keys to switch. Enter opens, Esc closes.',
+    empty: 'No windows open. Esc closes.',
+  },
+  achievementUnlocked: 'Achievement unlocked',
+  secretsFound: (found, total) => `${found} of ${total} secrets`,
+  secretsHint: 'There are secrets hidden around the site. Can you find them all?',
+  achievements: {
+    konami: { title: 'Konami Code', desc: 'You typed the legendary sequence.' },
+    bsod: { title: 'Blue screen', desc: 'Clicking the clock too eagerly breaks everything.' },
+    flip3d: { title: 'Flip 3D', desc: 'Switched between windows like in Windows 7.' },
+    aeroshake: { title: 'Aero Shake', desc: 'Shook the window and the rest vanished.' },
+    solitaire: { title: 'Solitaire', desc: 'Won a game of Solitaire.' },
+    minesweeper: { title: 'Minesweeper', desc: 'Cleared the field without blowing up.' },
+    screensaver: { title: 'Screen saver', desc: 'Stayed still until the bubbles showed up.' },
+    nudge: { title: 'Knock knock!', desc: 'Sent three nudges on MSN.' },
+    clippyAngry: { title: 'Angry Clippy', desc: 'Closed Clippy too many times.' },
+    clippyBonzi: { title: 'Rivalry', desc: 'Put Clippy and BonziBuddy side by side.' },
+    msnStatus: { title: 'MSN status', desc: 'Changed the presence status.' },
+    wink: { title: 'Giant emoticon', desc: 'A smile crossed the screen.' },
+    party: { title: 'Party mode', desc: 'Turned the desktop into a nightclub.' },
+    visualizer: { title: 'Visualization', desc: 'Opened the Media Player visualization.' },
+    scratch: { title: 'Scratched record', desc: 'Dragged the record backwards.' },
+    headphones: { title: 'Headphones', desc: 'Noticed the headphones on the profile photo.' },
+    penguin: { title: 'Happy feet', desc: 'Made the penguin dance.' },
+    rival: { title: 'Eternal rivalry', desc: 'Messed with the crest in the Recycle Bin.' },
+    obr: { title: 'Line follower', desc: 'Saw the OBR robot in action.' },
+    guarapuava: { title: 'Land of the cold', desc: 'Made it snow in Guarapuava.' },
+    graduation: { title: 'Graduate', desc: 'Tossed the cap in the air.' },
+    aquanauta: { title: 'Stay hydrated', desc: 'Waited for the Aquanauta reminder.' },
+    console: { title: 'Curious', desc: 'Opened the browser console.' },
+    vangogh: { title: 'Starry night', desc: 'Asked for a Van Gogh sky.' },
+    matrix: { title: 'Follow the white rabbit', desc: 'Entered the Matrix.' },
+    leet: { title: '1337', desc: 'Was here at just the right time.' },
+    birthday: { title: 'Happy birthday!', desc: 'Visited on the owner’s birthday.' },
+    maximize: { title: 'Perfect size', desc: 'Tried to maximize a perfect window.' },
+    collector: { title: 'Collector', desc: 'Found every secret on the site.' },
+  },
 
   privacy: 'Privacy',
   privacyDescription: 'How this site handles your data.',

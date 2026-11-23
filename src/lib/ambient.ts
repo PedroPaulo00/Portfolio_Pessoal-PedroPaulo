@@ -56,6 +56,18 @@ function readBool(key: string): boolean {
   }
 }
 
+/** "Mudo" e volume (0–100) escolhidos pelo visitante: efeitos curtos (ex.: conquistas) os respeitam. */
+let analyser: AnalyserNode | null = null;
+
+/** Analisador do som de fundo (null antes de a música carregar pela primeira vez). */
+export function ambientAnalyser(): AnalyserNode | null {
+  return analyser;
+}
+
+export function soundPrefs(): { readonly muted: boolean; readonly volume: number } {
+  return { muted: readBool(MUTED_KEY), volume: readNumber(VOLUME_KEY, 50) };
+}
+
 function write(key: string, value: string): void {
   try {
     localStorage.setItem(key, value);
@@ -129,6 +141,11 @@ class AmbientPlayer {
       const master = ctx.createGain();
       master.gain.value = level;
       master.connect(ctx.destination);
+      // Derivação para a visualização do Media Player (easter egg): só lê o sinal.
+      analyser = ctx.createAnalyser();
+      analyser.fftSize = 2048;
+      analyser.smoothingTimeConstant = 0.78;
+      master.connect(analyser);
       this.ctx = ctx;
       this.master = master;
       // Liberação do som (agora ou após um clique, mesmo durante o download).

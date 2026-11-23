@@ -12,6 +12,7 @@ import {
 import { createPortal } from 'react-dom';
 import { useI18n } from '../../i18n/I18n';
 import type { UiStrings } from '../../i18n/ui';
+import { unlockAchievement } from '../../lib/achievements';
 import { publishTasks, type Task } from '../../lib/tasks';
 import { useNavigation } from '../../lib/navigation';
 import { parseHash } from '../../lib/router';
@@ -20,6 +21,7 @@ import { AeroDialog } from '../ui/AeroDialog';
 import { Assistant } from './Assistant';
 import { MediaPlayer } from './MediaPlayer';
 import { Messenger } from './Messenger';
+import { RecycleBin } from './RecycleBin';
 import { Surfer } from './Surfer';
 import './desktop-icons.css';
 
@@ -63,7 +65,10 @@ export function DesktopIcons({ icons, windowOpen, onOpenWindow, poweredOn }: Des
     readonly icon: DesktopIcon;
     readonly summon: number;
     readonly minimized: boolean;
+    readonly say?: { readonly text: string; readonly id: number };
   } | null>(null);
+  // Quantas vezes o Clippy foi dispensado: na 5ª, ele volta irritado (easter egg).
+  const dismissals = useRef(0);
   // Media Player: aberto ou minimizado (o vídeo segue tocando), até fechar.
   const [player, setPlayer] = useState<{
     readonly icon: DesktopIcon;
@@ -93,13 +98,22 @@ export function DesktopIcons({ icons, windowOpen, onOpenWindow, poweredOn }: Des
       return;
     }
     if (icon.assistant) {
+      // Com o BonziBuddy já surfando, o Clippy faz uma piadinha (easter egg).
+      const rival = surfing ? { say: rivalSpeech(t.clippy.rival) } : {};
+      if (surfing) unlockAchievement('clippyBonzi');
       setAssistant((current) =>
-        current ? { ...current, summon: current.summon + 1, minimized: false } : { icon, summon: 0, minimized: false },
+        current
+          ? { ...current, summon: current.summon + 1, minimized: false, ...rival }
+          : { icon, summon: 0, minimized: false, ...rival },
       );
       return;
     }
     if (icon.surf) {
       const from = button.getBoundingClientRect();
+      if (assistant) {
+        unlockAchievement('clippyBonzi');
+        setAssistant({ ...assistant, say: rivalSpeech(t.clippy.rival) });
+      }
       setSurfing((current) => (current ? { ...current, minimized: false } : { icon, from, minimized: false }));
       return;
     }
@@ -209,6 +223,7 @@ export function DesktopIcons({ icons, windowOpen, onOpenWindow, poweredOn }: Des
                   minimized={minimized}
                   wide={icon.app === 'messenger'}
                   title={windowTitle(icon, t)}
+                  windowId={`window:${icon.id}`}
                   // Em cascata, como no Windows; a da frente fica por cima.
                   style={
                     {
@@ -222,6 +237,8 @@ export function DesktopIcons({ icons, windowOpen, onOpenWindow, poweredOn }: Des
                 >
                   {icon.app === 'messenger' ? (
                     <Messenger />
+                  ) : icon.content && icon.id === 'lixeira' ? (
+                    <RecycleBin content={icon.content} />
                   ) : icon.content ? (
                     <div className="desktop-window">
                       <img
@@ -263,7 +280,19 @@ export function DesktopIcons({ icons, windowOpen, onOpenWindow, poweredOn }: Des
                   onOpenWindow={onOpenWindow}
                   summon={assistant.summon}
                   minimized={assistant.minimized}
-                  onGone={() => setAssistant(null)}
+                  say={assistant.say}
+                  onGone={() => {
+                    const icon = assistant.icon;
+                    setAssistant(null);
+                    dismissals.current += 1;
+                    // Dispensado 5 vezes: volta sozinho, irritado.
+                    if (dismissals.current % 5 === 0) {
+                      window.setTimeout(() => {
+                        unlockAchievement('clippyAngry');
+                        setAssistant({ icon, summon: 0, minimized: false, say: rivalSpeech(t.clippy.angry) });
+                      }, 1800);
+                    }
+                  }}
                 />
               ) : null}
             </>,
@@ -273,6 +302,9 @@ export function DesktopIcons({ icons, windowOpen, onOpenWindow, poweredOn }: Des
     </nav>
   );
 }
+
+/** Fala especial do Clippy (o `id` novo faz o balão mostrá-la de novo). */
+const rivalSpeech = (text: string) => ({ text, id: Date.now() });
 
 /** Título da janela de um ícone (o do MSN é o nome do programa). */
 function windowTitle(icon: DesktopIcon, t: UiStrings): string {

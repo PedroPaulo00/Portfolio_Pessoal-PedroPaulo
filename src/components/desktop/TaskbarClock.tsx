@@ -1,5 +1,7 @@
 import { useEffect, useId, useMemo, useRef, useState } from 'react';
 import { useI18n } from '../../i18n/I18n';
+import { unlockAchievement } from '../../lib/achievements';
+import { BlueScreen } from './BlueScreen';
 import { DateTimeFlyout } from './DateTimeFlyout';
 
 /** Hora local do visitante, alinhada à virada de cada segundo. */
@@ -23,6 +25,12 @@ function useNow(): Date {
   return now;
 }
 
+/** Às 13:37 o relógio mostra "leet" por um minuto (easter egg). i18n-exempt */
+const LEET = 'L33T';
+
+/** Cliques seguidos no relógio (dentro de 4 s) que derrubam o "Windows". */
+const CRASH_CLICKS = 7;
+
 interface TaskbarClockProps {
   /** Link "Alterar configurações de data e hora..." do painel. */
   readonly onOpenSettings: (opener: HTMLElement | null) => void;
@@ -38,6 +46,9 @@ export function TaskbarClock({ onOpenSettings }: TaskbarClockProps) {
   const now = useNow();
   const { t, intl } = useI18n();
   const [open, setOpen] = useState(false);
+  const [crashed, setCrashed] = useState(false);
+  const clicks = useRef<number[]>([]);
+  const leet = now.getHours() === 13 && now.getMinutes() === 37;
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const panelId = useId();
@@ -57,6 +68,10 @@ export function TaskbarClock({ onOpenSettings }: TaskbarClockProps) {
     }),
     [intl],
   );
+
+  useEffect(() => {
+    if (leet) unlockAchievement('leet');
+  }, [leet]);
 
   useEffect(() => {
     if (!open) return;
@@ -83,12 +98,25 @@ export function TaskbarClock({ onOpenSettings }: TaskbarClockProps) {
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-controls={panelId}
-        onClick={() => setOpen((value) => !value)}
+        onClick={() => {
+          // Muitos cliques seguidos: tela azul. Os outros abrem e fecham o painel normalmente.
+          const stamp = Date.now();
+          clicks.current = [...clicks.current.filter((at) => stamp - at < 4000), stamp];
+          if (clicks.current.length >= CRASH_CLICKS) {
+            clicks.current = [];
+            setOpen(false);
+            setCrashed(true);
+            unlockAchievement('bsod');
+            return;
+          }
+          setOpen((value) => !value);
+        }}
       >
-        <span className="taskbar__clock-time">{timeFormat.format(now)}</span>
+        <span className="taskbar__clock-time">{leet ? LEET : timeFormat.format(now)}</span>
         <span className="taskbar__clock-date">{shortDateFormat.format(now)}</span>
         <span className="sr-only">{t.openDateAndTime}</span>
       </button>
+      {crashed ? <BlueScreen onDone={() => setCrashed(false)} /> : null}
       {open ? (
         <DateTimeFlyout
           id={panelId}

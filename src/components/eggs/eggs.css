@@ -1,0 +1,316 @@
+/* Efeitos de tela dos easter eggs. Tudo decorativo: sem eventos de mouse (exceto o protetor de tela). */
+.egg-host {
+  position: fixed;
+  inset: 0;
+  z-index: 2400;
+  overflow: hidden;
+  pointer-events: none;
+}
+.egg-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+/* Protetor de tela: cobre tudo e esconde o cursor, como o do Windows. */
+.egg-canvas--screensaver {
+  pointer-events: auto;
+  cursor: none;
+}
+
+/* Modo festa: luzes pulsando a 128 BPM (0,469 s por batida). */
+.egg-party {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  mix-blend-mode: screen;
+  animation: party-life 11s linear both;
+}
+.egg-party i {
+  position: absolute;
+  width: 62vmax;
+  height: 62vmax;
+  border-radius: 50%;
+  filter: blur(46px);
+  animation:
+    party-beat 0.46875s ease-out infinite,
+    party-hue 3.75s linear infinite;
+}
+.egg-party i:nth-child(1) {
+  left: -20vmax;
+  top: -20vmax;
+  background: #ff2d95;
+}
+.egg-party i:nth-child(2) {
+  right: -20vmax;
+  top: -20vmax;
+  background: #2d9bff;
+  animation-delay:
+    0.23s,
+    -1s;
+}
+.egg-party i:nth-child(3) {
+  left: -20vmax;
+  bottom: -20vmax;
+  background: #38ff7a;
+  animation-delay:
+    0.1s,
+    -2s;
+}
+.egg-party i:nth-child(4) {
+  right: -20vmax;
+  bottom: -20vmax;
+  background: #ffd02d;
+  animation-delay:
+    0.35s,
+    -3s;
+}
+.egg-party b {
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(
+    from 0deg at 50% 60%,
+    transparent 0 6%,
+    rgba(255, 255, 255, 0.4) 7% 8.5%,
+    transparent 10% 31%,
+    rgba(255, 255, 255, 0.4) 32% 33.5%,
+    transparent 35% 56%,
+    rgba(255, 255, 255, 0.4) 57% 58.5%,
+    transparent 60% 81%,
+    rgba(255, 255, 255, 0.4) 82% 83.5%,
+    transparent 85%
+  );
+  animation: party-spin 6s linear infinite;
+}
+@keyframes party-life {
+  0% {
+    opacity: 0;
+  }
+  5%,
+  92% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes party-beat {
+  0% {
+    opacity: 0.8;
+    scale: 1.18;
+  }
+  100% {
+    opacity: 0.25;
+    scale: 0.82;
+  }
+}
+@keyframes party-hue {
+  to {
+    filter: blur(46px) hue-rotate(360deg);
+  }
+}
+@keyframes party-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Emoticon gigante cruzando a tela. */
+.egg-wink {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: min(280px, 55vw);
+  aspect-ratio: 1;
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.4));
+  animation: wink-cross 3.6s ease-in-out both;
+}
+@keyframes wink-cross {
+  from {
+    transform: translate(-30vw, 75vh) rotate(-25deg) scale(0.6);
+  }
+  50% {
+    transform: translate(40vw, 25vh) rotate(8deg) scale(1.15);
+  }
+  to {
+    transform: translate(110vw, -20vh) rotate(30deg) scale(0.8);
+  }
+}
+
+/* Balões de aniversário. */
+.egg-balloons {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+.egg-balloon {
+  position: absolute;
+  bottom: -30vh;
+  border-radius: 50% 50% 48% 48% / 55% 55% 45% 45%;
+  background: radial-gradient(
+    circle at 35% 28%,
+    rgba(255, 255, 255, 0.75),
+    var(--color) 42%,
+    color-mix(in srgb, var(--color) 62%, #000)
+  );
+  box-shadow: inset -6px -8px 14px rgba(0, 0, 0, 0.22);
+  animation: balloon-rise linear both;
+}
+.egg-balloon::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -5px;
+  translate: -50% 0;
+  border: 5px solid transparent;
+  border-bottom: 8px solid color-mix(in srgb, var(--color) 62%, #000);
+  border-top: 0;
+}
+.egg-balloon::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 1px;
+  height: 90px;
+  background: rgba(255, 255, 255, 0.55);
+}
+@keyframes balloon-rise {
+  from {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(var(--sway), -75vh);
+  }
+  to {
+    transform: translate(calc(var(--sway) * -0.6), -150vh);
+  }
+}
+
+/* Chapéu de formatura e a contagem regressiva. */
+.egg-cap {
+  position: fixed;
+  width: 56px;
+  height: 56px;
+  filter: drop-shadow(0 6px 6px rgba(0, 0, 0, 0.4));
+}
+.egg-toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--taskbar-height) + 56px);
+  translate: -50% 0;
+  margin: 0;
+  max-width: min(90vw, 24rem);
+  padding: 7px 14px;
+  font-size: var(--text-small);
+  font-weight: var(--font-bold);
+  text-align: center;
+  color: #000;
+  background: linear-gradient(#ffffe9, #f4f1c2);
+  border: 1px solid #767676;
+  border-radius: 4px;
+  box-shadow: 1px 3px 8px rgba(0, 0, 0, 0.4);
+  animation: egg-toast-life 5.2s ease both;
+}
+@keyframes egg-toast-life {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  8%,
+  88% {
+    opacity: 1;
+  }
+}
+
+/* Zoação dos Nanicos: faixa verde e branca do Palmeiras. */
+.egg-banner {
+  position: fixed;
+  left: 50%;
+  top: 24%;
+  translate: -50% 0;
+  margin: 0;
+  font-size: clamp(2rem, 9vw, 5rem);
+  font-weight: 800;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  color: #fff;
+  -webkit-text-stroke: 3px #006437;
+  paint-order: stroke fill;
+  text-shadow: 0 6px 18px rgba(0, 60, 30, 0.6);
+  animation: banner-pop 6.5s cubic-bezier(0.2, 0.9, 0.3, 1.2) both;
+}
+@keyframes banner-pop {
+  0% {
+    opacity: 0;
+    scale: 0.3;
+  }
+  8% {
+    opacity: 1;
+    scale: 1.12;
+  }
+  14%,
+  88% {
+    opacity: 1;
+    scale: 1;
+  }
+  100% {
+    opacity: 0;
+    scale: 1;
+  }
+}
+
+/* Robô da OBR seguindo a linha. */
+.egg-obr {
+  position: fixed;
+  left: 0;
+  top: 0;
+  animation: egg-fade 7.5s ease both;
+}
+@keyframes egg-fade {
+  0% {
+    opacity: 0;
+  }
+  6%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Lembrete do Aquanauta no canto (como a notificação do próprio app). */
+.egg-reminder {
+  position: fixed;
+  right: 16px;
+  bottom: calc(var(--taskbar-height) + 18px);
+  width: min(380px, calc(100vw - 32px));
+  height: auto;
+  pointer-events: auto;
+  cursor: pointer;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.45));
+  animation: reminder-life 7s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+@keyframes reminder-life {
+  0% {
+    opacity: 0;
+    transform: translateX(110%);
+  }
+  8%,
+  90% {
+    opacity: 1;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(110%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .egg-reminder {
+    animation-name: egg-fade;
+  }
+}

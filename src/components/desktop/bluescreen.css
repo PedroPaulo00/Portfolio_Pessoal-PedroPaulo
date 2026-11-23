@@ -1,0 +1,33 @@
+/* Tela azul de mentirinha (easter egg): azul e texto monoespaçado como no Windows 7. */
+.bsod {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  padding: clamp(16px, 5vw, 56px);
+  overflow: auto;
+  font:
+    1rem/1.35 'Lucida Console',
+    'Courier New',
+    monospace;
+  color: #fff;
+  background: #0000aa;
+  cursor: none;
+  outline: 0;
+}
+.bsod p {
+  max-width: 80ch;
+  margin: 0 0 1.4em;
+}
+.bsod__press {
+  margin-top: 2em;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .bsod {
+    animation: bsod-in 80ms steps(2) both;
+  }
+  @keyframes bsod-in {
+    from {
+      opacity: 0;
+    }
+  }
+}

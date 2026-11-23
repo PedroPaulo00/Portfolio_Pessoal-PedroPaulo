@@ -30,6 +30,11 @@ export interface SpotifyNowPlaying {
   readonly track: SpotifyTrack;
   readonly isPlaying: boolean;
   readonly progressMs: number;
+  /**
+   * Andamento da música (batidas por minuto), para a animação pulsar no ritmo.
+   * Vem do Deezer (o Spotify não fornece mais); null quando não se sabe.
+   */
+  readonly bpm?: number | null;
 }
 
 export interface SpotifyRecent {

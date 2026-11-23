@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import startLogo from './assets/brands/start-logo.png';
 import portfolioIcon from './assets/desktop/portfolio.png';
 import bootBackdropVideo from './assets/video/intro_fundo.mp4';
@@ -11,6 +11,14 @@ import { DesktopBackdrop } from './components/desktop/DesktopBackdrop';
 import { DesktopIcons, PortfolioShortcut } from './components/desktop/DesktopIcons';
 import { VolumeControl } from './components/desktop/VolumeControl';
 import { StartMenu, type PowerAction } from './components/launcher/StartMenu';
+import { AchievementToast } from './components/ui/AchievementToast';
+import { useFlip3DOpen } from './lib/flip3d';
+import { useVisualizerOpen } from './lib/visualizer';
+import { useWindowDrag } from './lib/windowDrag';
+
+import { EggLayer } from './components/eggs/EggLayer';
+import { playEffect, toggleStarryWallpaper } from './lib/eggBus';
+import { installConsoleEgg } from './lib/consoleEgg';
 import { AboutSection } from './components/sections/AboutSection';
 import { ContactSection } from './components/sections/ContactSection';
 import { HeroSection } from './components/sections/HeroSection';
@@ -55,6 +63,11 @@ import './styles/app.css';
 // Por último: microinterações sobrepõem transições dos componentes.
 import './styles/motion.css';
 
+// Flip 3D: só é baixado quando aberto.
+const Flip3D = lazy(() => import('./components/desktop/Flip3D'));
+// Visualização do Media Player (easter egg): idem.
+const Visualizer = lazy(() => import('./components/desktop/Visualizer'));
+
 const MENU_ID = 'portfolio-menu';
 const HOME: Route = { section: 'inicio' };
 
@@ -76,6 +89,17 @@ export function App() {
   const [theme, setTheme] = useState<Theme>(getTheme);
   const [glass, setGlass] = useState<GlassMode>(() => getGlassMode());
   const [query, setQuery] = useState('');
+  // Easter eggs da busca: "matrix", "van gogh" e ":)".
+  const starryQuery = useRef(false);
+  useEffect(() => {
+    const q = query.trim().toLowerCase();
+    // "van gogh", "vangogh", "starry night" ou "noite estrelada": liga/desliga ao começar a digitar o termo.
+    const starry = /van ?gogh|starry night|noite estrelada/.test(q);
+    if (starry && !starryQuery.current) toggleStarryWallpaper();
+    starryQuery.current = starry;
+    if (q === 'matrix') playEffect('matrix');
+    else if (q.endsWith(':)')) playEffect('wink');
+  }, [query]);
   const [menu, setMenu] = useState<{ open: boolean; opener: HTMLElement | null; view: 'main' | 'settings' }>({
     open: false,
     opener: null,
@@ -83,6 +107,8 @@ export function App() {
   });
   const [status, setStatus] = useState('');
   const [copied, setCopied] = useState(false);
+  // Easter egg: mensagem e desafio no console do navegador (F12).
+  useEffect(installConsoleEgg, []);
   // O site abre "desligado": botão de ligar → vídeo de inicialização → área de trabalho.
   const [booted, setBooted] = useState(false);
   // Desligar/Reiniciar (menu Iniciar): a tela "Desligando..." está à mostra.
@@ -111,6 +137,10 @@ export function App() {
   const appearanceRef = useRef<HTMLButtonElement>(null);
   const mainRef = useRef<HTMLElement>(null);
   const windowRef = useRef<HTMLDivElement>(null);
+  // Janela arrastável pela barra de título (computador) e o Aero Shake.
+  useWindowDrag(windowRef, booted);
+  const flipOpen = useFlip3DOpen();
+  const visualizerOpen = useVisualizerOpen();
   const windowButtonRef = useRef<HTMLButtonElement>(null);
   const shortcutRef = useRef<HTMLButtonElement>(null);
   const firstRender = useRef(true);
@@ -321,6 +351,23 @@ export function App() {
             }}
           />
         )}
+        <AchievementToast />
+        {visualizerOpen ? (
+          <Suspense fallback={null}>
+            <Visualizer />
+          </Suspense>
+        ) : null}
+        {flipOpen ? (
+          <Suspense fallback={null}>
+            <Flip3D
+              onPortfolio={() => {
+                if (windowState === 'minimized') toggleWindow();
+                else if (windowState === 'closed') reopenWindow();
+              }}
+            />
+          </Suspense>
+        ) : null}
+        <EggLayer active={booted && power === null} />
         {power ? <PowerScreen action={power} onDone={finishPowerOff} /> : null}
         {/* "Desligado", tudo abaixo existe (e já carrega), mas fica fora do Tab e
             dos leitores de tela até a inicialização terminar. */}

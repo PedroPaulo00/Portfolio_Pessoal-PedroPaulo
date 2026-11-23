@@ -1,5 +1,7 @@
-import type { Ref } from 'react';
+import { useEffect, useState, type Ref } from 'react';
 import { useI18n } from '../../i18n/I18n';
+import { unlockAchievement } from '../../lib/achievements';
+import { hopElement } from '../../lib/eggs';
 import type { Profile } from '../../types/portfolio';
 import { BrandMark, menuButtonLabel } from '../ui/BrandMark';
 
@@ -48,7 +50,13 @@ export function WindowTitleBar({
           {title}
         </p>
       </div>
-      <WindowControls onMinimize={onMinimize} onClose={onClose} minimizeLabel={t.minimize} closeLabel={t.closeWindow} />
+      <WindowControls
+        onMinimize={onMinimize}
+        onClose={onClose}
+        minimizeLabel={t.minimize}
+        closeLabel={t.closeWindow}
+        maximizeTip={t.maximizeTip}
+      />
     </header>
   );
 }
@@ -65,12 +73,20 @@ function WindowControls({
   onClose,
   minimizeLabel,
   closeLabel,
+  maximizeTip,
 }: {
   readonly onMinimize: () => void;
   readonly onClose: () => void;
   readonly minimizeLabel: string;
   readonly closeLabel: string;
+  readonly maximizeTip: string;
 }) {
+  const [tip, setTip] = useState(false);
+  useEffect(() => {
+    if (!tip) return;
+    const timer = window.setTimeout(() => setTip(false), 2600);
+    return () => window.clearTimeout(timer);
+  }, [tip]);
   return (
     <div className="window-controls" aria-hidden="true">
       <button
@@ -82,7 +98,25 @@ function WindowControls({
       >
         −
       </button>
-      <span className="window-controls__item">□</span>
+      <button
+        type="button"
+        className="window-controls__item window-controls__item--button"
+        tabIndex={-1}
+        title={maximizeTip}
+        onClick={(event) => {
+          // Easter egg: a janela "tenta" crescer, dá um pulinho e avisa que já é perfeita.
+          hopElement(event.currentTarget.closest('.aero-window'));
+          setTip(true);
+          unlockAchievement('maximize');
+        }}
+      >
+        □
+      </button>
+      {tip ? (
+        <span className="window-controls__tip" role="status">
+          {maximizeTip}
+        </span>
+      ) : null}
       <button
         type="button"
         className="window-controls__item window-controls__item--button window-controls__item--close"

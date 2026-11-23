@@ -30,6 +30,43 @@
   object-position: center 35%;
   transition: opacity 700ms ease;
 }
+/* Easter egg (digitar "van gogh" na busca): A Noite Estrelada no lugar do papel de parede,
+   com uma aproximação lenta. (Sem filtros SVG: em algumas placas de vídeo o navegador
+   desistia de desenhar a pintura e sobrava só o fundo azul.) */
+html.wallpaper-vangogh .desktop-backdrop {
+  background: #0b1a4a;
+}
+/* Espiadinha ao ligar: a janela do portfólio fica quase transparente por uns segundos. */
+.desktop-stage > .aero-window.egg-peek {
+  opacity: 0.06;
+  transition:
+    transform 280ms cubic-bezier(0.2, 0.7, 0.3, 1),
+    opacity 600ms ease,
+    visibility 0s;
+}
+html.wallpaper-vangogh .desktop-backdrop__image {
+  opacity: 0;
+}
+html.wallpaper-vangogh .desktop-backdrop::before {
+  content: '';
+  position: absolute;
+  inset: -4%;
+  background: url('../../assets/desktop/noite-estrelada.webp') center / cover no-repeat;
+  will-change: transform;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html.wallpaper-vangogh .desktop-backdrop::before {
+    animation: vg-drift 50s ease-in-out infinite alternate;
+  }
+}
+@keyframes vg-drift {
+  from {
+    transform: scale(1.04) translate(-1%, -0.5%);
+  }
+  to {
+    transform: scale(1.12) translate(1%, 0.8%);
+  }
+}
 /* Papel de parede do outro tema: some suavemente (fica guardado para a volta). */
 .desktop-backdrop__image.is-hidden {
   opacity: 0;
@@ -783,5 +820,50 @@
   }
   .taskbar__start {
     width: 56px;
+  }
+}
+
+/* Botão "Alternar entre janelas" na barra de tarefas (ao lado do Iniciar). */
+.taskbar__flip {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: calc(var(--taskbar-height) - 8px);
+  margin: 0 2px 0 4px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  cursor: pointer;
+}
+@media (hover: hover) {
+  .taskbar__flip:hover {
+    border-color: rgba(255, 255, 255, 0.35);
+    background: linear-gradient(rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.08));
+  }
+}
+.taskbar__flip img {
+  width: 26px;
+  height: 26px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+.taskbar__flip:focus-visible {
+  outline-color: #b8f8ff;
+}
+@media (max-width: 37.49em) {
+  .taskbar__flip {
+    display: none;
+  }
+}
+
+/* Janela do portfólio arrastável (só no computador): deslocamento vindo de lib/windowDrag. */
+@media (hover: hover) and (pointer: fine) and (min-width: 64em) {
+  .desktop-stage > .aero-window {
+    left: var(--drag-x, 0px);
+    top: var(--drag-y, 0px);
+  }
+  .desktop-stage > .aero-window.is-dragging {
+    user-select: none;
   }
 }

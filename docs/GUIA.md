@@ -40,6 +40,34 @@ Em `profile`, troque `name`, `role` e `tagline`. O nome aparece no título da ja
 - **Logo:** o original é `src/assets/originais/brands/AFL_logo.png`. `npm run images` gera `src/assets/brands/logo.png`, usado na barra de título, no menu e na barra de tarefas, e os favicons `public/favicon.png` e `public/apple-touch-icon.png`. Sem `logo` em `profile`, aparece a marca provisória com as iniciais.
 - **Foto:** aparece no Início, numa moldura no estilo do avatar do MSN, com o status "Online" logo abaixo. A moldura é o SVG `src/assets/profile/msn-frame.svg`, calibrado pixel a pixel contra `src/assets/originais/referencias/exemplo_MSN.png`; o tamanho na tela vem de `--msn-photo` em `sections.css`. O original é `src/assets/originais/profile/foto.png` (nome em `PHOTO` no [`scripts/optimize-images.py`](../scripts/optimize-images.py)); `npm run images` gera `src/assets/profile/foto.webp`. Com `PHOTO_CROP = None` a imagem vai inteira, centralizada num quadrado; para recortar uma parte, informe a caixa (esquerda, topo, direita, base). As fotos anteriores (`minha_foto.jpg`, `minha_foto_atual.jpg`) continuam na pasta. Sem `photo` em `profile`, o Início mostra o logo.
 
+### Easter eggs e conquistas
+
+O site tem 28 segredos escondidos e uma 29ª conquista ("Colecionador", por achar todos). Cada um achado mostra uma notificação no estilo do Xbox 360 e entra no contador "X de 29 segredos" do menu Iniciar (salvo no navegador do visitante, em `portfolio-aero:achievements`). A lista, o som e a contagem ficam em `src/lib/achievements.ts`; os textos (nome e dica de cada um) em `src/i18n/ui.ts` → `achievements`. Para um segredo avisar que foi achado: `unlockAchievement('id')`. Para zerar o seu progresso de teste: apague essa chave no armazenamento local do navegador.
+
+Segredos já ativos (não conte para os visitantes!):
+
+- **Console:** abrir o console (F12) mostra uma arte e o desafio; digitar `pedro.contratar()` dá a conquista.
+- **Relógio:** às 13:37 ele mostra "L33T"; 7 cliques seguidos (em até 4 s) mostram uma tela azul falsa (qualquer tecla fecha).
+- **Maximizar:** o botão □ da janela faz ela dar um pulinho e mostra um balãozinho.
+- **Clippy:** dispensado 5 vezes, volta irritado; com o BonziBuddy na tela, comenta.
+- **MSN:** clicar no "Online" da tela inicial troca o status (Ocupado, Ausente e "Ouvindo: [música]"); 3 "toc toc" seguidos sacodem a janela do portfólio.
+- **Código Konami:** ↑ ↑ ↓ ↓ ← → ← → B A no teclado (no celular: deslizar na mesma ordem e tocar 2 vezes) enche a tela de bolhas de vidro.
+- **Protetor de tela:** 2 minutos parado mostra as bolhas do Windows 7 sobre o preto; mexer o mouse, tocar ou teclar fecha.
+- **Modo festa:** 10 cliques seguidos no "Online" (em até 6 s) ligam luzes de balada a 128 BPM.
+- **Neve:** clicar em "Guarapuava" na ficha do Sobre. **Chapéu:** clicar no ícone de formatura do cartão Formação joga o chapéu e mostra os dias que faltam para julho de 2027.
+- **Busca:** digitar `matrix` (chuva verde), `van gogh` (papel de parede _A Noite Estrelada_ ondulando, digite de novo para voltar) ou `:)` (emoticon gigante).
+- **Aniversário:** em 20 de julho, balões sobem pela tela (uma vez por visita).
+- **Lixeira (zoação):** clicar no escudo do Corinthians o derruba na pasta "Nanicos 🤏" ("Item movido para a pasta Times Minúsculos"), com trombone triste, confete verde e branco e "Avanti, Palestra!".
+- **OBR:** 3 cliques seguidos numa conquista da OBR (Sobre → Experiências) soltam o robô seguidor de linha pela tela.
+- **Aquanauta:** 1 minuto parado e aparece o lembrete "Hora de beber água!" do app (uma vez por visita).
+- **Spotify:** arrastar a capa do "Ouvindo agora" para a esquerda arranha o disco; 5 s com o ponteiro na foto do perfil coloca um fone de ouvido em pixel art; clicar no pinguim (só no computador) o faz dançar. O GIF da dança fica em `src/assets/originais/spotify/clubpenguin_dance.gif`.
+- **Van Gogh:** ao digitar (`van gogh`, `starry night` ou `noite estrelada`), a janela do portfólio fica quase transparente por uns segundos para mostrar o papel de parede. A pintura só faz uma aproximação lenta (sem filtros SVG, que falhavam em algumas placas de vídeo).
+- **Arrastar e Aero Shake (computador):** a janela do portfólio é arrastável pela barra de título (clique duplo volta ao centro). Chacoalhar a janela enquanto a arrasta minimiza as outras janelas; chacoalhar de novo traz de volta (`src/lib/windowDrag.ts`).
+- **Flip 3D (computador):** o botão "Alternar entre janelas", ao lado do Iniciar, ou a roda do mouse sobre a barra de tarefas mostram as janelas abertas empilhadas em 3D. Roda ou setas trocam; Enter ou clique abre; Esc fecha (`src/components/desktop/Flip3D.tsx`).
+- **Windows Media Player (Ouvindo agora):** um clique (ou Enter) na capa do "Ouvindo agora" abre o Windows Media Player 12 no modo "Em execução", com a capa, o nome da música e do artista no canto e as visualizações _Barras e ondas_ (barras e escopo) e _Alquimia_. As cores do player e das visualizações vêm da paleta da capa (`src/lib/palette.ts`). Elas reagem ao som de fundo do site; sem som (mudo), seguem o ritmo da música do Spotify. Arrastar a capa para a esquerda continua arranhando o disco, sem abrir o player (`src/components/desktop/Visualizer.tsx`).
+- **Pulso no ritmo (aba Spotify):** com uma música tocando, o fundo da aba inteira pulsa na batida dela (brilhos de água e luz, ondas a cada dois tempos, bolhas e raios de luz girando, no estilo Frutiger Aero), e o card "Ouvindo agora" também: a capa "bate", uma onda de luz ciano se espalha e o equalizador de vidro sobe. O andamento (BPM) vem do Deezer, consultado pelo servidor (`server/spotify.ts`, `bpmFor`), porque o Spotify não fornece mais esse dado; músicas sem BPM no Deezer ficam sem pulso. A fase da batida é aproximada pela posição da música.
+- **Status automático:** o "Online" da tela inicial vira "Ouvindo: [música]" sempre que o Spotify mostra uma música tocando agora (sem isso, fica Online).
+
 ### Serviços
 
 A seção **Serviços** (`#servicos`, antes de Projetos) mostra o que você oferece a clientes. O conteúdo fica em `services`, no `portfolio.ts`:

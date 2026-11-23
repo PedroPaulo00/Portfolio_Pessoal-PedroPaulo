@@ -159,6 +159,51 @@ async function slowParts(token: string): Promise<readonly [unknown, unknown]> {
   return data;
 }
 
+/* --------------------------- ritmo (BPM) --------------------------------- */
+
+/**
+ * BPM da música tocando agora, para a aba Spotify pulsar no ritmo dela. O Spotify
+ * desativou os dados de andamento (audio-features responde 403), então a consulta
+ * vai à API pública do Deezer: primeiro pelo ISRC (código único da gravação); se
+ * ele não tiver o BPM, pela busca "música + artista". Só o nome da música do dono
+ * vai ao Deezer (nada do visitante). Fica em cache por música; falha = sem pulso.
+ */
+const bpmCache = new Map<string, number | null>();
+const DEEZER = 'https://api.deezer.com';
+
+async function deezerJson(path: string): Promise<Record<string, unknown>> {
+  const response = await fetch(DEEZER + path, { signal: AbortSignal.timeout(2500) });
+  if (!response.ok) throw new Error(`Deezer HTTP ${response.status}`);
+  return obj(await response.json());
+}
+
+const plausible = (bpm: number | null) => (bpm !== null && bpm >= 50 && bpm <= 220 ? Math.round(bpm * 10) / 10 : null);
+
+async function lookupBpm(isrc: string, name: string, artist: string): Promise<number | null> {
+  if (isrc) {
+    const byIsrc = await deezerJson(`/track/isrc:${encodeURIComponent(isrc)}`).catch(() => null);
+    const bpm = plausible(num(byIsrc?.bpm));
+    if (bpm) return bpm;
+  }
+  const search = await deezerJson(`/search?limit=5&q=${encodeURIComponent(`${name} ${artist}`)}`).catch(() => null);
+  const wanted = artist.toLowerCase();
+  for (const hit of arr(search?.data).map(obj).slice(0, 3)) {
+    if (str(obj(hit.artist).name).toLowerCase() !== wanted) continue;
+    const detail = await deezerJson(`/track/${num(hit.id) ?? 0}`).catch(() => null);
+    const bpm = plausible(num(detail?.bpm));
+    if (bpm) return bpm;
+  }
+  return null;
+}
+
+async function bpmFor(id: string, isrc: string, name: string, artist: string): Promise<number | null> {
+  if (bpmCache.has(id)) return bpmCache.get(id) ?? null;
+  const bpm = await lookupBpm(isrc, name, artist).catch(() => null);
+  if (bpmCache.size > 500) bpmCache.clear();
+  bpmCache.set(id, bpm);
+  return bpm;
+}
+
 export async function getSpotifySnapshot(env: SpotifyCredentials): Promise<SpotifySnapshot> {
   if (Date.now() < blockedUntil) throw new RateLimited(blockedUntil);
   const token = await accessToken(env);
@@ -190,6 +235,12 @@ export async function getSpotifySnapshot(env: SpotifyCredentials): Promise<Spoti
       track: currentTrack,
       isPlaying: currentObj.is_playing === true,
       progressMs: num(currentObj.progress_ms) ?? 0,
+      bpm: await bpmFor(
+        currentTrack.id,
+        str(obj(obj(currentObj.item).external_ids).isrc),
+        currentTrack.name,
+        currentTrack.artists[0]?.name ?? '',
+      ),
     };
   }
 

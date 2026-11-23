@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState, type CSSProperties, type ReactNode } from 'react';
 import { useI18n } from '../../i18n/I18n';
 import type { SpotifyLink, SpotifyNowPlaying, SpotifyTrack } from '../../types/spotify';
+import { openVisualizer } from '../../lib/visualizer';
+import { ScratchableArt } from './SpotifyEggs';
 
 const UNITS: readonly [Intl.RelativeTimeFormatUnit, number][] = [
   ['day', 86_400],
@@ -124,7 +126,7 @@ export function TrackRow({
 }
 
 /** Progresso local entre atualizações do servidor (avança a cada segundo). */
-function useLiveProgress(now: SpotifyNowPlaying, receivedAt: number): number {
+export function useLiveProgress(now: SpotifyNowPlaying, receivedAt: number): number {
   const [tick, setTick] = useState(() => Date.now());
   useEffect(() => {
     if (!now.isPlaying) return;
@@ -148,19 +150,54 @@ export function NowPlaying({
   const progress = useLiveProgress(nowPlaying, receivedAt);
   const { track } = nowPlaying;
   const percent = track.durationMs ? (progress / track.durationMs) * 100 : 0;
+  // Pulso no ritmo da música (aba Spotify): a cada batida a capa "bate", uma onda
+  // de luz se espalha, as barrinhas do equalizador sobem e bolhas sobem pelo card.
+  // O atraso negativo alinha a animação com o ponto da música em que ela está.
+  const beatMs = !compact && nowPlaying.isPlaying && nowPlaying.bpm ? 60_000 / nowPlaying.bpm : 0;
+  const beatStyle = beatMs
+    ? ({ '--beat': `${beatMs.toFixed(1)}ms`, '--beat-delay': `${-(progress % beatMs).toFixed(0)}ms` } as CSSProperties)
+    : undefined;
 
   return (
-    <div className={`sp-now${compact ? ' sp-now--compact' : ''}${track.image ? ' has-backdrop' : ''}`}>
+    <div
+      className={`sp-now${compact ? ' sp-now--compact' : ''}${track.image ? ' has-backdrop' : ''}${beatMs ? ' is-beating' : ''}`}
+      style={beatStyle}
+    >
       {/* A capa da música também vira o fundo, escurecida (aba Spotify e Início). */}
       {track.image ? (
         <span className="sp-now__backdrop" style={{ backgroundImage: `url("${track.image}")` }} aria-hidden="true" />
       ) : null}
-      <Artwork src={track.image} size={compact ? 56 : 112} label={t.coverOf(track.album)} />
+      {beatMs ? (
+        <span className="sp-now__bubbles" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+          <i />
+          <i />
+          <i />
+          <i />
+        </span>
+      ) : null}
+      <span className="sp-now__cover">
+        {beatMs ? <span className="sp-now__ripple" aria-hidden="true" /> : null}
+        <ScratchableArt label={t.visualizer.open} onOpen={openVisualizer}>
+          <Artwork src={track.image} size={compact ? 56 : 112} label={t.coverOf(track.album)} />
+        </ScratchableArt>
+      </span>
       <div className="sp-now__body">
         <p className="sp-now__state">
           <span className={`sp-now__badge${nowPlaying.isPlaying ? '' : ' is-paused'}`}>
             {nowPlaying.isPlaying ? t.listeningNow : t.paused}
           </span>
+          {beatMs ? (
+            <span className="sp-eq" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+              <i />
+              <i />
+            </span>
+          ) : null}
         </p>
         <SpotifyLinkOut href={track.url} className="sp-now__title">
           {track.name}

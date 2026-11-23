@@ -19,6 +19,8 @@ interface AssistantProps {
   readonly onGone: () => void;
   /** Minimizado pela barra de tarefas: some até ser restaurado. */
   readonly minimized?: boolean;
+  /** Fala especial (easter eggs): aparece no balão no lugar do comentário da seção. O `id` muda a cada fala. */
+  readonly say?: { readonly text: string; readonly id: number } | undefined;
 }
 
 interface Option {
@@ -50,7 +52,7 @@ function clamp(x: number, y: number) {
  * seção muda, conta curiosidades do site e pode ser arrastado para qualquer
  * lugar. Clicar nele mostra ou esconde o balão; "Ocultar" o faz ir embora.
  */
-export function Assistant({ image, windowOpen, onOpenWindow, summon, onGone, minimized = false }: AssistantProps) {
+export function Assistant({ image, windowOpen, onOpenWindow, summon, onGone, minimized = false, say }: AssistantProps) {
   const { t } = useI18n();
   const c = t.clippy;
   const { route, navigate } = useNavigation();
@@ -60,6 +62,15 @@ export function Assistant({ image, windowOpen, onOpenWindow, summon, onGone, min
   const [balloon, setBalloon] = useState(true);
   const [tip, setTip] = useState<number | null>(null);
   const [leaving, setLeaving] = useState(false);
+  // Fala especial até o assunto mudar (ou o visitante pedir uma curiosidade).
+  const [saying, setSaying] = useState<string | null>(say?.text ?? null);
+  const [sayId, setSayId] = useState(say?.id ?? 0);
+  if (say && say.id !== sayId) {
+    setSayId(say.id);
+    setSaying(say.text);
+    setBalloon(true);
+    setTip(null);
+  }
   const gone = useRef(onGone);
   useEffect(() => {
     gone.current = onGone;
@@ -73,6 +84,7 @@ export function Assistant({ image, windowOpen, onOpenWindow, summon, onGone, min
     setSeen({ topic, summon });
     setBalloon(true);
     setTip(null);
+    setSaying(null);
   }
 
   useEffect(() => {
@@ -160,7 +172,7 @@ export function Assistant({ image, windowOpen, onOpenWindow, summon, onGone, min
         return [{ label: c.home, run: go({ section: 'inicio' }) }];
     }
   };
-  const message = tip !== null ? c.tips[tip % c.tips.length]! : windowOpen ? c[route.section] : c.desktop;
+  const message = tip !== null ? c.tips[tip % c.tips.length]! : (saying ?? (windowOpen ? c[route.section] : c.desktop));
 
   // Balão acima do Clippy (ou abaixo, se ele estiver no alto) e do lado que tem espaço.
   // Tela baixa (celular deitado): não cabe em cima nem embaixo; vai para o lado.

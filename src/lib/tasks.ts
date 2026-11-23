@@ -35,3 +35,8 @@ const snapshot = () => tasks;
 export function useTasks(): readonly Task[] {
   return useSyncExternalStore(subscribe, snapshot, snapshot);
 }
+
+/** Lista atual de tarefas, fora do React (ex.: o Aero Shake e o Flip 3D). */
+export function getTasks(): readonly Task[] {
+  return tasks;
+}

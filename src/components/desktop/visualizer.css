@@ -1,0 +1,270 @@
+/* Windows Media Player 12, modo "Em execução" (template), com as visualizações. */
+.wmp-viz {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: min(480px, calc(100dvh - var(--taskbar-height) - 200px));
+  min-height: 300px;
+  color: #fff;
+  background:
+    linear-gradient(105deg, transparent 30%, rgba(80, 150, 220, 0.08) 42%, transparent 50%),
+    linear-gradient(75deg, transparent 52%, rgba(80, 150, 220, 0.07) 60%, transparent 68%),
+    radial-gradient(
+      ellipse 75% 65% at 55% 60%,
+      var(--viz-deep, #1d5181) 0%,
+      var(--viz-deeper, #0c2a4b) 42%,
+      #030a14 80%
+    ),
+    #000;
+}
+.wmp-viz__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 8px 10px 0;
+}
+/* Capa, música e artista no canto, por cima da visualização (sem tampar o centro). */
+.wmp-viz__top {
+  position: relative;
+  z-index: 1;
+}
+.wmp-viz__info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.wmp-viz__cover {
+  flex: none;
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 3px;
+  box-shadow:
+    0 4px 14px rgba(0, 0, 0, 0.6),
+    0 0 14px var(--viz-glow, rgba(80, 180, 255, 0.5));
+}
+.wmp-viz__text {
+  min-width: 0;
+  text-shadow: 0 1px 3px #000;
+}
+.wmp-viz__track {
+  margin: 0;
+  overflow: hidden;
+  font-size: var(--text-body);
+  font-weight: var(--font-bold);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: #f2f6fb;
+}
+.wmp-viz__artist {
+  margin: 1px 0 0;
+  overflow: hidden;
+  font-size: var(--text-small);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: rgba(235, 242, 250, 0.85);
+}
+.wmp-viz__mode {
+  margin: 2px 0 0;
+  font-size: var(--text-caption);
+  color: rgba(220, 235, 250, 0.7);
+}
+.wmp-viz__stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+}
+.wmp-viz__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+/* Quadro da música (parado), como no template: vidro com a nota musical. */
+.wmp-viz__art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.wmp-viz__art {
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  width: min(234px, 50%);
+  aspect-ratio: 1;
+  background: linear-gradient(160deg, rgba(110, 160, 210, 0.45), rgba(30, 70, 120, 0.3));
+  border: 1px solid rgba(160, 200, 240, 0.55);
+  box-shadow: inset 0 0 30px rgba(140, 190, 240, 0.15);
+}
+.wmp-viz__silent {
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  translate: -50% 0;
+  max-width: calc(100% - 32px);
+  margin: 0;
+  padding: 3px 10px;
+  font-size: var(--text-caption);
+  text-align: center;
+  color: rgba(230, 240, 250, 0.85);
+  background: rgba(0, 0, 0, 0.45);
+  border-radius: 999px;
+}
+.wmp-viz__seek {
+  height: 4px;
+  margin: 0 8px;
+  background: rgba(255, 255, 255, 0.14);
+  border-top: 1px solid rgba(0, 0, 0, 0.6);
+}
+.wmp-viz__seek span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(var(--viz-light, #bfe9ff), var(--viz-a, #2c8fe0));
+  box-shadow: 0 0 6px var(--viz-glow, rgba(80, 180, 255, 0.8));
+}
+.wmp-viz__bar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 10px 12px;
+}
+.wmp-viz__time {
+  justify-self: end;
+  font-size: var(--text-caption);
+  font-variant-numeric: tabular-nums;
+  color: #e6eef8;
+}
+.wmp-viz__full {
+  justify-self: end;
+}
+/* Cápsula de controles de vidro escuro, como no WMP 12. */
+.wmp-viz__controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+  padding: 0 12px;
+  background: linear-gradient(
+    rgba(255, 255, 255, 0.22),
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(0, 0, 0, 0.25) 52%,
+    rgba(255, 255, 255, 0.08)
+  );
+  border: 1px solid rgba(0, 0, 0, 0.75);
+  border-radius: 999px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+.wmp-viz__btn {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 22px;
+  padding: 0;
+  color: #e8eef6;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+.wmp-viz__btn svg {
+  width: 15px;
+  height: 15px;
+}
+button.wmp-viz__btn {
+  cursor: pointer;
+}
+.wmp-viz__btn--pill {
+  width: 34px;
+  border-color: rgba(0, 0, 0, 0.6);
+  background: linear-gradient(rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.05) 50%, rgba(0, 0, 0, 0.2) 52%);
+}
+@media (hover: hover) {
+  button.wmp-viz__btn:hover {
+    background: linear-gradient(rgba(140, 200, 255, 0.45), rgba(40, 110, 190, 0.35));
+    border-color: rgba(160, 210, 255, 0.6);
+  }
+}
+.wmp-viz__sep {
+  width: 1px;
+  height: 18px;
+  margin: 0 4px;
+  background: rgba(255, 255, 255, 0.25);
+}
+/* O orbe azul de tocar/pausar, maior e saltado da cápsula. */
+.wmp-viz__play {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  margin: -6px 4px;
+  padding: 0;
+  border: 1px solid #0a2550;
+  border-radius: 50%;
+  cursor: pointer;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.85) 0 18%, transparent 46%),
+    radial-gradient(
+      circle at 50% 110%,
+      var(--viz-light, #7ad7ff) 0,
+      var(--viz-a, #1a6fd0) 55%,
+      var(--viz-deep, #0b3f8f) 100%
+    );
+  box-shadow:
+    inset 0 0 0 2px rgba(255, 255, 255, 0.35),
+    0 0 12px var(--viz-glow, rgba(80, 170, 255, 0.6)),
+    0 2px 5px rgba(0, 0, 0, 0.6);
+}
+.wmp-viz__play svg {
+  width: 20px;
+  height: 20px;
+  filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.5));
+}
+.wmp-viz__play:focus-visible,
+button.wmp-viz__btn:focus-visible {
+  outline: 2px solid #b8f8ff;
+  outline-offset: 2px;
+}
+.wmp-viz__volume {
+  width: 64px;
+  height: 4px;
+  margin-left: 2px;
+  background: rgba(0, 0, 0, 0.55);
+  border-radius: 2px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+.wmp-viz__volume span {
+  position: relative;
+  display: block;
+  height: 100%;
+  background: linear-gradient(var(--viz-light, #bfe9ff), var(--viz-a, #2c8fe0));
+  border-radius: 2px;
+}
+.wmp-viz__volume span::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: -3px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #fff, #5fb6ff 60%, #1a5fb0);
+  box-shadow: 0 0 4px rgba(80, 180, 255, 0.8);
+}
+@media (max-width: 37.49em) {
+  .wmp-viz__time,
+  .wmp-viz__full,
+  .wmp-viz__volume,
+  .wmp-viz__controls > span:nth-child(-n + 3) {
+    display: none;
+  }
+  .wmp-viz__bar {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+}

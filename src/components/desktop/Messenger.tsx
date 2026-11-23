@@ -3,6 +3,8 @@ import messengerImage from '../../assets/desktop/msn-conteudo.webp';
 import knock from '../../assets/desktop/msn-toc.json';
 import knockSheet from '../../assets/desktop/msn-toc.webp';
 import { useI18n } from '../../i18n/I18n';
+import { unlockAchievement } from '../../lib/achievements';
+import { shakeElement } from '../../lib/eggs';
 import './messenger.css';
 
 /**
@@ -19,12 +21,21 @@ export function Messenger() {
   const stageRef = useRef<HTMLDivElement>(null);
   const handRef = useRef<HTMLButtonElement>(null);
   const frameRef = useRef(0);
+  const nudges = useRef<number[]>([]);
 
   useEffect(() => () => cancelAnimationFrame(frameRef.current), []);
 
   const nudge = () => {
     const hand = handRef.current;
     if (!hand) return;
+    // Easter egg: três "toc toc" seguidos (em até 8 s) sacodem a janela do portfólio também.
+    const stamp = Date.now();
+    nudges.current = [...nudges.current.filter((at) => stamp - at < 8000), stamp];
+    if (nudges.current.length >= 3) {
+      nudges.current = [];
+      window.setTimeout(() => shakeElement(document.querySelector('.aero-window')), knock.impacts[0] ?? 0);
+      unlockAchievement('nudge');
+    }
     playKnocks(knock.impacts);
 
     // Quadros da batida, no tempo de cada um (do GIF); no fim, a mão parada.

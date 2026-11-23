@@ -642,7 +642,8 @@ a.sp-playlist:active {
   .sp-profile .group-title {
     grid-area: title;
   }
-  .sp-profile .sp-art {
+  .sp-profile .sp-art,
+  .sp-profile .sp-headphones-host {
     grid-area: photo;
   }
   .sp-profile__name {
@@ -968,5 +969,504 @@ a.sp-playlist:active {
   }
   .has-backdrop:hover .sp-fav-artists__backdrop {
     transform: scale(1.1);
+  }
+}
+
+/* Easter eggs da aba Spotify: disco que "arranha" e fone de ouvido em pixel art. */
+.sp-scratch {
+  display: inline-flex;
+  flex: none;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
+}
+.sp-scratch.is-released {
+  transition: transform 0.45s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+.sp-scratch:active {
+  cursor: grabbing;
+}
+.sp-headphones-host {
+  position: relative;
+  display: inline-flex;
+}
+.sp-headphones {
+  position: absolute;
+  left: -9%;
+  top: -17%;
+  width: 118%;
+  max-width: none;
+  height: auto;
+  aspect-ratio: 1;
+  pointer-events: none;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+  animation: sp-phones-drop 0.5s cubic-bezier(0.3, 1.5, 0.5, 1) both;
+}
+@keyframes sp-phones-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-40%);
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .sp-side__penguin {
+    cursor: pointer;
+  }
+}
+
+/* ---------- Pulso no ritmo da música (Ouvindo agora, aba Spotify) ----------
+   Frutiger Aero: vidro, água e brilho ciano. --beat é a duração de uma batida
+   (60 s / BPM) e --beat-delay alinha a animação com o ponto da música. */
+.sp-now__cover {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+}
+.sp-now.is-beating {
+  position: relative;
+  overflow: hidden;
+}
+.sp-now__ripple {
+  position: absolute;
+  inset: -3px;
+  border: 2px solid rgba(150, 245, 255, 0.85);
+  border-radius: 8px;
+  box-shadow:
+    0 0 16px rgba(70, 215, 255, 0.75),
+    inset 0 0 12px rgba(140, 240, 255, 0.55);
+  opacity: 0;
+  pointer-events: none;
+}
+.sp-eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 14px;
+  margin-left: 10px;
+  vertical-align: -2px;
+}
+.sp-eq i {
+  width: 4px;
+  height: 100%;
+  border-radius: 2px 2px 1px 1px;
+  background: linear-gradient(#e9fffb, #7ff0c8 35%, #1fb7c9 70%, #0d7fa8);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 0 6px rgba(90, 230, 220, 0.7);
+  transform-origin: bottom;
+  transform: scaleY(0.3);
+}
+.sp-now__bubbles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.sp-now.has-backdrop > .sp-now__bubbles {
+  position: absolute;
+}
+.sp-now__bubbles i {
+  position: absolute;
+  bottom: -24px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 32% 28%,
+    rgba(255, 255, 255, 0.95) 0 12%,
+    rgba(190, 250, 255, 0.35) 28%,
+    rgba(80, 210, 255, 0.12) 62%,
+    rgba(150, 240, 255, 0.55) 100%
+  );
+  box-shadow: 0 0 6px rgba(120, 230, 255, 0.5);
+  opacity: 0;
+}
+.sp-now__bubbles i:nth-child(1) {
+  left: 22%;
+  width: 10px;
+  height: 10px;
+}
+.sp-now__bubbles i:nth-child(2) {
+  left: 38%;
+  width: 16px;
+  height: 16px;
+}
+.sp-now__bubbles i:nth-child(3) {
+  left: 52%;
+  width: 8px;
+  height: 8px;
+}
+.sp-now__bubbles i:nth-child(4) {
+  left: 64%;
+  width: 13px;
+  height: 13px;
+}
+.sp-now__bubbles i:nth-child(5) {
+  left: 77%;
+  width: 9px;
+  height: 9px;
+}
+.sp-now__bubbles i:nth-child(6) {
+  left: 86%;
+  width: 18px;
+  height: 18px;
+}
+.sp-now__bubbles i:nth-child(7) {
+  left: 94%;
+  width: 7px;
+  height: 7px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .sp-now.is-beating {
+    animation: sp-glow var(--beat) ease-out var(--beat-delay) infinite;
+  }
+  .is-beating .sp-now__ripple {
+    animation: sp-ripple var(--beat) cubic-bezier(0.2, 0.6, 0.3, 1) var(--beat-delay) infinite;
+  }
+  .is-beating .sp-now__cover .sp-art {
+    animation: sp-thump var(--beat) ease-out var(--beat-delay) infinite;
+  }
+  .is-beating .sp-eq i {
+    animation: sp-eq var(--beat) ease-out var(--beat-delay) infinite;
+  }
+  /* Cada barrinha numa subdivisão diferente da batida, como um equalizador. */
+  .is-beating .sp-eq i:nth-child(2) {
+    animation-duration: calc(var(--beat) / 2);
+  }
+  .is-beating .sp-eq i:nth-child(3) {
+    animation-name: sp-eq-tall;
+  }
+  .is-beating .sp-eq i:nth-child(4) {
+    animation-duration: calc(var(--beat) / 2);
+    animation-name: sp-eq-tall;
+  }
+  .is-beating .sp-eq i:nth-child(5) {
+    animation-duration: calc(var(--beat) * 2);
+  }
+  .is-beating .sp-now__bubbles i {
+    animation: sp-bubble calc(var(--beat) * 8) linear infinite;
+  }
+  .is-beating .sp-now__bubbles i:nth-child(2) {
+    animation-delay: calc(var(--beat) * -1.5);
+    animation-duration: calc(var(--beat) * 10);
+  }
+  .is-beating .sp-now__bubbles i:nth-child(3) {
+    animation-delay: calc(var(--beat) * -3);
+  }
+  .is-beating .sp-now__bubbles i:nth-child(4) {
+    animation-delay: calc(var(--beat) * -4.5);
+    animation-duration: calc(var(--beat) * 9);
+  }
+  .is-beating .sp-now__bubbles i:nth-child(5) {
+    animation-delay: calc(var(--beat) * -6);
+  }
+  .is-beating .sp-now__bubbles i:nth-child(6) {
+    animation-delay: calc(var(--beat) * -2.2);
+    animation-duration: calc(var(--beat) * 12);
+  }
+  .is-beating .sp-now__bubbles i:nth-child(7) {
+    animation-delay: calc(var(--beat) * -5.2);
+  }
+}
+@keyframes sp-glow {
+  0% {
+    box-shadow:
+      0 0 0 1px rgba(150, 245, 255, 0.75),
+      0 0 26px rgba(60, 200, 255, 0.5),
+      inset 0 0 30px rgba(60, 200, 255, 0.18);
+  }
+  100% {
+    box-shadow:
+      0 0 0 1px rgba(150, 245, 255, 0),
+      0 0 0 rgba(60, 200, 255, 0),
+      inset 0 0 0 rgba(60, 200, 255, 0);
+  }
+}
+@keyframes sp-ripple {
+  0% {
+    opacity: 0.95;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.32);
+  }
+}
+@keyframes sp-thump {
+  0% {
+    transform: scale(1.06);
+    filter: brightness(1.15) saturate(1.1);
+  }
+  35%,
+  100% {
+    transform: scale(1);
+    filter: none;
+  }
+}
+@keyframes sp-eq {
+  0% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(0.25);
+  }
+}
+@keyframes sp-eq-tall {
+  0% {
+    transform: scaleY(0.8);
+  }
+  40% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(0.35);
+  }
+}
+@keyframes sp-bubble {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  10% {
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate(8px, -80px);
+  }
+  90% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-6px, -170px);
+  }
+}
+
+/* ---------- Fundo da aba Spotify no ritmo da música ----------
+   Água e luz no estilo Frutiger Aero, atrás de todo o conteúdo da seção. */
+.sp-section {
+  position: relative;
+  isolation: isolate;
+}
+.sp-beat-bg {
+  position: absolute;
+  inset: -24px -28px;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+.sp-beat-bg__glow {
+  position: absolute;
+  inset: -10%;
+  background:
+    radial-gradient(ellipse 50% 32% at 50% 12%, rgba(40, 200, 255, 0.55), transparent 70%),
+    radial-gradient(ellipse 42% 30% at 12% 48%, rgba(60, 225, 170, 0.45), transparent 70%),
+    radial-gradient(ellipse 42% 30% at 88% 52%, rgba(30, 140, 255, 0.42), transparent 70%),
+    radial-gradient(ellipse 60% 26% at 50% 92%, rgba(80, 230, 210, 0.38), transparent 70%);
+  opacity: 0.55;
+}
+/* Luz atravessando a água (cáusticas), girando devagar. */
+.sp-beat-bg__rays {
+  position: absolute;
+  left: 50%;
+  top: -40%;
+  width: 160%;
+  aspect-ratio: 1;
+  translate: -50% 0;
+  background: repeating-conic-gradient(
+    from 0deg at 50% 50%,
+    rgba(255, 255, 255, 0) 0deg 9deg,
+    rgba(170, 245, 255, 0.16) 11deg 13deg,
+    rgba(255, 255, 255, 0) 15deg 24deg
+  );
+  mask-image: radial-gradient(circle at 50% 50%, #000 0 30%, transparent 62%);
+}
+.sp-beat-bg__ring {
+  position: absolute;
+  left: 50%;
+  top: 140px;
+  width: 260px;
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border: 3px solid rgba(110, 230, 255, 0.75);
+  border-radius: 50%;
+  box-shadow:
+    0 0 24px rgba(60, 200, 255, 0.6),
+    inset 0 0 24px rgba(120, 235, 255, 0.45);
+  opacity: 0;
+}
+.sp-beat-bg__bubbles i {
+  position: absolute;
+  bottom: -40px;
+  width: 18px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 32% 28%,
+    rgba(255, 255, 255, 0.95) 0 12%,
+    rgba(190, 250, 255, 0.35) 28%,
+    rgba(80, 210, 255, 0.12) 62%,
+    rgba(120, 225, 255, 0.6) 100%
+  );
+  box-shadow: 0 0 8px rgba(100, 220, 255, 0.45);
+  opacity: 0;
+}
+.sp-beat-bg__bubbles i:nth-child(1) {
+  left: 4%;
+  width: 22px;
+}
+.sp-beat-bg__bubbles i:nth-child(2) {
+  left: 11%;
+  width: 14px;
+}
+.sp-beat-bg__bubbles i:nth-child(3) {
+  left: 19%;
+  width: 30px;
+}
+.sp-beat-bg__bubbles i:nth-child(4) {
+  left: 27%;
+  width: 12px;
+}
+.sp-beat-bg__bubbles i:nth-child(5) {
+  left: 35%;
+  width: 20px;
+}
+.sp-beat-bg__bubbles i:nth-child(6) {
+  left: 46%;
+  width: 34px;
+}
+.sp-beat-bg__bubbles i:nth-child(7) {
+  left: 55%;
+  width: 16px;
+}
+.sp-beat-bg__bubbles i:nth-child(8) {
+  left: 63%;
+  width: 26px;
+}
+.sp-beat-bg__bubbles i:nth-child(9) {
+  left: 71%;
+  width: 12px;
+}
+.sp-beat-bg__bubbles i:nth-child(10) {
+  left: 79%;
+  width: 30px;
+}
+.sp-beat-bg__bubbles i:nth-child(11) {
+  left: 88%;
+  width: 18px;
+}
+.sp-beat-bg__bubbles i:nth-child(12) {
+  left: 95%;
+  width: 24px;
+}
+[data-theme='dark'] .sp-beat-bg__glow {
+  opacity: 0.75;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .sp-beat-bg__glow {
+    animation: sp-bg-beat var(--beat) ease-out var(--beat-delay) infinite;
+  }
+  .sp-beat-bg__rays {
+    animation: sp-bg-rays 40s linear infinite;
+  }
+  .sp-beat-bg__ring {
+    animation: sp-bg-ring calc(var(--beat) * 2) cubic-bezier(0.15, 0.6, 0.3, 1) var(--beat2-delay) infinite;
+  }
+  .sp-beat-bg__ring--late {
+    animation-delay: calc(var(--beat2-delay) - var(--beat));
+  }
+  .sp-beat-bg__bubbles i {
+    animation: sp-bg-bubble calc(var(--beat) * 14) linear infinite;
+  }
+  .sp-beat-bg__bubbles i:nth-child(1) {
+    animation-delay: calc(var(--beat) * -7.5);
+    animation-duration: calc(var(--beat) * 14);
+  }
+  .sp-beat-bg__bubbles i:nth-child(2) {
+    animation-delay: calc(var(--beat) * -0.5);
+    animation-duration: calc(var(--beat) * 16);
+  }
+  .sp-beat-bg__bubbles i:nth-child(3) {
+    animation-delay: calc(var(--beat) * -7.5);
+    animation-duration: calc(var(--beat) * 18);
+  }
+  .sp-beat-bg__bubbles i:nth-child(4) {
+    animation-delay: calc(var(--beat) * -0.5);
+    animation-duration: calc(var(--beat) * 12);
+  }
+  .sp-beat-bg__bubbles i:nth-child(5) {
+    animation-delay: calc(var(--beat) * -7.5);
+    animation-duration: calc(var(--beat) * 14);
+  }
+  .sp-beat-bg__bubbles i:nth-child(6) {
+    animation-delay: calc(var(--beat) * -0.5);
+    animation-duration: calc(var(--beat) * 16);
+  }
+  .sp-beat-bg__bubbles i:nth-child(7) {
+    animation-delay: calc(var(--beat) * -7.5);
+    animation-duration: calc(var(--beat) * 18);
+  }
+  .sp-beat-bg__bubbles i:nth-child(8) {
+    animation-delay: calc(var(--beat) * -0.5);
+    animation-duration: calc(var(--beat) * 12);
+  }
+  .sp-beat-bg__bubbles i:nth-child(9) {
+    animation-delay: calc(var(--beat) * -7.5);
+    animation-duration: calc(var(--beat) * 14);
+  }
+  .sp-beat-bg__bubbles i:nth-child(10) {
+    animation-delay: calc(var(--beat) * -0.5);
+    animation-duration: calc(var(--beat) * 16);
+  }
+  .sp-beat-bg__bubbles i:nth-child(11) {
+    animation-delay: calc(var(--beat) * -7.5);
+    animation-duration: calc(var(--beat) * 18);
+  }
+  .sp-beat-bg__bubbles i:nth-child(12) {
+    animation-delay: calc(var(--beat) * -0.5);
+    animation-duration: calc(var(--beat) * 12);
+  }
+}
+@keyframes sp-bg-beat {
+  0% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+}
+@keyframes sp-bg-rays {
+  to {
+    rotate: 360deg;
+  }
+}
+@keyframes sp-bg-ring {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.35);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(3.2);
+  }
+}
+@keyframes sp-bg-bubble {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0);
+  }
+  8% {
+    opacity: 0.85;
+  }
+  50% {
+    transform: translate(14px, -45vh);
+  }
+  92% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-10px, -95vh);
   }
 }

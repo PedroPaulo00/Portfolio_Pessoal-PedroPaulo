@@ -1,0 +1,109 @@
+/* Flip 3D (Windows Vista/7): janelas abertas empilhadas em perspectiva. */
+.flip3d {
+  position: fixed;
+  inset: 0;
+  z-index: 2300;
+  overflow: hidden;
+  perspective: 1400px;
+  perspective-origin: 50% 38%;
+  background: radial-gradient(ellipse at 50% 40%, rgba(10, 25, 45, 0.45), rgba(0, 0, 0, 0.72));
+  backdrop-filter: blur(3px) saturate(0.8);
+  outline: 0;
+  animation: flip3d-in 240ms ease both;
+}
+@keyframes flip3d-in {
+  from {
+    opacity: 0;
+  }
+}
+.flip3d__stage {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+.flip3d__card {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  padding: 0;
+  overflow: hidden;
+  background: none;
+  border: 0;
+  border-radius: var(--frame-radius);
+  cursor: pointer;
+  transform-origin: 50% 50%;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
+  transition:
+    transform 420ms cubic-bezier(0.25, 0.8, 0.3, 1),
+    opacity 420ms ease;
+}
+.flip3d__card:not(.is-front) {
+  filter: brightness(0.82);
+}
+.flip3d__card:focus-visible {
+  outline: 3px solid #b8f8ff;
+  outline-offset: 4px;
+}
+.flip3d__window {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+/* A cópia ignora posição, animação e estado (minimizada) da janela original. */
+.flip3d .flip3d__clone,
+.flip3d .flip3d__shell {
+  position: static !important;
+  inset: auto !important;
+  display: flex !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  margin: 0;
+  transform: none !important;
+  translate: none !important;
+  scale: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  animation: none !important;
+  pointer-events: none !important;
+}
+.flip3d .flip3d__shell {
+  height: 100% !important;
+  padding: 0 !important;
+  background: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+.flip3d .flip3d__clone {
+  flex-direction: column;
+}
+.flip3d .flip3d__clone * {
+  animation: none !important;
+  transition: none !important;
+}
+.flip3d__hint {
+  position: absolute;
+  left: 50%;
+  bottom: calc(var(--taskbar-height) + 18px);
+  translate: -50% 0;
+  margin: 0;
+  max-width: calc(100vw - 32px);
+  padding: 6px 14px;
+  font-size: var(--text-small);
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 1px 2px #000;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .flip3d,
+  .flip3d__card {
+    animation: none;
+    transition: none;
+  }
+}

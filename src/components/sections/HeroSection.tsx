@@ -1,6 +1,10 @@
 import msnFrame from '../../assets/profile/msn-frame.svg';
 import featureVideo from '../../assets/video/fundo-tcc.mp4';
+import { useRef, useState } from 'react';
 import { useI18n } from '../../i18n/I18n';
+import { unlockAchievement } from '../../lib/achievements';
+import { playEffect } from '../../lib/eggBus';
+import { useSpotify } from '../../lib/spotify';
 import { RouteLink } from '../../lib/navigation';
 import { useVisitCount } from '../../lib/visits';
 import type { FeaturedPhoto, Profile, Section } from '../../types/portfolio';
@@ -37,11 +41,7 @@ export function HeroSection({ profile, sections, featured }: HeroSectionProps) {
               <img className="msn-frame__art" src={msnFrame} alt="" width={116} height={116} />
             </div>
             <div className="hero__status">
-              <p className="presence">
-                <span className="presence__dot" aria-hidden="true" />
-                <span className="sr-only">{t.status}</span>
-                {t.online}
-              </p>
+              <PresenceStatus />
               {visits !== null ? (
                 <p className="visit-counter">
                   <span className="visit-counter__icon" aria-hidden="true">
@@ -154,5 +154,60 @@ export function HeroSection({ profile, sections, featured }: HeroSectionProps) {
         </ul>
       </section>
     </div>
+  );
+}
+
+type Presence = 'online' | 'busy' | 'away' | 'listening';
+
+/**
+ * Status "Online" do MSN. É um botão (easter egg): cada clique troca o status,
+ * como no Messenger: Online, Ocupado, Ausente e, havendo música no Spotify,
+ * "Ouvindo: [música]".
+ */
+function PresenceStatus() {
+  const { t } = useI18n();
+  const spotify = useSpotify();
+  // Escolha manual do visitante (easter egg); sem ela, o status é automático.
+  const [manual, setManual] = useState<Presence | null>(null);
+  const clicks = useRef<number[]>([]);
+  const playing =
+    spotify.status === 'ready' && spotify.data.nowPlaying?.isPlaying ? spotify.data.nowPlaying.track : null;
+  const lastSong = spotify.status === 'ready' ? (spotify.data.recent[0]?.track ?? null) : null;
+  const song = playing ?? lastSong;
+  // Ouvindo música agora: "Ouvindo: [música]". Senão, Online.
+  const auto: Presence = playing ? 'listening' : 'online';
+  const current = manual ?? auto;
+  const cycle: readonly Presence[] = song ? ['online', 'busy', 'away', 'listening'] : ['online', 'busy', 'away'];
+  const label = {
+    online: t.online,
+    busy: t.statusBusy,
+    away: t.statusAway,
+    listening: song ? t.statusListening(song.name) : t.online,
+  }[current];
+
+  return (
+    <p className="presence-line">
+      <button
+        type="button"
+        className={`presence presence--${current}`}
+        title={t.changeStatus}
+        onClick={() => {
+          const next = cycle[(cycle.indexOf(current) + 1) % cycle.length] ?? 'online';
+          setManual(next === auto ? null : next);
+          unlockAchievement('msnStatus');
+          // 10 cliques seguidos (em até 6 s): modo festa.
+          const stamp = Date.now();
+          clicks.current = [...clicks.current.filter((at) => stamp - at < 6000), stamp];
+          if (clicks.current.length >= 10) {
+            clicks.current = [];
+            playEffect('party');
+          }
+        }}
+      >
+        <span className="presence__dot" aria-hidden="true" />
+        <span className="sr-only">{t.status}</span>
+        {label}
+      </button>
+    </p>
   );
 }

@@ -743,7 +743,7 @@ export const portfolio: PortfolioData<'source'> = {
   // Política de privacidade (rota #privacidade). Revise se algo mudar no site
   // (ex.: um formulário de contato ou outra ferramenta de estatísticas).
   privacy: {
-    updated: '2026-11-20',
+    updated: '2026-11-23',
     intro: {
       pt: 'Este portfólio foi feito para ser visitado sem que você precise entregar dados pessoais. Esta página explica o que é guardado, por quem e por quê, de acordo com a Lei Geral de Proteção de Dados (LGPD).',
       en: 'This portfolio is designed so you can visit it without handing over personal data. This page explains what is stored, by whom and why, in line with Brazil’s General Data Protection Law (LGPD).',
@@ -784,8 +784,8 @@ export const portfolio: PortfolioData<'source'> = {
         title: { pt: 'Spotify', en: 'Spotify' },
         paragraphs: [
           {
-            pt: 'A seção Spotify mostra dados públicos da minha própria conta, como perfil e músicas ouvidas. Nenhum dado seu é enviado ao Spotify pelo site, mas as capas dos álbuns são carregadas diretamente dos servidores do Spotify, que recebem os dados técnicos dessa requisição.',
-            en: 'The Spotify section shows public data from my own account, such as my profile and the songs I listened to. The site sends none of your data to Spotify, but album covers are loaded directly from Spotify’s servers, which receive the technical data of that request.',
+            pt: 'A seção Spotify mostra dados públicos da minha própria conta, como perfil e músicas ouvidas. Nenhum dado seu é enviado ao Spotify pelo site, mas as capas dos álbuns são carregadas diretamente dos servidores do Spotify, que recebem os dados técnicos dessa requisição. Para a animação acompanhar o ritmo da música que estou ouvindo, o servidor do site consulta o andamento dela no Deezer; só o nome da música vai nessa consulta, nada sobre você.',
+            en: 'The Spotify section shows public data from my own account, such as my profile and the songs I listened to. The site sends none of your data to Spotify, but album covers are loaded directly from Spotify’s servers, which receive the technical data of that request. So the animation can follow the rhythm of the song I am listening to, the site’s server looks up its tempo on Deezer; only the song’s name goes in that request, nothing about you.',
           },
         ],
       },

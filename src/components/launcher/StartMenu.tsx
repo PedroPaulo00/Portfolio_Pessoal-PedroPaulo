@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { useI18n } from '../../i18n/I18n';
+import { ACHIEVEMENT_TOTAL, useUnlockedAchievements } from '../../lib/achievements';
 import type { GlassMode, Theme } from '../../lib/preferences';
 import type { Locale, Profile, Section, SectionId } from '../../types/portfolio';
 import { BrandMark } from '../ui/BrandMark';
 import { Icon } from '../ui/Icon';
+import '../ui/achievements.css';
 import './launcher.css';
 
 interface StartMenuProps {
@@ -57,6 +59,7 @@ const LOGO_OVERHANG = 34;
 export function StartMenu(props: StartMenuProps) {
   const { id, open, opener, onClose, profile, sections, onNavigate, onPower, initialView = 'main' } = props;
   const { t } = useI18n();
+  const secrets = useUnlockedAchievements().size;
   const dialogRef = useRef<HTMLDialogElement>(null);
   const [view, setView] = useState<'main' | 'settings'>('main');
   const [query, setQuery] = useState('');
@@ -218,6 +221,18 @@ export function StartMenu(props: StartMenuProps) {
             )}
           </span>
           <p className="start-menu__owner">{profile.name}</p>
+          {/* Easter eggs achados: aparece só depois do primeiro (antes disso, a graça é descobrir). */}
+          {secrets > 0 ? (
+            <p className="start-menu__secrets" title={t.secretsHint}>
+              <strong>{t.secretsFound(secrets, ACHIEVEMENT_TOTAL)}</strong>
+              <span className="start-menu__secrets-bar" aria-hidden="true">
+                <span
+                  className="start-menu__secrets-fill"
+                  style={{ width: `${(secrets / ACHIEVEMENT_TOTAL) * 100}%` }}
+                />
+              </span>
+            </p>
+          ) : null}
           <button
             ref={settingsButtonRef}
             type="button"

@@ -150,6 +150,27 @@
   cursor: default;
   user-select: none;
 }
+/* Balãozinho do Maximizar (easter egg): amarelo, como as dicas do Windows. */
+.window-controls {
+  position: relative;
+}
+.window-controls__tip {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 40;
+  width: max-content;
+  max-width: 15rem;
+  padding: 5px 9px;
+  font-size: var(--text-caption);
+  line-height: 1.3;
+  color: #000;
+  background: linear-gradient(#ffffe9, #f4f1c2);
+  border: 1px solid #767676;
+  border-radius: 3px;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.35);
+  pointer-events: none;
+}
 .window-controls__item {
   min-width: var(--control-min-width);
   min-height: var(--control-min-height);

@@ -1,4 +1,5 @@
-import type { ReactNode } from 'react';
+import { useRef, type ReactNode } from 'react';
+import { playEffect } from '../../lib/eggBus';
 import { useI18n } from '../../i18n/I18n';
 import type { About, AboutFactKind, LanguageFlag, Profile, Section } from '../../types/portfolio';
 import { PhotoCarousel } from './PhotoCarousel';
@@ -57,7 +58,16 @@ export function AboutSection({ section, about, profile }: AboutSectionProps) {
                   <FactIcon kind={fact.kind} />
                   {fact.label}
                 </dt>
-                <dd>{fact.value}</dd>
+                <dd>
+                  {fact.kind === 'born' ? (
+                    // Easter egg: clicar na cidade faz nevar (Guarapuava é uma das mais frias do Paraná).
+                    <button type="button" className="about-facts__secret" onClick={() => playEffect('snow')}>
+                      {fact.value}
+                    </button>
+                  ) : (
+                    fact.value
+                  )}
+                </dd>
               </div>
             ))}
           </dl>
@@ -90,7 +100,7 @@ export function AboutSection({ section, about, profile }: AboutSectionProps) {
               </CardTitle>
               <ul className="about-highlights">
                 {highlights.map((item) => (
-                  <li key={item}>{item}</li>
+                  <li key={item}>{/OBR/.test(item) ? <RobotSecret text={item} /> : item}</li>
                 ))}
               </ul>
             </section>
@@ -99,7 +109,7 @@ export function AboutSection({ section, about, profile }: AboutSectionProps) {
         <div className="about__aside">
           {about.education ? (
             <section className="about-card about-card--education" aria-labelledby="about-education">
-              <CardTitle id="about-education" icon="cap">
+              <CardTitle id="about-education" icon="cap" onIconClick={(origin) => playEffect('graduation', origin)}>
                 {t.education}
               </CardTitle>
               <p className="about__course">{about.education.course}</p>
@@ -144,20 +154,65 @@ export function AboutSection({ section, about, profile }: AboutSectionProps) {
 type CardIconName = 'profile' | 'camera' | 'book' | 'trophy' | 'cap' | 'star' | 'globe';
 
 /** Título do cartão com um pequeno ícone, no estilo dos cabeçalhos de painel. */
+/**
+ * Easter egg: três cliques seguidos numa conquista da OBR (Olimpíada Brasileira de
+ * Robótica) soltam o robô seguidor de linha pela tela.
+ */
+function RobotSecret({ text }: { readonly text: string }) {
+  const clicks = useRef<number[]>([]);
+  return (
+    <button
+      type="button"
+      className="about-facts__secret"
+      onClick={() => {
+        const stamp = Date.now();
+        clicks.current = [...clicks.current.filter((at) => stamp - at < 4000), stamp];
+        if (clicks.current.length >= 3) {
+          clicks.current = [];
+          playEffect('obr');
+        }
+      }}
+    >
+      {text}
+    </button>
+  );
+}
+
 function CardTitle({
   id,
   icon,
   children,
+  onIconClick,
 }: {
   readonly id: string;
   readonly icon: CardIconName;
   readonly children: ReactNode;
+  /** Easter egg: o ícone vira um botão escondido (fora do Tab e dos leitores de tela). */
+  readonly onIconClick?: (origin: { x: number; y: number }) => void;
 }) {
+  const svg = (
+    <svg className="about-card__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+      {CARD_ICONS[icon]}
+    </svg>
+  );
   return (
     <h2 id={id} className="about-card__title">
-      <svg className="about-card__icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
-        {CARD_ICONS[icon]}
-      </svg>
+      {onIconClick ? (
+        <button
+          type="button"
+          className="about-card__icon-button"
+          tabIndex={-1}
+          aria-hidden="true"
+          onClick={(event) => {
+            const box = event.currentTarget.getBoundingClientRect();
+            onIconClick({ x: box.left + box.width / 2, y: box.top + box.height / 2 });
+          }}
+        >
+          {svg}
+        </button>
+      ) : (
+        svg
+      )}
       {children}
     </h2>
   );

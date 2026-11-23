@@ -1,5 +1,7 @@
 import { useEffect, useRef, type PointerEvent, type ReactNode, type Ref } from 'react';
+import flipIcon from '../../assets/desktop/flip3d.png';
 import { useI18n } from '../../i18n/I18n';
+import { openFlip3D } from '../../lib/flip3d';
 import { useTasks } from '../../lib/tasks';
 import type { Profile, Section } from '../../types/portfolio';
 import type { WindowState } from '../window/AeroWindow';
@@ -59,6 +61,22 @@ export function DecorativeTaskbar({
     lastCount.current = taskCount;
   }, [taskCount]);
 
+  // Roda do mouse sobre a barra (computador): abre o Flip 3D, como no Windows 7.
+  // Ouvinte nativo (não passivo): a página por trás não rola junto.
+  const taskbarRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const bar = taskbarRef.current;
+    if (!bar) return;
+    const onWheel = (event: WheelEvent) => {
+      if (event.deltaY === 0 || !window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+      if ((event.target as HTMLElement).closest('.volume, .datetime')) return;
+      event.preventDefault();
+      openFlip3D();
+    };
+    bar.addEventListener('wheel', onWheel, { passive: false });
+    return () => bar.removeEventListener('wheel', onWheel);
+  }, []);
+
   // Brilho que acompanha o ponteiro sobre o botão, como no Windows 7.
   const trackGlow = (event: PointerEvent<HTMLButtonElement>) => {
     const box = event.currentTarget.getBoundingClientRect();
@@ -66,9 +84,18 @@ export function DecorativeTaskbar({
   };
 
   return (
-    <div className="taskbar" role="region" aria-label={t.taskbar}>
+    <div ref={taskbarRef} className="taskbar" role="region" aria-label={t.taskbar}>
       <div className="taskbar__glass" aria-hidden="true" />
       <div className="taskbar__start">{startButton}</div>
+      <button
+        type="button"
+        className="taskbar__flip"
+        aria-label={t.flip3d.open}
+        title={t.flip3d.open}
+        onClick={openFlip3D}
+      >
+        <img src={flipIcon} alt="" width={26} height={26} draggable={false} />
+      </button>
       <div ref={itemsRef} className="taskbar__items">
         {/* Leitores de tela: avisa que o conteúdo saiu de cena e como voltar. */}
         <span className="sr-only" role="status">

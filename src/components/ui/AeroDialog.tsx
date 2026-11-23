@@ -23,6 +23,8 @@ interface AeroDialogProps {
   /** Só janelas: clicou ou focou nela (vem para a frente). */
   readonly onActivate?: () => void;
   readonly style?: CSSProperties;
+  /** Só janelas: o id da tarefa na barra (o Flip 3D usa para achar a janela). */
+  readonly windowId?: string;
 }
 
 /**
@@ -43,6 +45,7 @@ export function AeroDialog({
   onMinimize,
   onActivate,
   style,
+  windowId,
 }: AeroDialogProps) {
   const { t } = useI18n();
   const ref = useRef<HTMLDialogElement>(null);
@@ -63,6 +66,7 @@ export function AeroDialog({
       ref={ref}
       className={`aero-dialog${wide ? ' aero-dialog--wide' : ''}${modal ? '' : ' aero-dialog--window'}${minimized ? ' is-minimized' : ''}`}
       style={style}
+      data-window={windowId}
       aria-labelledby={titleId}
       inert={minimized}
       onClose={onClose}
@@ -80,7 +84,7 @@ export function AeroDialog({
       }}
     >
       <div className="aero-window aero-window--dialog">
-        <header className="aero-titlebar">
+        <header className="aero-titlebar" role="presentation">
           <h2 id={titleId} className="aero-titlebar__title aero-dialog__title">
             {title}
           </h2>

@@ -1,11 +1,16 @@
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import spotifyLogo from '../../assets/brands/spotify-logo.png';
+import penguinDance from '../../assets/spotify/club-penguin-dance.webp';
+import { unlockAchievement } from '../../lib/achievements';
 import { portfolio } from '../../data/portfolio';
 import { useI18n } from '../../i18n/I18n';
 import { useSpotify, useSpotifyRefresh } from '../../lib/spotify';
 import type { Section } from '../../types/portfolio';
 import { SectionHeader } from '../sections/SectionHeader';
-import { Artwork, NowPlaying, SpotifyLinkOut, TrackRow, useTimeAgo } from './SpotifyParts';
+import type { SpotifyNowPlaying } from '../../types/spotify';
+import { Artwork, NowPlaying, SpotifyLinkOut, TrackRow, useLiveProgress, useTimeAgo } from './SpotifyParts';
 import { SpotifyFavorites } from './SpotifyFavorites';
+import { HeadphonesPhoto } from './SpotifyEggs';
 import './spotify.css';
 
 /**
@@ -24,9 +29,16 @@ export function SpotifySection({
   const state = useSpotify();
   const { refresh, refreshing } = useSpotifyRefresh();
   const followers = state.status === 'ready' ? state.data.profile.followers : null;
+  // Easter egg do pinguim: dança por alguns segundos depois do clique.
+  const [dancing, setDancing] = useState(false);
+  const danceTimer = useRef(0);
+  useEffect(() => () => window.clearTimeout(danceTimer.current), []);
 
   return (
     <div className="sp-section">
+      {state.status === 'ready' && state.data.nowPlaying?.isPlaying && state.data.nowPlaying.bpm ? (
+        <BeatBackground nowPlaying={state.data.nowPlaying} receivedAt={state.receivedAt} />
+      ) : null}
       <div className="sp-section__head">
         <SectionHeader title={section.title ?? section.label} description={section.description} />
         <img className="sp-section__brand" src={spotifyLogo} alt={t.spotifyLogo} width={96} height={76} />
@@ -69,7 +81,9 @@ export function SpotifySection({
                 <h2 id="sp-profile-title" className="group-title">
                   {t.myProfile}
                 </h2>
-                <Artwork src={state.data.profile.image} size={120} round label={t.photoOf(state.data.profile.name)} />
+                <HeadphonesPhoto>
+                  <Artwork src={state.data.profile.image} size={120} round label={t.photoOf(state.data.profile.name)} />
+                </HeadphonesPhoto>
                 <p className="sp-profile__name">{state.data.profile.name}</p>
                 {typeof followers === 'number' || showPlaylists ? (
                   <dl className="sp-profile__stats">
@@ -99,7 +113,19 @@ export function SpotifySection({
                 ) : null}
               </section>
               {/* Enfeite: imagem de fundo via CSS, para o celular nem baixar o arquivo. */}
-              <span className="sp-side__penguin" aria-hidden="true" />
+              <span
+                className={`sp-side__penguin${dancing ? ' is-dancing' : ''}`}
+                style={dancing ? { backgroundImage: `url(${penguinDance})` } : undefined}
+                aria-hidden="true"
+                onPointerEnter={() => void (new Image().src = penguinDance)}
+                onClick={() => {
+                  // Easter egg: clicar no pinguim o faz dançar por uns segundos.
+                  setDancing(true);
+                  unlockAchievement('penguin');
+                  window.clearTimeout(danceTimer.current);
+                  danceTimer.current = window.setTimeout(() => setDancing(false), 9000);
+                }}
+              />
             </div>
 
             {/* ---------- Minha atividade ---------- */}
@@ -154,6 +180,40 @@ export function SpotifySection({
 
       {/* ---------- Meu top 10 (escolhido à mão; independe da atividade) ---------- */}
       {portfolio.spotify.favorites ? <SpotifyFavorites /> : null}
+    </div>
+  );
+}
+
+/**
+ * Fundo da aba Spotify pulsando no ritmo da música tocando agora (BPM do Deezer):
+ * brilhos de água e luz (Frutiger Aero) que "batem" a cada tempo, ondas de luz que
+ * se espalham a cada dois tempos e bolhas subindo. A fase acompanha a música.
+ */
+function BeatBackground({
+  nowPlaying,
+  receivedAt,
+}: {
+  readonly nowPlaying: SpotifyNowPlaying;
+  readonly receivedAt: number;
+}) {
+  const progress = useLiveProgress(nowPlaying, receivedAt);
+  const beatMs = 60_000 / (nowPlaying.bpm ?? 120);
+  const style = {
+    '--beat': `${beatMs.toFixed(1)}ms`,
+    '--beat-delay': `${-(progress % beatMs).toFixed(0)}ms`,
+    '--beat2-delay': `${-(progress % (beatMs * 2)).toFixed(0)}ms`,
+  } as CSSProperties;
+  return (
+    <div className="sp-beat-bg" style={style} aria-hidden="true">
+      <span className="sp-beat-bg__glow" />
+      <span className="sp-beat-bg__rays" />
+      <span className="sp-beat-bg__ring" />
+      <span className="sp-beat-bg__ring sp-beat-bg__ring--late" />
+      <span className="sp-beat-bg__bubbles">
+        {Array.from({ length: 12 }, (_, i) => (
+          <i key={i} />
+        ))}
+      </span>
     </div>
   );
 }

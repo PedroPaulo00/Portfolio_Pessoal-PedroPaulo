@@ -110,6 +110,55 @@
     0 0 1px 1px rgba(130, 225, 95, 0.55),
     0 0 4px 2px rgba(165, 238, 150, 0.45);
 }
+/* O status é um botão (troca de status ao clicar): sem a cara de botão. */
+.presence-line {
+  margin: 0;
+}
+button.presence {
+  padding: 0;
+  font: inherit;
+  font-size: 0.8125rem;
+  text-align: left;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.presence--busy .presence__dot {
+  background: radial-gradient(circle at 42% 36%, #ff9a8c, #f0503c 40%, #d63a26 72%, #bf2c1a);
+  box-shadow:
+    0 0 1px 1px rgba(235, 90, 70, 0.55),
+    0 0 4px 2px rgba(245, 140, 125, 0.45);
+}
+.presence--away .presence__dot {
+  background: radial-gradient(circle at 42% 36%, #ffe9a0, #f6c84a 40%, #e2a720 72%, #c88d10);
+  box-shadow:
+    0 0 1px 1px rgba(235, 180, 60, 0.55),
+    0 0 4px 2px rgba(250, 215, 130, 0.45);
+}
+.presence--listening .presence__dot {
+  background: radial-gradient(circle at 42% 36%, #8fe0ff, #2b93dc 45%, #1b6fb5 75%);
+  box-shadow:
+    0 0 1px 1px rgba(60, 150, 220, 0.55),
+    0 0 4px 2px rgba(130, 200, 250, 0.45);
+}
+.presence--busy {
+  color: #a0372a;
+}
+.presence--away {
+  color: #8a6410;
+}
+.presence--listening {
+  color: #1d5f93;
+}
+[data-theme='dark'] .presence.presence--busy {
+  color: #ff9d90;
+}
+[data-theme='dark'] .presence.presence--away {
+  color: #f2d27c;
+}
+[data-theme='dark'] .presence.presence--listening {
+  color: #9bd2f5;
+}
 [data-theme='dark'] .presence {
   color: #8fd6a6;
   text-shadow: none;
@@ -421,6 +470,21 @@
   font-weight: var(--font-bold, 700);
   color: var(--heading);
   border-bottom: 1px solid var(--divider);
+}
+/* Botões escondidos dos easter eggs: visualmente iguais ao texto/ícone de antes. */
+.about-card__icon-button,
+.about-facts__secret {
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+  background: none;
+  border: 0;
+  cursor: inherit;
+}
+.about-card__icon-button {
+  display: inline-flex;
+  flex: none;
 }
 .about-card__icon {
   flex: none;
