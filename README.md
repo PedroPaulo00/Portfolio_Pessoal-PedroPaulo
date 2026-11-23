@@ -1,10 +1,10 @@
 # Portfólio Aero
 
-Portfólio pessoal de **Pedro Paulo de Lima**, desenvolvedor de software e graduando em Ciência da Computação (UNICENTRO). O site é um computador do Windows 7: começa desligado, liga com a animação de inicialização e abre uma janela Aero de vidro sobre uma área de trabalho cheia de atalhos que funcionam. Funciona em português e inglês.
+Portfólio pessoal de **Pedro Paulo de Lima**, desenvolvedor de sites e aplicativos e graduando em Ciência da Computação (UNICENTRO). O site é um computador do Windows 7: começa desligado, liga com a animação de inicialização e abre sozinho uma janela Aero de vidro sobre uma área de trabalho cheia de atalhos que funcionam. Funciona em português e inglês, e também serve de vitrine para quem procura um site ou uma landing page.
 
 **Site no ar:** [portfolio-pedropaulo.vercel.app](https://portfolio-pedropaulo.vercel.app)
 
-> **English:** Personal portfolio of Pedro Paulo de Lima, software developer and Computer Science undergraduate. The site is a Windows 7 computer: it starts turned off, boots with the Windows startup animation and opens an Aero glass window over a desktop full of working shortcuts. It is fully bilingual (Portuguese/English): the language follows the visitor's browser and can be switched from the taskbar.
+> **English:** Personal portfolio of Pedro Paulo de Lima, web and app developer and Computer Science undergraduate. The site is a Windows 7 computer: it starts turned off, boots with the Windows startup animation and opens an Aero glass window on its own over a desktop full of working shortcuts. It is fully bilingual (Portuguese/English): the language follows the visitor's browser and can be switched from the taskbar.
 
 ![Página inicial do portfólio](docs/screenshots/inicio.webp)
 
@@ -19,28 +19,30 @@ Portfólio pessoal de **Pedro Paulo de Lima**, desenvolvedor de software e gradu
 ### O portfólio
 
 - **Janela Aero navegável:** voltar/avançar sincronizados com o navegador, barra de localização, pesquisa de projetos e menu Iniciar com tema claro/escuro (com papel de parede de dia e de noite) e três modos de vidro.
-- **Início** com foto, apresentação e destaque da apresentação do TCC.
+- **Início** com foto, apresentação, destaque da apresentação do TCC (com fundo de água em movimento) e um cartão do Spotify. O "Online" vira "Ouvindo: [música]" quando uma música está tocando.
 - **Serviços** com o que ofereço a clientes (sites e landing pages em destaque, aplicativos, sistemas, automação, design e formatação), as etapas do atendimento e um botão para chamar no WhatsApp.
 - **Projetos** com filtro por categoria, busca, modos de exibição como os do Explorer (ícones grandes, lista, detalhes...) e janela de detalhes com galeria de capturas. O Aquanauta tem o botão **Artigo do TCC**, que pede confirmação antes de levar ao artigo no Google Drive.
-- **Sobre** em cartões: ficha rápida (de onde sou, o que estudo, foco, idiomas e paixão), carrossel de fotos, história, conquistas, formação, interesses e idiomas.
+- **Sobre** em cartões: ficha rápida (de onde sou, o que estudo, foco, idiomas e paixão), carrossel de fotos, história, conquistas, formação (com a foto da UNICENTRO), interesses e idiomas (com bandeirinhas).
 - **Tecnologias** em grupos, com ícone em cada item. Ao clicar, uma explicação curta do que é a ferramenta.
-- **Spotify ao vivo:** perfil, música tocando agora e últimas faixas, servidos por uma função serverless (as credenciais nunca chegam ao navegador). Mais o **top 10 de músicas e de artistas preferidos** (escolhidos à mão, não os mais ouvidos), com capas e fotos vindas do Spotify e prévia de cada música pelo player oficial, aberta por um orbe verde.
+- **Spotify ao vivo:** perfil, música tocando agora e últimas faixas, servidos por uma função serverless (as credenciais nunca chegam ao navegador). Mais o **top 10 de músicas e de artistas preferidos** (escolhidos à mão, não os mais ouvidos), com capas e fotos vindas do Spotify e prévia de cada música pelo player oficial, aberta por um orbe verde. Com uma música tocando, o fundo da aba pulsa no **ritmo real dela** (o andamento vem do Deezer, consultado pelo servidor) e um clique na capa abre o **Windows Media Player**, com visualizações que reagem ao som e usam as cores da capa.
+- **Contato** com e-mail, WhatsApp (abre a conversa direto), GitHub, Instagram e Facebook (em breve).
 - **Contador de visitas** discreto no Início, sem contar o próprio dono.
-- **Bilíngue:** idioma detectado pelo navegador, troca pelo indicador PT/EN da barra de tarefas. O build falha se algum texto ficar em uma língua só.
+- **Bilíngue:** idioma detectado pelo navegador, troca pelo indicador PT-BR/EN-US da barra de tarefas. O build falha se algum texto ficar em uma língua só.
 
 ### O computador
 
-- **Tela de ligar:** o site abre "desligado". O botão de energia toca a animação de inicialização e revela a área de trabalho, de onde se abre o portfólio pelo ícone.
-- **Janela de verdade:** minimizar (encolhe até a barra de tarefas), fechar e reabrir pelo ícone.
-- **Barra de tarefas:** botão Iniciar, botões das janelas abertas (com miniatura ao passar o mouse), volume, idioma e relógio que abre um calendário Aero funcional.
+- **Tela de ligar:** o site abre "desligado". O botão de energia toca a animação de inicialização, revela a área de trabalho e abre o portfólio sozinho (com a música).
+- **Janela de verdade:** minimizar (encolhe até a barra de tarefas), fechar, reabrir pelo ícone e, no computador, arrastar pela barra de título.
+- **Barra de tarefas:** botão Iniciar, botão "Alternar entre janelas" (Flip 3D, no computador), botões das janelas abertas (com miniatura ao passar o mouse), idioma, volume e relógio que abre um calendário Aero funcional.
 - **Desligar e reiniciar** pelo menu Iniciar, com as telas "Desligando..." e "Reiniciando...".
 - **Ícones da área de trabalho que funcionam:** a Lixeira mostra seu conteúdo; o **MSN** abre o Messenger e o "chamar a atenção" (a mão bate na tela, a janela treme e toca um "toc toc"); o **Media Player** toca vídeos na skin da cabeça verde, com anterior, próximo, pausa, minimizar e fechar; o **Clippy** comenta o que você está vendo e dá dicas; o **BonziBuddy** surfa pela tela até ser clicado. Tudo o que abre aparece na barra de tarefas.
+- **Segredos escondidos:** o site guarda easter eggs (referências ao Windows, ao MSN, aos anos 2000 e ao dono) e conta os achados no menu Iniciar, com notificações no estilo das conquistas do Xbox 360. Descubra!
 - **Som de fundo** em loop, a partir do momento em que o portfólio é aberto, com controle de volume na bandeja. Ele para ao fechar a janela, ao trocar de aba e ao minimizar o navegador, e se cala sozinho enquanto um vídeo ou uma prévia do Spotify toca.
 - **Acessível e responsivo:** navegação completa por teclado, leitores de tela, preferência por menos movimento, de 320 px a telas largas, em Chrome, Edge e Safari (testado com os motores Chromium e WebKit).
 
 ## Tecnologias
 
-React 19 · TypeScript (strict) · Vite · CSS puro (sem framework) · Web Audio API · funções serverless na Vercel (Spotify e contador de visitas) · Upstash Redis (contador) · ESLint e Prettier.
+React 19 · TypeScript (strict) · Vite · CSS puro (sem framework) · Web Audio API e Canvas · funções serverless na Vercel (Spotify e contador de visitas) · Upstash Redis (contador) · ESLint e Prettier.
 
 ## Como rodar
 
@@ -71,7 +73,7 @@ Sem as credenciais do Spotify, a aba mostra dados de exemplo durante o desenvolv
 
 O projeto está pronto para a **Vercel**: o build é estático (`dist/`) e a pasta `api/` vira as funções do site:
 
-- `/api/spotify`: perfil, tocando agora e últimas faixas;
+- `/api/spotify`: perfil, tocando agora (com o andamento em BPM) e últimas faixas;
 - `/api/spotify-favorites`: capas e fotos do top 10 (cache de um dia);
 - `/api/visits`: contador de visitas.
 
@@ -82,6 +84,7 @@ Nas variáveis de ambiente do projeto, cadastre `SPOTIFY_CLIENT_ID`, `SPOTIFY_CL
 Todo o conteúdo fica em `src/data/portfolio.ts`, em português e inglês. O [guia](docs/GUIA.md) explica, passo a passo, como:
 
 - trocar fotos, papéis de parede e ícones (`npm run images`);
+- editar os serviços oferecidos (cartões, etapas e chamada para o WhatsApp);
 - preencher o carrossel de fotos do Sobre e a ficha rápida;
 - escolher o top 10 do Spotify (cole os links ou IDs na ordem);
 - adicionar um botão de artigo, com confirmação, a um projeto (`articleUrl`);
@@ -96,7 +99,7 @@ src/data/portfolio.ts   todo o conteúdo do site, em português e inglês
 src/data/skillInfo.ts   explicação curta de cada ferramenta (Tecnologias)
 src/i18n/               textos da interface e troca de idioma
 src/components/         janela, área de trabalho, menu Iniciar, seções e Spotify
-src/lib/                som de fundo, rotas, Spotify, visitas e barra de tarefas
+src/lib/                som de fundo, rotas, Spotify, visitas, conquistas e easter eggs
 src/assets/             imagens e vídeos otimizados (originais em src/assets/originais/)
 server/ e api/          funções serverless (Spotify, top 10 e visitas)
 scripts/                imagens, ícones, traduções e autenticação do Spotify
@@ -107,12 +110,12 @@ docs/screenshots/       capturas de tela usadas neste README
 
 ## Privacidade
 
-O site não usa cookies nem pede dados pessoais. Guarda no navegador só preferências (tema, idioma, volume) e conta visitas sem identificar ninguém (o endereço de rede é transformado em um código irreversível). A política completa está na própria aba **Privacidade** do site.
+O site não usa cookies nem pede dados pessoais. Guarda no navegador só preferências (tema, idioma, volume) e o progresso dos segredos achados, e conta visitas sem identificar ninguém (o endereço de rede é transformado em um código irreversível). Para a animação seguir o ritmo da música, o servidor consulta o andamento dela no Deezer (só o nome da música vai na consulta). A política completa está na própria aba **Privacidade** do site.
 
 ## Créditos
 
 - Ícones de tecnologias: [Devicon](https://devicon.dev) (MIT) e [Simple Icons](https://simpleicons.org) (CC0). As marcas pertencem aos seus donos.
-- Logos e imagens do Windows, do Spotify, do MSN, do Windows Media Player, do Clippy, do BonziBuddy, dos jogos e dos demais programas da área de trabalho, assim como o escudo da Lixeira, são marcas e obras de terceiros, usadas apenas como referência visual e de homenagem, sem fins comerciais.
+- Logos e imagens do Windows, do Spotify, do MSN, do Windows Media Player, do Clippy, do BonziBuddy, do Club Penguin, do WhatsApp, do Facebook, dos jogos e dos demais programas da área de trabalho, assim como o escudo da Lixeira e a pintura _A Noite Estrelada_ (domínio público), são marcas e obras de terceiros, usadas apenas como referência visual e de homenagem, sem fins comerciais.
 - Fonte Frutiger e recursos do Aero UI Kit: veja [`aero-ui-kit/LEIA-ME.md`](aero-ui-kit/LEIA-ME.md).
 
 ## Autor
