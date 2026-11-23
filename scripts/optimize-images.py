@@ -80,6 +80,7 @@ GALLERY = {
     "aquanauta_print3.png": "projetos/aquanauta-3.webp",
     "flor_digital_print1.png": "projetos/flor-digital-1.webp",
     "flor_digital_print2.png": "projetos/flor-digital-2.webp",
+    "flor_digital_print3.png": "projetos/flor-digital-3.webp",
     "sistrafa_inicio.png": "projetos/sistrafa-1.webp",
     "sistrafa_pergunta.png": "projetos/sistrafa-2.webp",
     "sistrafa_checklist.png": "projetos/sistrafa-3.webp",
@@ -160,6 +161,33 @@ def phones(shots: list[Image.Image], background: str = "#0b2a1c", glow: str = "#
         base.paste(img, (x, y), mask)
         x += img.width + gap
     return base
+
+def logo_painting(source: str, box: tuple[int, int, int, int], size: int = 128) -> Image.Image:
+    """Logo a partir de um recorte quadrado de uma imagem (ex.: a pintura de Van Gogh do
+    Flor Digital), num ladrilho de vidro arredondado: brilho em cima, borda escura fina
+    e filete claro por dentro, como os ícones do Windows 7."""
+    s = 4  # desenha 4× maior e reduz no fim, para bordas lisas
+    big = size * s
+    art = Image.open(SRC / "projetos" / "logos" / source).convert("RGB").crop(box).resize((big, big), Image.LANCZOS)
+    radius = int(big * 0.22)
+    mask = Image.new("L", (big, big), 0)
+    ImageDraw.Draw(mask).rounded_rectangle((0, 0, big - 1, big - 1), radius, fill=255)
+    out = Image.new("RGBA", (big, big), (0, 0, 0, 0))
+    out.paste(art, (0, 0), mask)
+    gloss = Image.new("L", (big, big), 0)
+    ImageDraw.Draw(gloss).ellipse((-big * 0.35, -big * 0.95, big * 1.35, big * 0.48), fill=95)
+    gloss = gloss.filter(ImageFilter.GaussianBlur(big * 0.02))
+    shine = Image.new("RGBA", (big, big), (255, 255, 255, 0))
+    shine.putalpha(Image.composite(gloss, Image.new("L", (big, big), 0), mask))
+    out = Image.alpha_composite(out, shine)
+    edge = Image.new("RGBA", (big, big), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(edge)
+    line = big * 0.022
+    draw.rounded_rectangle((0, 0, big - 1, big - 1), radius, outline=(10, 30, 70, 230), width=int(line))
+    draw.rounded_rectangle((line, line, big - 1 - line, big - 1 - line), radius - line,
+                           outline=(255, 255, 255, 110), width=int(big * 0.012))
+    return Image.alpha_composite(out, edge).resize((size, size), Image.LANCZOS)
+
 
 def logo_template() -> Image.Image:
     """Logo provisório (128 px): flor branca num ladrilho de vidro azul-esverdeado."""
@@ -550,6 +578,9 @@ def main() -> None:
         logo_img = square(logo_img)
         save(logo_img.resize((128, 128), Image.LANCZOS), f"projetos/logos/{name}.png", optimize=True)
     save(logo_template(), "projetos/logos/template.png", optimize=True)
+    # Flor Digital: o cipreste e o céu estrelado de "A Noite Estrelada" (Van Gogh),
+    # recortados da imagem usada no próprio site do projeto.
+    save(logo_painting("flordigital_vangogh.jpg", (80, 60, 560, 540)), "projetos/logos/flordigital.png", optimize=True)
 
     # Projetos: galeria (até 1200 px de largura) e miniaturas 16:9 dos cards.
     shots = {name: Image.open(SRC / "projetos" / name) for name in GALLERY}
@@ -560,7 +591,7 @@ def main() -> None:
         save(img, target, format="WEBP", quality=84, method=6)
     aquanauta = [shots[f"aquanauta_print{i}.png"] for i in (1, 2, 3)]
     save(showcase(aquanauta).resize(THUMB, Image.LANCZOS), "projetos/aquanauta-thumb.webp", format="WEBP", quality=84, method=6)
-    save(cover(shots["flor_digital_print1.png"], THUMB, x_anchor=0.3), "projetos/flor-digital-thumb.webp", format="WEBP", quality=84, method=6)
+    save(cover(shots["flor_digital_print1.png"], THUMB, x_anchor=0.5), "projetos/flor-digital-thumb.webp", format="WEBP", quality=84, method=6)
     sistrafa = [shots[f"sistrafa_{n}.png"] for n in ("inicio", "pergunta", "checklist", "especie")]
     save(phones(sistrafa).resize(THUMB, Image.LANCZOS), "projetos/sistrafa-thumb.webp", format="WEBP", quality=84, method=6)
 

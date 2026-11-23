@@ -33,6 +33,7 @@ import aquanauta3 from '../assets/projetos/aquanauta-3.webp';
 import aquanautaThumb from '../assets/projetos/aquanauta-thumb.webp';
 import florDigital1 from '../assets/projetos/flor-digital-1.webp';
 import florDigital2 from '../assets/projetos/flor-digital-2.webp';
+import florDigital3 from '../assets/projetos/flor-digital-3.webp';
 import florDigitalThumb from '../assets/projetos/flor-digital-thumb.webp';
 import photo from '../assets/profile/foto.webp';
 import fotoTcc from '../assets/profile/foto-tcc.webp';
@@ -40,8 +41,8 @@ import aquanautaLogo from '../assets/projetos/logos/aquanauta.png';
 import diaraLogo from '../assets/projetos/logos/diara.png';
 import foldaeroLogo from '../assets/projetos/logos/foldaero.png';
 import sistrafaLogo from '../assets/projetos/logos/sistrafa.png';
-// TEMPLATE: logo provisório até o Flor Digital ter o seu (troque o import).
-import florDigitalLogo from '../assets/projetos/logos/template.png';
+// Flor Digital: recorte de A Noite Estrelada (gerado por `npm run images`).
+import florDigitalLogo from '../assets/projetos/logos/flordigital.png';
 import sistrafa1 from '../assets/projetos/sistrafa-1.webp';
 import sistrafa2 from '../assets/projetos/sistrafa-2.webp';
 import sistrafa3 from '../assets/projetos/sistrafa-3.webp';
@@ -51,8 +52,8 @@ import sistrafaThumb from '../assets/projetos/sistrafa-thumb.webp';
 import type { PortfolioData } from '../types/portfolio';
 
 const florAlt1 = {
-  pt: 'Fundo do mar em arte ASCII, com plantas, flores e peixes, e a legenda "Um último mergulho…".',
-  en: 'An ASCII-art seabed with plants, flowers and fish, captioned "Um último mergulho…" ("One last dive…").',
+  pt: 'Buquê de flores em arte ASCII nas cores de A Noite Estrelada, de Van Gogh, sob um céu de redemoinhos, estrelas e lua, com a frase "Dizem que Van Gogh enxergava beleza até nas noites mais escuras...".',
+  en: 'An ASCII-art flower bouquet in the colors of Van Gogh’s The Starry Night, under a sky of swirls, stars and a moon, with the line "Dizem que Van Gogh enxergava beleza até nas noites mais escuras..." ("They say Van Gogh saw beauty even in the darkest nights...").',
 };
 
 export const portfolio: PortfolioData<'source'> = {
@@ -302,14 +303,21 @@ export const portfolio: PortfolioData<'source'> = {
     {
       id: 'flordigital',
       logo: florDigitalLogo,
-      color: '#1b2a44', // cor mais presente no logo/capturas: tinge o fundo do card
+      color: '#2a46a8', // azul-ultramar do logo (A Noite Estrelada): tinge o fundo do card
       name: 'Flor Digital',
       category: 'pessoal',
       summary: {
-        pt: 'Projeto criativo na web, com visuais e animações de inspiração aquática, que funciona como uma experiência interativa de arte e texto. Explora a programação front-end como forma de expressão visual.',
-        en: 'A creative web project with ocean-inspired visuals and animations, built as an interactive experience with art and text. It explores front-end programming as a form of visual expression.',
+        pt: 'Experiência interativa na web inspirada em A Noite Estrelada, de Van Gogh: um buquê de flores em 3D feito de caracteres ASCII floresce sob um céu de redemoinhos animados, enquanto uma pequena história se escreve na tela e termina numa surpresa.',
+        en: 'An interactive web experience inspired by Van Gogh’s The Starry Night: a 3D flower bouquet made of ASCII characters blooms under a sky of animated swirls while a short story types itself on screen and ends in a surprise.',
       },
-      stack: ['HTML5', 'CSS3', 'JavaScript', 'Canvas'],
+      stack: [
+        'HTML5',
+        'CSS3',
+        'JavaScript',
+        'Canvas',
+        'MediaPipe',
+        { pt: 'Câmera (getUserMedia)', en: 'Camera (getUserMedia)' },
+      ],
       status: 'concluido',
       repositoryUrl: 'https://github.com/PedroPaulo00/FlorDigital_s2',
       demoUrl: 'https://a-noite-estrelada.vercel.app/',
@@ -319,14 +327,21 @@ export const portfolio: PortfolioData<'source'> = {
         {
           src: florDigital2,
           alt: {
-            pt: 'Oceano em arte ASCII com peixes e a frase "Não sei desenhar o oceano, mas sei programar um pra você."',
-            en: 'An ASCII-art ocean with fish and the line "Não sei desenhar o oceano, mas sei programar um pra você." ("I can’t draw the ocean, but I can code one for you.")',
+            pt: 'O buquê ASCII com o botão "Uma última estrela...", que abre a surpresa.',
+            en: 'The ASCII bouquet with the "Uma última estrela..." ("One last star...") button, which opens the surprise.',
+          },
+        },
+        {
+          src: florDigital3,
+          alt: {
+            pt: 'A Noite Estrelada recriada em caracteres ASCII coloridos, com a frase "Não sei pintar um céu estrelado, mas sei programar um pra você." e o botão "Clique aqui pra ver a estrela mais bonita do universo!".',
+            en: 'The Starry Night recreated in colored ASCII characters, with the line "Não sei pintar um céu estrelado, mas sei programar um pra você." ("I can’t paint a starry sky, but I can code one for you.") and the button "Clique aqui pra ver a estrela mais bonita do universo!" ("Click here to see the most beautiful star in the universe!").',
           },
         },
       ],
       details: {
-        pt: 'Projeto feito por diversão, que explora composição de cenas, tipografia monoespaçada, transições, animações e desenhos em Canvas. Mostra o meu interesse por interfaces personalizadas e por unir design e programação, indo além dos aplicativos utilitários.',
-        en: 'A project made for fun that explores scene composition, monospaced typography, transitions, animations and drawings on Canvas. It shows my interest in custom interfaces and in combining design and programming, going beyond utility apps.',
+        pt: 'Projeto pessoal feito por diversão, todo em HTML, CSS e JavaScript puros, desenhado em Canvas. As flores são modeladas em 3D e convertidas em caracteres ASCII a cada quadro, com a paleta da pintura: azul-ultramar, amarelo-limão, turquesa e o verde do cipreste. O céu tem redemoinhos que se movem como pinceladas, estrelas que pulsam, estrelas cadentes e a lua.\n\nA história aparece digitada em etapas ("Dizem que Van Gogh enxergava beleza até nas noites mais escuras..." e "Então pensei em te dar um pedacinho desse céu.") até o botão "Uma última estrela...". Ele revela A Noite Estrelada inteira em ASCII, com uma panorâmica lenta, e convida a abrir a câmera: um modelo de segmentação do MediaPipe separa a pessoa do fundo e a transforma numa estrela, com halo dourado e céu noturno. A imagem fica só no aparelho, sem gravar nem enviar nada.\n\nO enquadramento se adapta a qualquer tela, do celular ao monitor, e quem pede menos animação no sistema vê uma versão mais calma.',
+        en: 'A personal project made for fun, built with plain HTML, CSS and JavaScript and drawn on Canvas. The flowers are modeled in 3D and turned into ASCII characters every frame, using the painting’s palette: ultramarine blue, lemon yellow, turquoise and the cypress green. The sky has swirls that move like brushstrokes, pulsing stars, shooting stars and the moon.\n\nThe story types itself out in steps ("They say Van Gogh saw beauty even in the darkest nights..." and "So I thought I’d give you a little piece of that sky.") until the "One last star..." button. It reveals the whole Starry Night in ASCII with a slow pan and invites you to open the camera: a MediaPipe segmentation model separates the person from the background and turns them into a star, with a golden halo and a night sky. The image stays on the device, nothing is recorded or sent.\n\nThe framing adapts to any screen, from phones to monitors, and people who ask their system for less motion get a calmer version.',
       },
     },
   ],
