@@ -1,7 +1,7 @@
 /**
  * Roteamento leve por hash, integrado ao histórico do navegador.
  *
- *   #inicio · #projetos · #projetos/academico · #sobre · #tecnologias · #spotify · #contato
+ *   #inicio · #servicos · #projetos · #projetos/academico · #sobre · #tecnologias · #spotify · #contato
  *
  * Voltar/avançar da janela chamam history.back()/forward(), então ficam em sincronia
  * com os botões do navegador. Cada entrada guarda seu índice em history.state para
@@ -18,6 +18,7 @@ export interface Route {
 
 const SECTIONS: readonly SectionId[] = [
   'inicio',
+  'servicos',
   'projetos',
   'sobre',
   'tecnologias',

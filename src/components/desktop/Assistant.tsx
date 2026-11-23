@@ -122,6 +122,7 @@ export function Assistant({ image, windowOpen, onOpenWindow, summon, onGone, min
     switch (route.section) {
       case 'inicio':
         return [
+          { label: c.seeServices, run: go({ section: 'servicos' }) },
           { label: c.seeProjects, run: go({ section: 'projetos' }) },
           { label: c.aboutHim, run: go({ section: 'sobre' }) },
           { label: c.contact, run: go({ section: 'contato' }) },
@@ -139,6 +140,11 @@ export function Assistant({ image, windowOpen, onOpenWindow, summon, onGone, min
         return [
           ...(spotify ? [{ label: c.listening, run: go({ section: 'spotify' }) }] : []),
           { label: c.technologies, run: go({ section: 'tecnologias' }) },
+        ];
+      case 'servicos':
+        return [
+          { label: c.contact, run: go({ section: 'contato' }) },
+          { label: c.seeProjects, run: go({ section: 'projetos' }) },
         ];
       case 'tecnologias':
         return [

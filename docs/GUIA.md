@@ -40,6 +40,14 @@ Em `profile`, troque `name`, `role` e `tagline`. O nome aparece no título da ja
 - **Logo:** o original é `src/assets/originais/brands/AFL_logo.png`. `npm run images` gera `src/assets/brands/logo.png`, usado na barra de título, no menu e na barra de tarefas, e os favicons `public/favicon.png` e `public/apple-touch-icon.png`. Sem `logo` em `profile`, aparece a marca provisória com as iniciais.
 - **Foto:** aparece no Início, numa moldura no estilo do avatar do MSN, com o status "Online" logo abaixo. A moldura é o SVG `src/assets/profile/msn-frame.svg`, calibrado pixel a pixel contra `src/assets/originais/referencias/exemplo_MSN.png`; o tamanho na tela vem de `--msn-photo` em `sections.css`. O original é `src/assets/originais/profile/foto.png` (nome em `PHOTO` no [`scripts/optimize-images.py`](../scripts/optimize-images.py)); `npm run images` gera `src/assets/profile/foto.webp`. Com `PHOTO_CROP = None` a imagem vai inteira, centralizada num quadrado; para recortar uma parte, informe a caixa (esquerda, topo, direita, base). As fotos anteriores (`minha_foto.jpg`, `minha_foto_atual.jpg`) continuam na pasta. Sem `photo` em `profile`, o Início mostra o logo.
 
+### Serviços
+
+A seção **Serviços** (`#servicos`, antes de Projetos) mostra o que você oferece a clientes. O conteúdo fica em `services`, no `portfolio.ts`:
+
+- `items`: cada serviço tem `title`, `summary`, a lista `includes` (o que está incluso) e, opcional, `idealFor` (para quem é). `featured: true` deixa o cartão maior, na largura toda, com o selo "Mais procurado" (hoje: Sites e landing pages). O `icon` escolhe o desenho: `sites`, `apps`, `sistemas`, `automacao`, `design` ou `formatacao`.
+- `steps`: as etapas de "Como funciona", em ordem (cada uma vira um orbe numerado).
+- `cta`: o título e o texto da faixa final. O botão "Chamar no WhatsApp" usa o link de WhatsApp de `contact.links`; sem ele, aparece só "Outros contatos".
+
 ### 3. Projetos
 
 Cada objeto em `projects` vira um card, sempre pelo mesmo modelo (`ProjectCard`). Para adicionar um projeto, copie um objeto e edite:

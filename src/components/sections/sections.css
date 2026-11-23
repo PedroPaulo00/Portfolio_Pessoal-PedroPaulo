@@ -832,6 +832,268 @@
   }
 }
 
+/* ---------- Serviços ----------
+   Cartões como os painéis do Painel de Controle do Windows 7: ladrilho de vidro
+   com o ícone, título no verde dos títulos e a lista do que está incluso com
+   marcas de "ok". O serviço principal ocupa a largura toda, com um selo verde. */
+.services__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.service-card {
+  display: flex;
+  min-width: 0;
+  background: linear-gradient(var(--surface), var(--sidebar));
+  border: 1px solid var(--divider);
+  border-radius: 6px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    0 1px 3px rgba(0, 40, 80, 0.08);
+  transition:
+    border-color 160ms var(--ease),
+    box-shadow 160ms var(--ease),
+    translate 160ms var(--ease);
+}
+[data-theme='dark'] .service-card {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+@media (hover: hover) {
+  .service-card:hover {
+    border-color: var(--selection-border);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      0 4px 12px rgba(30, 100, 160, 0.16);
+  }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .service-card:hover {
+    translate: 0 -2px;
+  }
+}
+.service-card > article {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-4);
+}
+.service-card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+/* Ladrilho de vidro claro (igual ao das Tecnologias, maior), nos dois temas. */
+.service-card__tile {
+  flex: none;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(13, 90, 166, 0.3);
+  border-radius: 10px;
+  background: linear-gradient(#ffffff, #eef5fb 50%, #dfeaf5 51%, #f4f9fd);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 2px 5px rgba(0, 40, 80, 0.16);
+}
+.service-card__intro {
+  min-width: 0;
+}
+.service-card__title {
+  margin: 2px 0 4px;
+  font-size: 1.0625rem;
+  line-height: 1.25;
+  color: var(--heading);
+}
+.service-card__summary {
+  margin: 0;
+  font-size: var(--text-small);
+  line-height: 1.55;
+}
+/* Lista do que está incluso: marca verde de vidro com um "ok" branco. */
+.service-card__includes {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-small);
+}
+.service-card__includes li {
+  position: relative;
+  padding-left: 24px;
+  line-height: 1.45;
+}
+.service-card__includes li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m4.4 8.3 2.4 2.4 4.8-5' fill='none' stroke='%23fff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+      center / 100% no-repeat,
+    radial-gradient(circle at 40% 30%, #c9f99c, #6cc32a 55%, #3a8c14);
+  box-shadow:
+    0 0 0 1px #2f6e10,
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.service-card__ideal {
+  margin: auto 0 0;
+  padding-top: var(--space-2);
+  font-size: var(--text-small);
+  color: var(--text-secondary);
+  border-top: 1px dashed var(--divider);
+}
+.service-card__ideal strong {
+  color: var(--text);
+}
+
+/* Destaque (sites): a largura toda, tom azul Aero e selo verde. */
+.service-card--featured {
+  grid-column: 1 / -1;
+  background: linear-gradient(
+    color-mix(in srgb, #2b93dc 14%, var(--surface)),
+    color-mix(in srgb, #2b93dc 5%, var(--sidebar)) 60%
+  );
+  border-color: var(--selection-border);
+}
+.service-card--featured .service-card__tile {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+}
+.service-card--featured .service-card__title {
+  font-size: var(--text-subtitle);
+}
+.service-card--featured .service-card__summary {
+  font-size: var(--text-body);
+}
+.service-card__ribbon {
+  align-self: flex-start;
+  padding: 2px 10px;
+  font-size: var(--text-caption);
+  font-weight: var(--font-bold);
+  letter-spacing: 0.02em;
+  color: #fff;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.45);
+  background: linear-gradient(#5fb83a, #2e7a17 50%, #22630f 51%, #2f7d18);
+  border: 1px solid #1d560c;
+  border-radius: 999px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+}
+@container main (min-width: 40rem) {
+  .service-card--featured .service-card__includes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-5);
+  }
+}
+
+/* Como funciona: etapas com orbes numerados, ligadas por um fio pontilhado. */
+.services__steps {
+  margin-top: var(--space-6);
+}
+.service-steps {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+.service-step {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+.service-step__orb .orb-glyph {
+  font:
+    700 36px/1 Frutiger,
+    'Segoe UI',
+    Arial,
+    sans-serif;
+  color: #fff;
+}
+.service-step__title {
+  margin: var(--space-2) 0 2px;
+  font-size: var(--text-body);
+  color: var(--heading);
+}
+.service-step__text {
+  margin: 0;
+  max-width: 22ch;
+  font-size: var(--text-small);
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+@container main (min-width: 30rem) {
+  .service-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@container main (min-width: 46rem) {
+  .service-steps {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .service-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 21px;
+    left: calc(50% + 30px);
+    width: calc(100% - 60px + var(--space-4));
+    height: 2px;
+    background: repeating-linear-gradient(90deg, var(--selection-border) 0 6px, transparent 6px 11px);
+  }
+}
+
+/* Chamada final: faixa de vidro azul com os botões de contato. */
+.services__cta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-top: var(--space-6);
+  padding: var(--space-5);
+  background: linear-gradient(#f2faff, #d9eefc 50%, #c6e5fa 51%, #e3f3fe);
+  border: 1px solid var(--selection-border);
+  border-radius: 8px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 2px 8px rgba(30, 100, 160, 0.14);
+}
+[data-theme='dark'] .services__cta {
+  background: linear-gradient(#2d4a64, #233b52 50%, #1c3247 51%, #24405a);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 2px 8px rgba(0, 0, 0, 0.35);
+}
+.services__cta-title {
+  margin: 0 0 4px;
+  font-size: var(--text-subtitle);
+  color: var(--heading);
+}
+.services__cta-text p {
+  margin: 0;
+}
+.services__cta-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.services__whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* ---------- Tecnologias ---------- */
 .skills__groups {
   display: grid;

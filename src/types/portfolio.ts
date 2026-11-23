@@ -22,7 +22,8 @@ export type Mode = 'source' | 'view';
 export type Prose<M extends Mode> = M extends 'source' ? Localized : string;
 export type Name<M extends Mode> = M extends 'source' ? string | Localized : string;
 
-export type SectionId = 'inicio' | 'projetos' | 'sobre' | 'tecnologias' | 'spotify' | 'contato' | 'privacidade';
+export type SectionId =
+  'inicio' | 'servicos' | 'projetos' | 'sobre' | 'tecnologias' | 'spotify' | 'contato' | 'privacidade';
 
 export interface Section<M extends Mode = 'view'> {
   readonly id: SectionId;
@@ -228,12 +229,43 @@ export interface DesktopIconContent<M extends Mode = 'view'> {
   readonly alt: Name<M>;
 }
 
+/** Ícone de cada serviço (desenhado em src/components/ui/Icon.tsx). */
+export type ServiceIcon = 'sites' | 'apps' | 'sistemas' | 'automacao' | 'design' | 'formatacao';
+
+export interface Service<M extends Mode = 'view'> {
+  readonly id: string;
+  readonly icon: ServiceIcon;
+  readonly title: Prose<M>;
+  readonly summary: Prose<M>;
+  /** O que entra no serviço (lista curta, com ✓). */
+  readonly includes: readonly Prose<M>[];
+  /** Para quem é (ex.: consultórios, lojas). */
+  readonly idealFor?: Prose<M>;
+  /** Serviço principal: cartão maior, com selo de destaque. */
+  readonly featured?: boolean;
+}
+
+export interface ServiceStep<M extends Mode = 'view'> {
+  readonly title: Prose<M>;
+  readonly text: Prose<M>;
+}
+
+export interface Services<M extends Mode = 'view'> {
+  readonly items: readonly Service<M>[];
+  /** "Como funciona": etapas do atendimento, em ordem. */
+  readonly steps: readonly ServiceStep<M>[];
+  /** Chamada final para pedir orçamento. */
+  readonly cta: { readonly title: Prose<M>; readonly text: Prose<M> };
+}
+
 export interface PortfolioData<M extends Mode = 'view'> {
   readonly profile: Profile<M>;
   readonly sections: readonly Section<M>[];
   readonly projects: readonly Project<M>[];
   readonly about: About<M>;
   readonly skills: readonly SkillGroup<M>[];
+  /** Serviços oferecidos (seção #servicos). */
+  readonly services: Services<M>;
   readonly contact: Contact<M>;
   readonly spotify: SpotifyConfig;
   readonly sound: SoundConfig;

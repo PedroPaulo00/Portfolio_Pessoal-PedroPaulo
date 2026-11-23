@@ -20,6 +20,7 @@ Portfólio pessoal de **Pedro Paulo de Lima**, desenvolvedor de software e gradu
 
 - **Janela Aero navegável:** voltar/avançar sincronizados com o navegador, barra de localização, pesquisa de projetos e menu Iniciar com tema claro/escuro (com papel de parede de dia e de noite) e três modos de vidro.
 - **Início** com foto, apresentação e destaque da apresentação do TCC.
+- **Serviços** com o que ofereço a clientes (sites e landing pages em destaque, aplicativos, sistemas, automação, design e formatação), as etapas do atendimento e um botão para chamar no WhatsApp.
 - **Projetos** com filtro por categoria, busca, modos de exibição como os do Explorer (ícones grandes, lista, detalhes...) e janela de detalhes com galeria de capturas. O Aquanauta tem o botão **Artigo do TCC**, que pede confirmação antes de levar ao artigo no Google Drive.
 - **Sobre** em cartões: ficha rápida (de onde sou, o que estudo, foco, idiomas e paixão), carrossel de fotos, história, conquistas, formação, interesses e idiomas.
 - **Tecnologias** em grupos, com ícone em cada item. Ao clicar, uma explicação curta do que é a ferramenta.

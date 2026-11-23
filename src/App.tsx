@@ -16,6 +16,7 @@ import { ContactSection } from './components/sections/ContactSection';
 import { HeroSection } from './components/sections/HeroSection';
 import { PrivacySection } from './components/sections/PrivacySection';
 import { ProjectsSection } from './components/sections/ProjectsSection';
+import { ServicesSection } from './components/sections/ServicesSection';
 import { SkillsSection } from './components/sections/SkillsSection';
 import { SpotifySection } from './components/spotify/SpotifySection';
 import { BrandMark } from './components/ui/BrandMark';
@@ -61,7 +62,7 @@ export function App() {
   const { locale, t, setLocale } = useI18n();
   // Conteúdo já no idioma atual (portfolio.ts guarda as duas línguas).
   const content = useMemo(() => localize(portfolio, locale), [locale]);
-  const { profile, projects, about, skills, contact } = content;
+  const { profile, projects, about, skills, services, contact } = content;
   // A aba Spotify só existe com a integração ligada em portfolio.ts.
   const sections = content.sections.filter((item) => item.id !== 'spotify' || portfolio.spotify.enabled);
   const router = useRouter();
@@ -413,6 +414,9 @@ export function App() {
                     {route.section === 'inicio' ? (
                       <HeroSection profile={profile} sections={sections} featured={content.featured} />
                     ) : null}
+                    {route.section === 'servicos' ? (
+                      <ServicesSection section={section} services={services} contact={contact} />
+                    ) : null}
                     {route.section === 'projetos' ? (
                       <ProjectsSection
                         section={section}
@@ -521,6 +525,10 @@ function SectionCommands({ route, hasEmail, copied, onCopyEmail }: SectionComman
     case 'inicio':
       return (
         <>
+          <RouteLink to={{ section: 'servicos' }} className="command-button">
+            <Icon name="servicos" size={16} />
+            {t.viewServices}
+          </RouteLink>
           <RouteLink to={{ section: 'projetos' }} className="command-button">
             <Icon name="projetos" size={16} />
             {t.viewProjects}
@@ -551,6 +559,19 @@ function SectionCommands({ route, hasEmail, copied, onCopyEmail }: SectionComman
           <RouteLink to={{ section: 'tecnologias' }} className="command-button">
             <Icon name="tecnologias" size={16} />
             {t.viewSkills}
+          </RouteLink>
+          <RouteLink to={{ section: 'contato' }} className="command-button">
+            <Icon name="contato" size={16} />
+            {t.contact}
+          </RouteLink>
+        </>
+      );
+    case 'servicos':
+      return (
+        <>
+          <RouteLink to={{ section: 'projetos' }} className="command-button">
+            <Icon name="projetos" size={16} />
+            {t.viewProjects}
           </RouteLink>
           <RouteLink to={{ section: 'contato' }} className="command-button">
             <Icon name="contato" size={16} />

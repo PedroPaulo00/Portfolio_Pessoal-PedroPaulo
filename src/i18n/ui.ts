@@ -141,6 +141,7 @@ const pt = {
     back: 'Voltar',
     openPortfolio: 'Abrir o portfólio',
     seeProjects: 'Ver os projetos',
+    seeServices: 'Ver os serviços',
     aboutHim: 'Saber mais sobre ele',
     contact: 'Entrar em contato',
     onlyCategory: (plural: string) => `Só os ${plural.toLowerCase()}`,
@@ -149,6 +150,7 @@ const pt = {
     home: 'Voltar ao início',
     desktop: 'Parece que você está olhando para uma área de trabalho vazia. Quer que eu abra o portfólio do Pedro?',
     inicio: 'Parece que você está conhecendo o Pedro. Posso ajudar?',
+    servicos: 'Parece que você está procurando alguém para fazer um site. Chegou no lugar certo!',
     projetos: 'Parece que você está procurando projetos. Quer filtrar por tipo?',
     sobre: 'Parece que você está lendo sobre o Pedro. Sabia que a maior paixão dele é música?',
     tecnologias: 'Parece que você está avaliando as tecnologias. Quer ver onde elas foram usadas?',
@@ -252,6 +254,14 @@ const pt = {
   nextPhoto: 'Próxima foto',
   photoNumber: (index: number, total: number) => `Foto ${index} de ${total}`,
   seeTccProject: 'Ver o projeto',
+
+  // Serviços
+  featuredService: 'Mais procurado',
+  idealFor: 'Ideal para: ',
+  howItWorks: 'Como funciona',
+  talkOnWhatsApp: 'Chamar no WhatsApp',
+  otherContacts: 'Outros contatos',
+  viewServices: 'Ver serviços',
 
   // Privacidade
   privacy: 'Privacidade',
@@ -434,6 +444,7 @@ const en: UiStrings = {
     back: 'Back',
     openPortfolio: 'Open the portfolio',
     seeProjects: 'See the projects',
+    seeServices: 'See the services',
     aboutHim: 'Learn more about him',
     contact: 'Get in touch',
     onlyCategory: (plural) => `Only ${plural.toLowerCase()}`,
@@ -442,6 +453,7 @@ const en: UiStrings = {
     home: 'Back to home',
     desktop: 'It looks like you are staring at an empty desktop. Want me to open Pedro’s portfolio?',
     inicio: 'It looks like you are getting to know Pedro. Can I help?',
+    servicos: 'It looks like you are looking for someone to build a website. You came to the right place!',
     projetos: 'It looks like you are looking for projects. Want to filter by type?',
     sobre: 'It looks like you are reading about Pedro. Did you know music is his greatest passion?',
     tecnologias: 'It looks like you are checking the technologies. Want to see where they were used?',
@@ -541,6 +553,13 @@ const en: UiStrings = {
   nextPhoto: 'Next photo',
   photoNumber: (index, total) => `Photo ${index} of ${total}`,
   seeTccProject: 'See the project',
+
+  featuredService: 'Most requested',
+  idealFor: 'Ideal for: ',
+  howItWorks: 'How it works',
+  talkOnWhatsApp: 'Message on WhatsApp',
+  otherContacts: 'Other contacts',
+  viewServices: 'View services',
 
   privacy: 'Privacy',
   privacyDescription: 'How this site handles your data.',

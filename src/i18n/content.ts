@@ -79,6 +79,17 @@ export function localize(data: PortfolioData<'source'>, locale: Locale): Portfol
         }
       : {}),
     skills: data.skills.map((group) => ({ title: text(group.title), items: group.items.map(name) })),
+    services: {
+      items: data.services.items.map(({ idealFor, ...service }) => ({
+        ...service,
+        title: text(service.title),
+        summary: text(service.summary),
+        includes: service.includes.map(text),
+        ...(idealFor ? { idealFor: text(idealFor) } : {}),
+      })),
+      steps: data.services.steps.map((step) => ({ title: text(step.title), text: text(step.text) })),
+      cta: { title: text(data.services.cta.title), text: text(data.services.cta.text) },
+    },
     contact: {
       ...data.contact,
       intro: text(data.contact.intro),

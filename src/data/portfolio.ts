@@ -80,6 +80,15 @@ export const portfolio: PortfolioData<'source'> = {
       },
     },
     {
+      id: 'servicos',
+      label: { pt: 'Serviços', en: 'Services' },
+      title: { pt: 'O que eu posso fazer por você', en: 'What I can do for you' },
+      description: {
+        pt: 'Sites, aplicativos, sistemas e ajuda com o computador, sob medida para o seu negócio.',
+        en: 'Websites, apps, systems and computer help, tailored to your business.',
+      },
+    },
+    {
       id: 'projetos',
       label: { pt: 'Projetos', en: 'Projects' },
       description: { pt: 'Trabalhos acadêmicos e pessoais.', en: 'Academic and personal work.' },
@@ -453,6 +462,144 @@ export const portfolio: PortfolioData<'source'> = {
       ],
     },
   ],
+
+  // Serviços (seção #servicos). `featured: true` = cartão maior, com selo de destaque.
+  // Ícones disponíveis: sites, apps, sistemas, automacao, design, formatacao.
+  services: {
+    items: [
+      {
+        id: 'sites',
+        icon: 'sites',
+        featured: true,
+        title: { pt: 'Sites e landing pages', en: 'Websites and landing pages' },
+        summary: {
+          pt: 'Um site bonito, rápido e fácil de usar no celular, que apresenta o seu trabalho e leva o visitante direto até você.',
+          en: 'A good-looking, fast website that is easy to use on a phone, presents your work and takes visitors straight to you.',
+        },
+        includes: [
+          { pt: 'Visual sob medida, com a identidade do seu negócio', en: 'Custom design with your business identity' },
+          {
+            pt: 'Funciona bem no celular, no tablet e no computador',
+            en: 'Works well on phones, tablets and computers',
+          },
+          { pt: 'Botão de WhatsApp, mapa e redes sociais', en: 'WhatsApp button, map and social media' },
+          { pt: 'Preparado para aparecer no Google', en: 'Ready to show up on Google' },
+          { pt: 'Ajuda com domínio e hospedagem', en: 'Help with domain and hosting' },
+        ],
+        idealFor: {
+          pt: 'consultórios, clínicas, lojas, restaurantes e profissionais autônomos',
+          en: 'medical practices, clinics, shops, restaurants and freelancers',
+        },
+      },
+      {
+        id: 'apps',
+        icon: 'apps',
+        title: { pt: 'Aplicativos', en: 'Apps' },
+        summary: {
+          pt: 'Apps para Android e iOS, ou que rodam direto no navegador, com uma interface caprichada.',
+          en: 'Apps for Android and iOS, or that run right in the browser, with a polished interface.',
+        },
+        includes: [
+          { pt: 'Android, iOS e web (PWA)', en: 'Android, iOS and web (PWA)' },
+          { pt: 'Login, notificações e uso sem internet', en: 'Sign-in, notifications and offline use' },
+          { pt: 'Dados guardados com segurança', en: 'Data stored securely' },
+        ],
+      },
+      {
+        id: 'sistemas',
+        icon: 'sistemas',
+        title: { pt: 'Sistemas sob medida', en: 'Custom systems' },
+        summary: {
+          pt: 'Ferramentas web para o dia a dia do seu negócio, no lugar de planilhas soltas e cadernos.',
+          en: 'Web tools for your day-to-day business, instead of scattered spreadsheets and notebooks.',
+        },
+        includes: [
+          { pt: 'Cadastros de clientes, produtos e serviços', en: 'Customer, product and service records' },
+          { pt: 'Agendamentos e controle de pedidos', en: 'Bookings and order tracking' },
+          { pt: 'Relatórios e exportação em PDF', en: 'Reports and PDF export' },
+        ],
+      },
+      {
+        id: 'automacao',
+        icon: 'automacao',
+        title: { pt: 'Automação de processos', en: 'Process automation' },
+        summary: {
+          pt: 'Aquela tarefa repetitiva que toma horas toda semana pode virar um clique.',
+          en: 'That repetitive task that takes hours every week can become a single click.',
+        },
+        includes: [
+          { pt: 'Planilhas e relatórios automáticos', en: 'Automatic spreadsheets and reports' },
+          { pt: 'Organização e conversão de arquivos', en: 'File organization and conversion' },
+          { pt: 'Scripts e integrações entre sistemas', en: 'Scripts and integrations between systems' },
+        ],
+      },
+      {
+        id: 'design',
+        icon: 'design',
+        title: { pt: 'Design de interfaces', en: 'Interface design' },
+        summary: {
+          pt: 'Protótipos e telas pensadas para quem vai usar, ou um visual novo para um site antigo.',
+          en: 'Prototypes and screens designed for the people who will use them, or a fresh look for an old website.',
+        },
+        includes: [
+          { pt: 'Protótipos navegáveis no Figma', en: 'Clickable prototypes in Figma' },
+          { pt: 'Redesenho de sites e apps', en: 'Website and app redesign' },
+          { pt: 'Avaliação de usabilidade', en: 'Usability review' },
+        ],
+      },
+      {
+        id: 'formatacao',
+        icon: 'formatacao',
+        title: { pt: 'Formatação e manutenção', en: 'Formatting and maintenance' },
+        summary: {
+          pt: 'Computador lento ou com problema? Formato, instalo e deixo tudo funcionando de novo.',
+          en: 'Slow or troubled computer? I format it, install what you need and get everything working again.',
+        },
+        includes: [
+          { pt: 'Formatação e instalação do Windows', en: 'Formatting and Windows installation' },
+          { pt: 'Programas, drivers e atualizações', en: 'Software, drivers and updates' },
+          { pt: 'Backup dos seus arquivos e limpeza', en: 'File backup and cleanup' },
+        ],
+      },
+    ],
+    steps: [
+      {
+        title: { pt: 'Conversa', en: 'Chat' },
+        text: {
+          pt: 'Você me conta o que precisa, pelo WhatsApp ou por e-mail.',
+          en: 'You tell me what you need, by WhatsApp or email.',
+        },
+      },
+      {
+        title: { pt: 'Proposta', en: 'Proposal' },
+        text: {
+          pt: 'Mando uma proposta clara, com o que vai ser feito, prazo e valor.',
+          en: 'I send a clear proposal with the scope, timeline and price.',
+        },
+      },
+      {
+        title: { pt: 'Desenvolvimento', en: 'Development' },
+        text: {
+          pt: 'Construo o projeto e mostro prévias para você acompanhar e opinar.',
+          en: 'I build the project and share previews so you can follow along and give feedback.',
+        },
+      },
+      {
+        title: { pt: 'Entrega e suporte', en: 'Delivery and support' },
+        text: {
+          pt: 'Entrego tudo funcionando e continuo por perto para ajustes.',
+          en: 'I deliver everything working and stay around for adjustments.',
+        },
+      },
+    ],
+    cta: {
+      title: { pt: 'Vamos tirar sua ideia do papel?', en: 'Shall we bring your idea to life?' },
+      text: {
+        pt: 'Me chame para conversar. O orçamento é sem compromisso.',
+        en: 'Reach out for a chat. Quotes are free, with no commitment.',
+      },
+    },
+  },
 
   contact: {
     intro: {

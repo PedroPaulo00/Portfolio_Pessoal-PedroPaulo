@@ -19,6 +19,13 @@ export type IconName =
   | 'link'
   | 'documento'
   | 'atualizar'
+  | 'servicos'
+  | 'sites'
+  | 'apps'
+  | 'sistemas'
+  | 'automacao'
+  | 'design'
+  | 'formatacao'
   | 'spotify';
 
 interface IconProps {
@@ -61,6 +68,11 @@ export function Icon({ name, size = 24 }: IconProps) {
           <stop offset="0" stopColor="#e9f3fb" />
           <stop offset="0.5" stopColor="#9fb7cc" />
           <stop offset="1" stopColor="#5f7d98" />
+        </linearGradient>
+        <linearGradient id={`${id}red`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#ffb3a1" />
+          <stop offset="0.55" stopColor="#e2553a" />
+          <stop offset="1" stopColor="#a8301c" />
         </linearGradient>
         <linearGradient id={`${id}gloss`} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#fff" stopOpacity="0.85" />
@@ -240,6 +252,124 @@ const SHAPES: Record<Exclude<IconName, 'spotify'>, (g: Paint) => JSX.Element> = 
       />
       <path d="M14.5 2.5V7H19" fill="#d6e6f4" stroke="#5a7d9c" strokeWidth="0.8" strokeLinejoin="round" />
       <path d="M8 10.5h8M8 13.5h8M8 16.5h5" stroke="#2b93dc" strokeWidth="1.1" strokeLinecap="round" />
+    </>
+  ),
+  // Serviços: caixa de ferramentas (azul, alça de aço, fecho âmbar).
+  servicos: (g) => (
+    <>
+      <path d="M8.5 7.5V5.2a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v2.3" fill="none" stroke="#46627c" strokeWidth="1.5" />
+      <rect x="2.5" y="7.5" width="19" height="12.5" rx="1.4" fill={g('blue')} stroke="#0b4a85" strokeWidth="0.8" />
+      <path d="M2.5 12.2h19" stroke="#0b4a85" strokeWidth="0.8" />
+      <rect x="10" y="10.8" width="4" height="3" rx="0.6" fill={g('amber')} stroke="#a0661a" strokeWidth="0.6" />
+      <path d="M3.3 8.3h17.4v3.4H3.3Z" fill={g('gloss')} opacity="0.65" />
+    </>
+  ),
+  // Site: janela de navegador com cabeçalho, bloco de destaque e botão.
+  sites: (g) => (
+    <>
+      <rect x="2" y="3.5" width="20" height="17" rx="1.4" fill={g('paper')} stroke="#4f7393" strokeWidth="0.8" />
+      <path
+        d="M2 4.9a1.4 1.4 0 0 1 1.4-1.4h17.2A1.4 1.4 0 0 1 22 4.9V7.5H2Z"
+        fill={g('steel')}
+        stroke="#4f7393"
+        strokeWidth="0.8"
+      />
+      <circle cx="4.6" cy="5.5" r="0.8" fill="#e2553a" />
+      <circle cx="7" cy="5.5" r="0.8" fill="#f2bb4a" />
+      <circle cx="9.4" cy="5.5" r="0.8" fill="#6cc32a" />
+      <rect x="4" y="9.3" width="16" height="5.2" rx="0.6" fill={g('blue')} />
+      <path d="M4 9.3h16v2.2H4Z" fill={g('gloss')} opacity="0.55" />
+      <rect x="4" y="16.2" width="6" height="2.4" rx="1.2" fill={g('green')} stroke="#2f6e10" strokeWidth="0.5" />
+      <path d="M12 16.8h8M12 18.4h5" stroke="#9fb7cc" strokeWidth="0.9" strokeLinecap="round" />
+    </>
+  ),
+  // App: celular com a tela azul e ícones de app.
+  apps: (g) => (
+    <>
+      <rect x="6" y="1.8" width="12" height="20.4" rx="2.2" fill={g('steel')} stroke="#34495e" strokeWidth="0.8" />
+      <rect x="7.3" y="4.2" width="9.4" height="14.8" rx="0.6" fill={g('blue')} />
+      <rect x="8.4" y="5.6" width="3" height="3" rx="0.8" fill={g('green')} />
+      <rect x="12.6" y="5.6" width="3" height="3" rx="0.8" fill={g('amber')} />
+      <rect x="8.4" y="9.8" width="3" height="3" rx="0.8" fill={g('red')} />
+      <rect x="12.6" y="9.8" width="3" height="3" rx="0.8" fill={g('paper')} />
+      <path d="M7.3 4.2h9.4v5.2c-3 .8-6.3.8-9.4 0Z" fill={g('gloss')} opacity="0.5" />
+      <rect x="10.4" y="20" width="3.2" height="0.9" rx="0.45" fill="#34495e" />
+    </>
+  ),
+  // Sistema: monitor com um painel de gráfico de barras.
+  sistemas: (g) => (
+    <>
+      <rect x="2.5" y="3" width="19" height="13.5" rx="1.2" fill={g('steel')} stroke="#46627c" strokeWidth="0.8" />
+      <rect x="4" y="4.5" width="16" height="10.5" rx="0.4" fill={g('paper')} />
+      <rect x="6" y="10" width="2.4" height="4" fill={g('blue')} />
+      <rect x="9.6" y="7.6" width="2.4" height="6.4" fill={g('green')} />
+      <rect x="13.2" y="9" width="2.4" height="5" fill={g('amber')} />
+      <rect x="16.8" y="6.4" width="2.4" height="7.6" fill={g('blue')} />
+      <path d="M4 4.5h16v3H4Z" fill={g('gloss')} opacity="0.45" />
+      <path d="M9 16.5h6l1 3.5H8Z" fill={g('steel')} stroke="#46627c" strokeWidth="0.7" strokeLinejoin="round" />
+    </>
+  ),
+  // Automação: setas em ciclo (verde) em volta de um raio (âmbar).
+  automacao: (g) => (
+    <>
+      <path d="M19.2 9.2A7.6 7.6 0 0 0 5.4 7.4" fill="none" stroke="#2f6e10" strokeWidth="3.6" strokeLinecap="round" />
+      <path
+        d="M19.2 9.2A7.6 7.6 0 0 0 5.4 7.4"
+        fill="none"
+        stroke={g('green')}
+        strokeWidth="2.2"
+        strokeLinecap="round"
+      />
+      <path d="M4.8 14.8a7.6 7.6 0 0 0 13.8 1.8" fill="none" stroke="#2f6e10" strokeWidth="3.6" strokeLinecap="round" />
+      <path
+        d="M4.8 14.8a7.6 7.6 0 0 0 13.8 1.8"
+        fill="none"
+        stroke={g('green')}
+        strokeWidth="2.2"
+        strokeLinecap="round"
+      />
+      <path d="m2.6 4.4 1 5.6 5.4-1.8Z" fill={g('green')} stroke="#2f6e10" strokeWidth="0.7" strokeLinejoin="round" />
+      <path d="m21.4 19.6-1-5.6-5.4 1.8Z" fill={g('green')} stroke="#2f6e10" strokeWidth="0.7" strokeLinejoin="round" />
+      <path
+        d="M13 5.8 8.6 12.6h3l-1 5.6 4.8-7.2h-3.1Z"
+        fill={g('amber')}
+        stroke="#a0661a"
+        strokeWidth="0.7"
+        strokeLinejoin="round"
+      />
+    </>
+  ),
+  // Design: paleta de pintor com tintas e um pincel.
+  design: (g) => (
+    <>
+      <path
+        d="M12 2.8C6.6 2.8 2.5 6.6 2.5 11.4c0 4.6 3.9 8.3 8.7 8.3 1.5 0 2.2-.8 2.2-1.8 0-1.4-1.3-1.7-1.3-2.9 0-1 .8-1.6 1.9-1.6h2.6c3 0 4.9-1.9 4.9-4.6 0-3.7-4.2-6-9.5-6Z"
+        fill={g('paper')}
+        stroke="#8a6a3a"
+        strokeWidth="0.9"
+      />
+      <circle cx="7" cy="9.6" r="1.7" fill={g('red')} />
+      <circle cx="10.6" cy="6.4" r="1.7" fill={g('amber')} />
+      <circle cx="15.2" cy="6.6" r="1.7" fill={g('green')} />
+      <circle cx="7.2" cy="14.4" r="1.7" fill={g('blue')} />
+      <path d="m21.6 13.2-6.4 6.4" stroke="#8a5a17" strokeWidth="1.6" strokeLinecap="round" />
+      <path d="m15.8 19-1.9 2.2 2.8-.9" fill="#34495e" stroke="#34495e" strokeWidth="0.8" strokeLinejoin="round" />
+    </>
+  ),
+  // Formatação: gabinete de PC (aço, luz verde) com uma chave inglesa.
+  formatacao: (g) => (
+    <>
+      <rect x="4.5" y="2.5" width="10" height="19" rx="1.2" fill={g('steel')} stroke="#46627c" strokeWidth="0.8" />
+      <path d="M6.5 5.5h6M6.5 7.5h6" stroke="#46627c" strokeWidth="0.9" strokeLinecap="round" />
+      <circle cx="9.5" cy="16.5" r="1.3" fill={g('green')} stroke="#2f6e10" strokeWidth="0.5" />
+      <path d="M5.3 3.3h8.4v3.4H5.3Z" fill={g('gloss')} opacity="0.6" />
+      <path
+        d="M20.6 8.4a3 3 0 0 1-4 3.4l-4.6 4.6a1.3 1.3 0 0 1-1.8-1.8l4.6-4.6a3 3 0 0 1 3.4-4l-1.8 1.8.4 1.6 1.6.4Z"
+        fill={g('blue')}
+        stroke="#0b4a85"
+        strokeWidth="0.8"
+        strokeLinejoin="round"
+      />
     </>
   ),
   configuracoes: (g) => (
