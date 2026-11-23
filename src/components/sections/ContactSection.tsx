@@ -1,7 +1,9 @@
 import githubLogo from '../../assets/contato/github.png';
 import gmailLogo from '../../assets/contato/gmail.png';
 import hotmailLogo from '../../assets/contato/hotmail.png';
+import facebookLogo from '../../assets/contato/facebook.png';
 import instagramLogo from '../../assets/contato/instagram.png';
+import whatsappLogo from '../../assets/contato/whatsapp.svg';
 import { useI18n } from '../../i18n/I18n';
 import { RouteLink } from '../../lib/navigation';
 import type { Contact, Section } from '../../types/portfolio';
@@ -30,10 +32,14 @@ const LOGOS: readonly { readonly match: RegExp; readonly src: string; readonly i
   { match: /@gmail\.com$/i, src: gmailLogo },
   { match: /@(outlook|hotmail|live)\.com$/i, src: hotmailLogo },
   { match: /instagram\.com/i, src: instagramLogo },
+  { match: /wa\.me|whatsapp/i, src: whatsappLogo },
+  { match: /facebook/i, src: facebookLogo },
 ];
 
 function ChannelIcon({ channel }: { readonly channel: Channel }) {
-  const logo = channel.href ? LOGOS.find((item) => item.match.test(channel.href ?? '')) : undefined;
+  // Pelo endereço; sem endereço (canal "em breve"), pelo nome do serviço.
+  const key = channel.href ?? channel.label;
+  const logo = LOGOS.find((item) => item.match.test(key));
   if (!logo) return <Icon name={channel.icon} size={36} />;
   return (
     <img
@@ -69,13 +75,15 @@ export function ContactSection({ section, contact }: ContactSectionProps) {
         ? [
             {
               label: link.label,
-              value: displayUrl(link.url),
+              value: link.display ?? displayUrl(link.url),
               href: link.url,
               icon: iconFor(link.label),
               external: true,
             },
           ]
-        : [],
+        : link.soon
+          ? [{ label: link.label, value: t.comingSoon, icon: iconFor(link.label), external: false }]
+          : [],
     ),
   ];
 

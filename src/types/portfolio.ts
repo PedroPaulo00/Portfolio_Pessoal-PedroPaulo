@@ -76,8 +76,12 @@ export interface SkillGroup<M extends Mode = 'view'> {
 
 export interface ContactLink<M extends Mode = 'view'> {
   readonly label: Name<M>;
-  /** Sem URL, o link não aparece. */
+  /** Sem URL, o link não aparece (a não ser que `soon` esteja marcado). */
   readonly url?: string;
+  /** Texto exibido no lugar do endereço (ex.: o telefone do WhatsApp). */
+  readonly display?: string;
+  /** Sem URL ainda, mas aparece como "Em breve" (desativado). */
+  readonly soon?: boolean;
 }
 
 export interface Profile<M extends Mode = 'view'> {

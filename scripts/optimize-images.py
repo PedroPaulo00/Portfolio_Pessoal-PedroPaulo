@@ -16,6 +16,8 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFilter
 
+Image.MAX_IMAGE_PIXELS = None  # a foto de perfil tem ~60 megapixels
+
 ROOT = Path(__file__).resolve().parent.parent / "src" / "assets"
 SRC = ROOT / "originais"
 PUBLIC = ROOT.parent.parent / "public"
@@ -24,8 +26,9 @@ PUBLIC = ROOT.parent.parent / "public"
 # centralizada num quadrado. A foto anterior (minha_foto.jpg, extraída de
 # minha_foto.CR2) usava o recorte (1320, 308, 3300, 2288).
 PHOTO = "foto_tela_inicial.jpg"
-# Quadrado centrado no rosto (a foto tem 1007×1049). As anteriores continuam na
-# pasta (foto.png, com o alienígena, usava o recorte (60, 0, 1208, 1148)).
+# Quadrado centrado no rosto (a foto tem 1007×1049). As outras continuam na pasta:
+# foto.png (o alienígena) usava o recorte (60, 0, 1208, 1148); nova_foto_perfil.jpg
+# (corpo inteiro, 7794×7794; foi testada e descartada) usava (2500, 200, 5100, 2800).
 PHOTO_CROP = (70, 110, 980, 1020)
 # Foto da apresentação do TCC (destaque no Início).
 TCC_PHOTO = "foto_tcc.jpg"
@@ -65,7 +68,10 @@ CONTACT = {
     "gmail_logo.png": ("contato/gmail.png", (1240, 440, 2070, 1070)),
     "hotmail_logo.png": ("contato/hotmail.png", (80, 640, 1300, 1530)),
     "instagram_logo.png": ("contato/instagram.png", None),
+    "facebook_logo.png": ("contato/facebook.png", (922, 83, 2905, 2068)),
 }
+# WhatsApp: o original é vetor (originais/contato/whatsapp_logo.svg), copiado
+# como está para contato/whatsapp.svg (não passa pelo Pillow).
 
 # Capturas dos projetos (originais/projetos/): galeria da janela Detalhes.
 GALLERY = {

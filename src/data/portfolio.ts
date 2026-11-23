@@ -59,12 +59,12 @@ export const portfolio: PortfolioData<'source'> = {
   profile: {
     name: 'Pedro Paulo de Lima',
     role: {
-      pt: 'Desenvolvedor de Software | Graduando em Ciência da Computação',
-      en: 'Software Developer | Computer Science Undergraduate',
+      pt: 'Desenvolvedor de Sites e Aplicativos | Graduando em Ciência da Computação',
+      en: 'Web & App Developer | Computer Science Undergraduate',
     },
     tagline: {
-      pt: 'Estudo Ciência da Computação na UNICENTRO e trabalho principalmente com web, mobile e experiências digitais. Gosto de criar aplicativos que sejam úteis, fáceis de usar e com identidade visual própria, como o Aquanauta e o FoldAero. Estou aberto a oportunidades de desenvolvimento de software e a projetos que deem valor à experiência de quem usa.',
-      en: 'I’m studying Computer Science at UNICENTRO and mostly work on web, mobile and digital experiences. I like building apps that are useful, easy to use and visually distinctive, like Aquanauta and FoldAero. I’m open to software development opportunities and to projects that care about the user experience.',
+      pt: 'Estudo Ciência da Computação na UNICENTRO e crio sites e aplicativos. Gosto muito de fazer sites e landing pages para profissionais e pequenos negócios, como consultórios médicos e lojas: páginas bonitas, rápidas e fáceis de usar no celular, que apresentem bem o seu trabalho. Também desenvolvo aplicativos com identidade visual própria, como o Aquanauta e o FoldAero, e este portfólio é um exemplo do cuidado que coloco em cada projeto.',
+      en: 'I’m studying Computer Science at UNICENTRO and I build websites and apps. I especially enjoy making websites and landing pages for professionals and small businesses, like medical practices and shops: good-looking, fast pages that are easy to use on a phone and present your work well. I also build apps with their own visual identity, like Aquanauta and FoldAero, and this portfolio is an example of the care I put into every project.',
     },
     logo: { src: logo, alt: { pt: '', en: '' } },
     photo: { src: photo, alt: { pt: 'Foto de Pedro Paulo de Lima', en: 'Photo of Pedro Paulo de Lima' } },
@@ -325,12 +325,12 @@ export const portfolio: PortfolioData<'source'> = {
   about: {
     paragraphs: [
       {
-        pt: 'Meu interesse por tecnologia começou na infância e ganhou força com o exemplo da minha irmã, doutora e professora de Ciência da Computação. Durante a graduação na UNICENTRO, passei por várias áreas da Computação e me identifiquei mais com desenvolvimento web, mobile e design de interfaces. No TCC, criei o Aquanauta, um aplicativo desktop de bem-estar digital com monitoramento de atividade, lembretes, organização da rotina e uma interface inspirada no Frutiger Aero.',
-        en: 'My interest in technology started in childhood and grew with the example of my sister, who has a PhD and teaches Computer Science. During my degree at UNICENTRO I tried out different areas of computing and connected most with web, mobile and interface design. For my thesis I built Aquanauta, a digital well-being desktop app with activity monitoring, reminders, routine planning and a Frutiger Aero-inspired interface.',
+        pt: 'Meu interesse por tecnologia começou na infância e ganhou força com o exemplo da minha irmã, doutora e professora de Ciência da Computação. Durante a graduação na UNICENTRO, passei por várias áreas da Computação e me identifiquei mais com a criação de sites, o desenvolvimento de aplicativos e o design de interfaces. No TCC, criei o Aquanauta, um aplicativo desktop de bem-estar digital com monitoramento de atividade, lembretes, organização da rotina e uma interface inspirada no Frutiger Aero.',
+        en: 'My interest in technology started in childhood and grew with the example of my sister, who has a PhD and teaches Computer Science. During my degree at UNICENTRO I tried out different areas of computing and connected most with building websites, developing apps and interface design. For my thesis I built Aquanauta, a digital well-being desktop app with activity monitoring, reminders, routine planning and a Frutiger Aero-inspired interface.',
       },
       {
-        pt: 'Costumo trabalhar por etapas: planejo a estrutura, construo funcionalidade por funcionalidade, testo e vou refinando até o resultado ficar consistente. Dou valor a código organizado e fácil de manter, à responsividade, a uma interface bem cuidada e a decisões técnicas que resolvam problemas reais. Também uso ferramentas de IA como apoio, sempre me preocupando em entender, revisar e validar o que elas sugerem.',
-        en: 'I like to work in steps: I plan the structure, build feature by feature, then test and refine until the result feels consistent. I care about clean, maintainable code, responsiveness, a well-crafted interface and technical decisions that solve real problems. I also use AI tools as support, always making sure I understand, review and validate what they suggest.',
+        pt: 'Costumo trabalhar por etapas: planejo a estrutura, construo funcionalidade por funcionalidade, testo e vou refinando até o resultado ficar consistente. Dou valor a código organizado e fácil de manter, à responsividade, a uma interface bem cuidada e a decisões técnicas que resolvam problemas reais. Também uso ferramentas de IA como apoio, sempre me preocupando em entender, revisar e validar o que elas sugerem. Num site, penso em quem vai visitar: a informação certa logo de cara, um visual que combine com o negócio e um caminho fácil até o contato, seja pelo WhatsApp, por um agendamento ou pelo endereço no mapa.',
+        en: 'I like to work in steps: I plan the structure, build feature by feature, then test and refine until the result feels consistent. I care about clean, maintainable code, responsiveness, a well-crafted interface and technical decisions that solve real problems. I also use AI tools as support, always making sure I understand, review and validate what they suggest. On a website, I think about the visitor: the right information up front, a look that fits the business and an easy path to getting in touch, whether by WhatsApp, a booking or the address on a map.',
       },
       {
         pt: 'Fora do código, minha maior paixão é a música: ela está comigo em quase tudo o que faço, inclusive enquanto programo. Por isso este portfólio tem uma seção com o que ando ouvindo no Spotify.',
@@ -353,7 +353,10 @@ export const portfolio: PortfolioData<'source'> = {
       {
         kind: 'focus',
         label: { pt: 'Foco', en: 'Focus' },
-        value: { pt: 'Web, mobile e design de interfaces', en: 'Web, mobile and interface design' },
+        value: {
+          pt: 'Sites, landing pages, aplicativos e design de interfaces',
+          en: 'Websites, landing pages, apps and interface design',
+        },
       },
       {
         kind: 'languages',
@@ -393,7 +396,7 @@ export const portfolio: PortfolioData<'source'> = {
     ],
     interests: [
       { pt: 'UI/UX e Interação Humano-Computador', en: 'UI/UX and Human-Computer Interaction' },
-      { pt: 'Desenvolvimento web', en: 'Web development' },
+      { pt: 'Criação de sites e landing pages', en: 'Websites and landing pages' },
       { pt: 'Desenvolvimento mobile', en: 'Mobile development' },
       { pt: 'Aplicações desktop', en: 'Desktop applications' },
       { pt: 'Design responsivo', en: 'Responsive design' },
@@ -453,15 +456,18 @@ export const portfolio: PortfolioData<'source'> = {
 
   contact: {
     intro: {
-      pt: 'Tenho interesse em oportunidades e parcerias em desenvolvimento web, mobile e desktop, principalmente em projetos que juntem tecnologia e uma boa experiência de uso. Me chame para conversar sobre ideias, projetos ou oportunidades!',
-      en: 'I’m interested in opportunities and collaborations in web, mobile and desktop development, especially projects that bring technology and user experience together. Reach out to talk about ideas, projects or opportunities!',
+      pt: 'Precisa de um site ou de uma landing page para o seu consultório, loja ou negócio? Faço páginas sob medida, bonitas, rápidas e pensadas para o celular. Também tenho interesse em oportunidades e parcerias em desenvolvimento de sites e aplicativos. Me chame para conversar sobre a sua ideia!',
+      en: 'Need a website or a landing page for your practice, shop or business? I build custom pages that look good, load fast and are designed for phones. I’m also interested in opportunities and collaborations in website and app development. Reach out to talk about your idea!',
     },
     email: 'pppedro95@gmail.com',
     secondaryEmail: 'pedropaulo0720@outlook.com',
     // Sem `url`, o canal não aparece. Falta: LinkedIn e currículo (veja docs/Pendencias_Futuras.docx).
     links: [
+      { label: 'WhatsApp', url: 'https://wa.me/5542998665139', display: '+55 (42) 9 9866-5139' },
       { label: 'GitHub', url: 'https://github.com/PedroPaulo00' },
       { label: 'Instagram', url: 'https://www.instagram.com/pedropaulo.mp3/' },
+      // Facebook: quando o perfil existir, troque `soon: true` por url: 'https://facebook.com/...'.
+      { label: 'Facebook', soon: true },
       { label: 'LinkedIn' },
       { label: { pt: 'Currículo (PDF)', en: 'Résumé (PDF)' } },
     ],
@@ -625,8 +631,8 @@ export const portfolio: PortfolioData<'source'> = {
         title: { pt: 'Links externos', en: 'External links' },
         paragraphs: [
           {
-            pt: 'Os links para GitHub, Instagram, demonstrações de projetos e outros serviços levam a sites de terceiros, que têm políticas de privacidade próprias. As prévias de músicas da aba Spotify usam o player do próprio Spotify, que só é carregado quando você pede uma prévia e segue a política de privacidade do Spotify.',
-            en: 'Links to GitHub, Instagram, project demos and other services lead to third-party sites, which have their own privacy policies. The song previews in the Spotify tab use Spotify’s own player, which only loads when you ask for a preview and follows Spotify’s privacy policy.',
+            pt: 'Os links para WhatsApp, GitHub, Instagram, demonstrações de projetos e outros serviços levam a sites de terceiros, que têm políticas de privacidade próprias. As prévias de músicas da aba Spotify usam o player do próprio Spotify, que só é carregado quando você pede uma prévia e segue a política de privacidade do Spotify.',
+            en: 'Links to WhatsApp, GitHub, Instagram, project demos and other services lead to third-party sites, which have their own privacy policies. The song previews in the Spotify tab use Spotify’s own player, which only loads when you ask for a preview and follows Spotify’s privacy policy.',
           },
         ],
       },
