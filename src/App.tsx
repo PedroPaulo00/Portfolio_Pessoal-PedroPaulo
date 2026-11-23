@@ -90,8 +90,8 @@ export function App() {
   // Depois de "Reiniciar", a inicialização toca o vídeo sem esperar o botão.
   const [autoBoot, setAutoBoot] = useState(false);
   // Janela aberta, minimizada (volta pela barra de tarefas) ou fechada (abre pelo
-  // ícone "Portfólio"). Fora de cena, só a área de trabalho fica à vista. Depois
-  // de ligar, o portfólio começa fechado: o visitante o abre pelo ícone.
+  // ícone "Portfólio"). Fora de cena, só a área de trabalho fica à vista. Ao
+  // terminar de ligar, o portfólio abre sozinho (como ao clicar no ícone).
   const [windowState, setWindowState] = useState<WindowState>('closed');
   // Ir para outro destino (menu, ícone, voltar/avançar) traz a janela de volta.
   const [shownRoute, setShownRoute] = useState(route);
@@ -171,6 +171,18 @@ export function App() {
     shortcutRef.current?.focus({ preventScroll: true });
   }, [booted, windowState]);
 
+  // Terminou de ligar com a janela aberta (abre sozinha): o foco vai para o título
+  // da seção, para teclado e leitores de tela começarem pelo portfólio.
+  useEffect(() => {
+    if (!booted) return;
+    const frame = requestAnimationFrame(() => {
+      if (windowRef.current?.closest('[inert]')) return;
+      mainRef.current?.querySelector<HTMLElement>('[data-view-heading]')?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(frame);
+    // Só na passagem para "ligado"; navegações depois cuidam do próprio foco.
+  }, [booted]);
+
   // A música acompanha a janela: toca com ela aberta (por qualquer caminho: ícone,
   // menu Iniciar...), continua com ela minimizada e para quando é fechada.
   useEffect(() => {
@@ -235,8 +247,8 @@ export function App() {
    * Desligar ou reiniciar: a música para na hora (com a saída curta), a janela
    * fecha por trás da tela "Desligando..." e, no fim dela, o site volta ao botão
    * de ligar (desligar) ou ao vídeo de inicialização (reiniciar). Ao ligar de
-   * novo, tudo recomeça como na primeira visita: portfólio fechado e música só
-   * quando ele for aberto.
+   * novo, tudo recomeça como na primeira visita: o portfólio abre sozinho no fim
+   * da inicialização.
    */
   const powerOff = (action: PowerAction) => {
     if (power) return;
@@ -303,6 +315,9 @@ export function App() {
             onDone={(byKeyboard) => {
               skipShortcutFocus.current = !byKeyboard;
               setBooted(true);
+              // Fim da inicialização: a janela do portfólio abre sozinha, com a
+              // mesma animação e a música de quando se clica no ícone.
+              reopenWindow();
             }}
           />
         )}
