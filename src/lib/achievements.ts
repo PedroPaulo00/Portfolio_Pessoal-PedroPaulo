@@ -8,7 +8,7 @@
  * A 30ª conquista ("collector") vem sozinha quando as outras 29 foram achadas.
  */
 import { useSyncExternalStore } from 'react';
-import { soundPrefs } from './ambient';
+import { effectsPrefs } from './effectsVolume';
 
 export const SECRET_IDS = [
   'konami',
@@ -119,7 +119,7 @@ let audio: AudioContext | null = null;
  * Respeita o "mudo" e o volume escolhidos pelo visitante.
  */
 function playUnlockSound(): void {
-  const { muted, volume } = soundPrefs();
+  const { muted, volume } = effectsPrefs();
   if (muted || volume <= 0) return;
   try {
     audio ??= new AudioContext();

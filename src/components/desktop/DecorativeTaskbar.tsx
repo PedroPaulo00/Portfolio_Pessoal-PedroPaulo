@@ -9,6 +9,7 @@ import { BrandMark } from '../ui/BrandMark';
 import { Icon } from '../ui/Icon';
 import { TaskbarClock } from './TaskbarClock';
 import './desktop.css';
+import { BatteryIndicator } from './BatteryIndicator';
 
 interface DecorativeTaskbarProps {
   readonly profile: Profile;
@@ -175,6 +176,7 @@ export function DecorativeTaskbar({
             <i />
           </span>
         </span>
+        <BatteryIndicator />
         {volumeControl}
         <TaskbarClock onOpenSettings={onOpenDateSettings} />
       </div>

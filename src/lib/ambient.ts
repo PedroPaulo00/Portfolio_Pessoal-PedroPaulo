@@ -56,7 +56,7 @@ function readBool(key: string): boolean {
   }
 }
 
-/** "Mudo" e volume (0–100) escolhidos pelo visitante: efeitos curtos (ex.: conquistas) os respeitam. */
+/** "Mudo" e volume (0–100) da música de fundo (os efeitos têm os seus: lib/effectsVolume.ts). */
 let analyser: AnalyserNode | null = null;
 
 /** Analisador do som de fundo (null antes de a música carregar pela primeira vez). */

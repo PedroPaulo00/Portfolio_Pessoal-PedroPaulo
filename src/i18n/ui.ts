@@ -94,9 +94,14 @@ const pt = {
   language: 'Idioma',
 
   // Volume
-  soundOff: 'Som de fundo desligado',
-  soundLevel: (volume: number) => `Volume do som de fundo: ${volume}%`,
-  soundPanel: 'Volume do som de fundo',
+  soundMixerLabel: (music: number, effects: number) =>
+    `Volume: música ${music ? `${music}%` : 'sem som'}, efeitos ${effects ? `${effects}%` : 'sem som'}`,
+  soundMusic: 'Música',
+  soundEffects: 'Efeitos',
+  volumeOf: (channel: string) => `Volume: ${channel}`,
+  muteOf: (channel: string) => `Silenciar: ${channel}`,
+  battery: (level: number, charging: boolean) => `Bateria: ${level}%${charging ? ' (carregando)' : ' restante'}`,
+  soundPanel: 'Mixer de volume',
   volume: 'Volume',
   muted: 'Silenciado',
   unmute: 'Ativar som',
@@ -474,9 +479,14 @@ const en: UiStrings = {
   blurUnsupported: 'This browser does not support background blur; the glass is shown translucent without blur.',
   language: 'Language',
 
-  soundOff: 'Background sound off',
-  soundLevel: (volume) => `Background sound volume: ${volume}%`,
-  soundPanel: 'Background sound volume',
+  soundMixerLabel: (music, effects) =>
+    `Volume: music ${music ? `${music}%` : 'off'}, effects ${effects ? `${effects}%` : 'off'}`,
+  soundMusic: 'Music',
+  soundEffects: 'Effects',
+  volumeOf: (channel) => `Volume: ${channel}`,
+  muteOf: (channel) => `Mute: ${channel}`,
+  battery: (level, charging) => `Battery: ${level}%${charging ? ' (charging)' : ' remaining'}`,
+  soundPanel: 'Volume mixer',
   volume: 'Volume',
   muted: 'Muted',
   unmute: 'Unmute',

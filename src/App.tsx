@@ -19,6 +19,7 @@ import { useWindowDrag } from './lib/windowDrag';
 import { EggLayer } from './components/eggs/EggLayer';
 import { playEffect, toggleStarryWallpaper } from './lib/eggBus';
 import { installConsoleEgg } from './lib/consoleEgg';
+import { installSystemSounds, playSystemSound } from './lib/systemSounds';
 import { AboutSection } from './components/sections/AboutSection';
 import { ContactSection } from './components/sections/ContactSection';
 import { HeroSection } from './components/sections/HeroSection';
@@ -109,6 +110,8 @@ export function App() {
   const [copied, setCopied] = useState(false);
   // Easter egg: mensagem e desafio no console do navegador (F12).
   useEffect(installConsoleEgg, []);
+  // Sons do Windows 7 (clique de navegação nos links externos; baixa tudo no 1º gesto).
+  useEffect(installSystemSounds, []);
   // O site abre "desligado": botão de ligar → vídeo de inicialização → área de trabalho.
   const [booted, setBooted] = useState(false);
   // Desligar/Reiniciar (menu Iniciar): a tela "Desligando..." está à mostra.
@@ -171,6 +174,8 @@ export function App() {
       firstRender.current = false;
       return;
     }
+    // O clique de "iniciar navegação" do Windows Explorer a cada troca de página.
+    playSystemSound('navigate');
     const main = mainRef.current;
     if (main && main.getBoundingClientRect().top < 0) {
       main.scrollIntoView({ block: 'start' });
@@ -241,8 +246,10 @@ export function App() {
       // O foco vai para o botão da janela na barra: é por ele que se restaura
       // (quem minimizou pelo "−" da moldura ficaria com o foco numa janela inerte).
       button?.focus({ preventScroll: true });
+      playSystemSound('minimize');
       setWindowState('minimized');
     } else {
+      playSystemSound('restore');
       setWindowState('open');
     }
   };
@@ -257,7 +264,7 @@ export function App() {
     setWindowState('closed');
   };
 
-  const reopenWindow = () => {
+  const reopenWindow = (fromBoot = false) => {
     const frame = windowRef.current;
     if (frame) {
       // Abre a partir do meio da parte visível (mesmo ponto usado ao fechar).
@@ -266,6 +273,7 @@ export function App() {
     }
     // Dentro do clique: o navegador libera o áudio na hora (ver lib/ambient.ts).
     playSound();
+    if (!fromBoot) playSystemSound('restore');
     setWindowState('open');
     // Depois de voltar a ser focável (sai do `inert` no próximo render).
     requestAnimationFrame(() =>
@@ -283,6 +291,7 @@ export function App() {
   const powerOff = (action: PowerAction) => {
     if (power) return;
     stopSound();
+    playSystemSound('shutdown');
     closeWindow();
     setPower(action);
   };
@@ -292,8 +301,10 @@ export function App() {
     setBooted(false);
   };
 
-  const openMenu = (opener: HTMLElement | null, view: 'main' | 'settings' = 'main') =>
+  const openMenu = (opener: HTMLElement | null, view: 'main' | 'settings' = 'main') => {
+    playSystemSound('menu');
     setMenu({ open: true, opener, view });
+  };
 
   const changeTheme = (next: Theme) => {
     applyTheme(next, true);
@@ -316,6 +327,7 @@ export function App() {
     try {
       await navigator.clipboard.writeText(contact.email);
       setCopied(true);
+      playSystemSound('info');
       setStatus(t.emailCopied);
       window.setTimeout(() => setCopied(false), 2500);
     } catch {
@@ -347,7 +359,7 @@ export function App() {
               setBooted(true);
               // Fim da inicialização: a janela do portfólio abre sozinha, com a
               // mesma animação e a música de quando se clica no ícone.
-              reopenWindow();
+              reopenWindow(true);
             }}
           />
         )}
@@ -402,7 +414,7 @@ export function App() {
             />
           ) : null}
           {windowState === 'closed' ? (
-            <PortfolioShortcut image={portfolioIcon} buttonRef={shortcutRef} onOpen={reopenWindow} />
+            <PortfolioShortcut image={portfolioIcon} buttonRef={shortcutRef} onOpen={() => reopenWindow()} />
           ) : null}
 
           <div className={`desktop-stage${content.desktopIcons.length > 0 ? ' desktop-stage--with-icons' : ''}`}>

@@ -6,6 +6,7 @@ import { useI18n } from '../../i18n/I18n';
 import { unlockAchievement } from '../../lib/achievements';
 import { shakeElement } from '../../lib/eggs';
 import './messenger.css';
+import { effectsGain } from '../../lib/effectsVolume';
 
 /**
  * Janela do MSN (ícone da área de trabalho): a imagem do Windows Live Messenger
@@ -145,11 +146,15 @@ let audio: AudioContext | null = null;
 let noise: AudioBuffer | null = null;
 
 function playKnocks(impacts: readonly number[]) {
+  const gain = effectsGain();
+  if (gain <= 0) return;
   try {
     audio ??= new AudioContext();
     void audio.resume().catch(() => undefined);
     const start = audio.currentTime + 0.02;
-    impacts.forEach((ms, i) => tok(audio!, start + ms / 1000, i === impacts.length - 1 ? 1 : 0.85));
+    impacts.forEach((ms, i) =>
+      tok(audio!, start + ms / 1000, (i === impacts.length - 1 ? 1 : 0.85) * (0.4 + 0.6 * gain)),
+    );
   } catch {
     /* sem Web Audio: só a animação */
   }

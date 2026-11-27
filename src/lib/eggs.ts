@@ -3,7 +3,7 @@
  * sonoros gerados na hora (sem arquivos), que respeitam o mudo e o volume do visitante.
  */
 
-import { soundPrefs } from './ambient';
+import { effectsPrefs } from './effectsVolume';
 
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -47,7 +47,7 @@ let audio: AudioContext | null = null;
 
 /** Contexto de áudio dos efeitos curtos, ou null se o visitante deixou o som mudo. */
 function context(): AudioContext | null {
-  const { muted, volume } = soundPrefs();
+  const { muted, volume } = effectsPrefs();
   if (muted || volume <= 0) return null;
   try {
     audio ??= new AudioContext();
@@ -58,7 +58,7 @@ function context(): AudioContext | null {
   }
 }
 
-const level = () => 0.25 + 0.75 * Math.pow(soundPrefs().volume / 100, 2);
+const level = () => 0.25 + 0.75 * Math.pow(effectsPrefs().volume / 100, 2);
 
 function noiseBuffer(ctx: AudioContext, seconds: number): AudioBuffer {
   const buffer = ctx.createBuffer(1, Math.floor(ctx.sampleRate * seconds), ctx.sampleRate);

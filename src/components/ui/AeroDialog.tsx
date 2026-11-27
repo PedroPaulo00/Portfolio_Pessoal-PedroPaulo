@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, type CSSProperties, type ReactNode } from 'react';
 import { useI18n } from '../../i18n/I18n';
+import { playSystemSound } from '../../lib/systemSounds';
 import '../window/window.css';
 
 interface AeroDialogProps {
@@ -55,11 +56,21 @@ export function AeroDialog({
     const dialog = ref.current;
     if (!dialog) return;
     if (open && !dialog.open) {
+      // O "balão" do Windows 7 ao surgir uma janela pop-up.
+      playSystemSound('popup');
       if (modal) dialog.showModal();
       else dialog.show();
     }
     if (!open && dialog.open) dialog.close();
   }, [open, modal]);
+
+  // Minimizar/restaurar (pela barra de título ou pela barra de tarefas), com som.
+  const wasMinimized = useRef(minimized);
+  useEffect(() => {
+    if (wasMinimized.current === minimized) return;
+    wasMinimized.current = minimized;
+    playSystemSound(minimized ? 'minimize' : 'restore');
+  }, [minimized]);
 
   return (
     <dialog

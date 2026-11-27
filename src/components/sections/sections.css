@@ -897,23 +897,72 @@ button.presence {
 }
 
 /* ---------- Serviços ----------
-   Cartões como os painéis do Painel de Controle do Windows 7: ladrilho de vidro
-   com o ícone, título no verde dos títulos e a lista do que está incluso com
-   marcas de "ok". O serviço principal ocupa a largura toda, com um selo verde. */
+   O serviço principal num painel de vidro Aero largo, com a prévia de um site;
+   os demais em cartões com a cor de cada serviço (--svc): faixa de vidro tingida
+   no topo, ladrilho do ícone com aro colorido e a lista do que está incluso com
+   marcas de "ok" verdes, como no Windows 7. */
 .services__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
   margin: 0;
   padding: 0;
   list-style: none;
 }
+@container main (min-width: 30rem) {
+  .services__grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .service-card {
+    grid-column: span 3;
+  }
+  .service-card.is-tail2-full,
+  .service-card--featured {
+    grid-column: 1 / -1;
+  }
+}
+@container main (min-width: 52rem) {
+  .service-card,
+  .service-card.is-tail2-full {
+    grid-column: span 2;
+  }
+  .service-card.is-tail3-half {
+    grid-column: span 3;
+  }
+  .service-card.is-tail3-full,
+  .service-card--featured {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Cores de cada serviço (novos serviços ficam no azul Aero). */
 .service-card {
+  --svc: #2b8fd8;
+}
+.service-card[data-service='apps'] {
+  --svc: #1fa37a;
+}
+.service-card[data-service='sistemas'] {
+  --svc: #6c5ad6;
+}
+.service-card[data-service='automacao'] {
+  --svc: #e08a1c;
+}
+.service-card[data-service='design'] {
+  --svc: #d24f8e;
+}
+.service-card[data-service='formatacao'] {
+  --svc: #3d7fae;
+}
+
+.service-card {
+  position: relative;
   display: flex;
   min-width: 0;
-  background: linear-gradient(var(--surface), var(--sidebar));
-  border: 1px solid var(--divider);
-  border-radius: 6px;
+  overflow: hidden;
+  background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--svc) 30%, var(--divider));
+  border-radius: 8px;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.7),
     0 1px 3px rgba(0, 40, 80, 0.08);
@@ -927,10 +976,10 @@ button.presence {
 }
 @media (hover: hover) {
   .service-card:hover {
-    border-color: var(--selection-border);
+    border-color: color-mix(in srgb, var(--svc) 70%, transparent);
     box-shadow:
       inset 0 1px 0 rgba(255, 255, 255, 0.7),
-      0 4px 12px rgba(30, 100, 160, 0.16);
+      0 6px 18px color-mix(in srgb, var(--svc) 24%, transparent);
   }
 }
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
@@ -943,26 +992,43 @@ button.presence {
   flex-direction: column;
   gap: var(--space-3);
   width: 100%;
-  padding: var(--space-4);
+  padding: 0 var(--space-4) var(--space-4);
 }
+
+/* Faixa de vidro tingida no topo do cartão, com o ladrilho e o título. */
 .service-card__head {
   display: flex;
   align-items: flex-start;
   gap: 12px;
+  margin: 0 calc(var(--space-4) * -1);
+  padding: var(--space-4) var(--space-4) var(--space-3);
+  background: linear-gradient(
+    color-mix(in srgb, var(--svc) 16%, var(--surface)),
+    color-mix(in srgb, var(--svc) 7%, var(--surface)) 55%,
+    var(--surface)
+  );
+  border-top: 3px solid var(--svc);
 }
-/* Ladrilho de vidro claro (igual ao das Tecnologias, maior), nos dois temas. */
 .service-card__tile {
   flex: none;
-  width: 52px;
-  height: 52px;
+  width: 54px;
+  height: 54px;
   display: grid;
   place-items: center;
-  border: 1px solid rgba(13, 90, 166, 0.3);
-  border-radius: 10px;
-  background: linear-gradient(#ffffff, #eef5fb 50%, #dfeaf5 51%, #f4f9fd);
+  border: 1px solid color-mix(in srgb, var(--svc) 55%, #fff);
+  border-radius: 12px;
+  background:
+    radial-gradient(120% 70% at 50% 0%, rgba(255, 255, 255, 0.95), transparent 60%),
+    linear-gradient(
+      #ffffff,
+      color-mix(in srgb, var(--svc) 10%, #f3f8fc) 50%,
+      color-mix(in srgb, var(--svc) 22%, #e2edf6) 51%,
+      #f6fbff
+    );
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.95),
-    0 2px 5px rgba(0, 40, 80, 0.16);
+    0 0 0 3px color-mix(in srgb, var(--svc) 14%, transparent),
+    0 3px 8px color-mix(in srgb, var(--svc) 28%, transparent);
 }
 .service-card__intro {
   min-width: 0;
@@ -981,7 +1047,7 @@ button.presence {
 /* Lista do que está incluso: marca verde de vidro com um "ok" branco. */
 .service-card__includes {
   display: grid;
-  gap: 5px;
+  gap: 6px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -989,7 +1055,7 @@ button.presence {
 }
 .service-card__includes li {
   position: relative;
-  padding-left: 24px;
+  padding-left: 25px;
   line-height: 1.45;
 }
 .service-card__includes li::before {
@@ -1010,7 +1076,7 @@ button.presence {
 }
 .service-card__ideal {
   margin: auto 0 0;
-  padding-top: var(--space-2);
+  padding-top: var(--space-3);
   font-size: var(--text-small);
   color: var(--text-secondary);
   border-top: 1px dashed var(--divider);
@@ -1019,28 +1085,109 @@ button.presence {
   color: var(--text);
 }
 
-/* Destaque (sites): a largura toda, tom azul Aero e selo verde. */
+/* ---- Destaque (sites): painel largo de vidro Aero com a prévia de um site ---- */
 .service-card--featured {
-  grid-column: 1 / -1;
-  background: linear-gradient(
-    color-mix(in srgb, #2b93dc 14%, var(--surface)),
-    color-mix(in srgb, #2b93dc 5%, var(--sidebar)) 60%
-  );
+  --svc: #2b8fd8;
   border-color: var(--selection-border);
+  background:
+    radial-gradient(60% 90% at 100% 0%, color-mix(in srgb, #4cc7ff 28%, transparent), transparent 70%),
+    radial-gradient(50% 80% at 0% 100%, color-mix(in srgb, #6be0b4 18%, transparent), transparent 70%),
+    linear-gradient(
+      160deg,
+      color-mix(in srgb, #2b93dc 14%, var(--surface)),
+      color-mix(in srgb, #2b93dc 4%, var(--sidebar)) 70%
+    );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 3px 12px rgba(30, 100, 160, 0.16);
+}
+[data-theme='dark'] .service-card--featured {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 3px 12px rgba(0, 0, 0, 0.35);
+}
+/* Faixas de luz diagonais (o "brilho" das janelas Aero). */
+.service-card--featured::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      115deg,
+      transparent 52%,
+      rgba(255, 255, 255, 0.35) 52.5%,
+      rgba(255, 255, 255, 0.08) 60%,
+      transparent 60.5%
+    ),
+    linear-gradient(115deg, transparent 63%, rgba(255, 255, 255, 0.18) 63.5%, transparent 68%);
+}
+[data-theme='dark'] .service-card--featured::before {
+  opacity: 0.25;
+}
+.service-card--featured > article {
+  position: relative;
+  display: grid;
+  gap: var(--space-5);
+  padding: var(--space-5);
+}
+.service-card__body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-3);
+  min-width: 0;
+}
+.service-card--featured .service-card__head {
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: 0;
 }
 .service-card--featured .service-card__tile {
-  width: 64px;
-  height: 64px;
-  border-radius: 12px;
+  width: 68px;
+  height: 68px;
+  border-radius: 14px;
 }
 .service-card--featured .service-card__title {
-  font-size: var(--text-subtitle);
+  font-size: var(--text-title);
 }
 .service-card--featured .service-card__summary {
   font-size: var(--text-body);
 }
+.service-card--featured .service-card__includes {
+  width: 100%;
+  gap: 7px;
+}
+.service-card--featured .service-card__ideal {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+.service-card__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.service-card__chips li {
+  padding: 2px 10px;
+  font-size: var(--text-caption);
+  color: var(--text);
+  border: 1px solid var(--selection-border);
+  border-radius: 999px;
+  background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(220, 238, 252, 0.85));
+  box-shadow: inset 0 1px 0 #fff;
+}
+[data-theme='dark'] .service-card__chips li {
+  background: linear-gradient(rgba(70, 110, 150, 0.55), rgba(40, 70, 100, 0.55));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
 .service-card__ribbon {
-  align-self: flex-start;
   padding: 2px 10px;
   font-size: var(--text-caption);
   font-weight: var(--font-bold);
@@ -1056,6 +1203,174 @@ button.presence {
   .service-card--featured .service-card__includes {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     column-gap: var(--space-5);
+  }
+}
+@container main (min-width: 52rem) {
+  .service-card--featured > article {
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    align-items: center;
+  }
+}
+
+/* Prévia do site: janela de navegador Aero e um celular na frente. */
+.site-preview {
+  position: relative;
+  width: min(100%, 360px);
+  justify-self: center;
+  padding: 0 28px 26px 0;
+}
+@container main (max-width: 30rem) {
+  .site-preview {
+    display: none;
+  }
+}
+.site-preview__browser {
+  border: 1px solid rgba(20, 70, 120, 0.45);
+  border-radius: 7px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow:
+    0 10px 28px rgba(10, 50, 100, 0.25),
+    0 0 0 4px rgba(255, 255, 255, 0.35);
+}
+.site-preview__bar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  background: linear-gradient(#d9ecfb, #b6d6f2 50%, #a4cbee 51%, #c3def5);
+  border-bottom: 1px solid rgba(20, 70, 120, 0.3);
+}
+.site-preview__bar i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  box-shadow: inset 0 0 0 1px rgba(20, 70, 120, 0.35);
+}
+.site-preview__bar i:first-child {
+  background: radial-gradient(circle at 40% 35%, #ffb3a6, #d8402c);
+}
+.site-preview__url {
+  flex: 1;
+  height: 10px;
+  margin-left: 6px;
+  border-radius: 3px;
+  background: #fff;
+  box-shadow: inset 0 0 0 1px rgba(20, 70, 120, 0.25);
+}
+.site-preview__page {
+  display: grid;
+  gap: 10px;
+  padding: 0 0 12px;
+}
+.site-preview__hero {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+  padding: 18px 16px 16px;
+  background:
+    radial-gradient(70% 120% at 85% 10%, rgba(120, 230, 255, 0.75), transparent 60%),
+    linear-gradient(135deg, #1b6fc0, #31a6e6 60%, #48d0c4);
+}
+.site-preview__line {
+  display: block;
+  width: 70%;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.7);
+}
+.site-preview__line--title {
+  width: 55%;
+  height: 10px;
+  background: #fff;
+}
+.site-preview__line--short {
+  width: 45%;
+}
+.site-preview__cta {
+  display: block;
+  width: 64px;
+  height: 16px;
+  margin-top: 4px;
+  border-radius: 8px;
+  background: linear-gradient(#7fdc4c, #3c9e1c);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+.site-preview__cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 0 12px;
+}
+.site-preview__cards span {
+  height: 42px;
+  border-radius: 5px;
+  background: linear-gradient(#f1f7fd, #dcebf8);
+  box-shadow: inset 0 0 0 1px #c8dcef;
+}
+.site-preview__phone {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 96px;
+  padding: 7px 5px 12px;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #3b4652, #12181f);
+  box-shadow:
+    0 10px 24px rgba(0, 20, 50, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+.site-preview__phone-screen {
+  display: grid;
+  gap: 5px;
+  padding-bottom: 6px;
+  overflow: hidden;
+  border-radius: 10px;
+  background: #fff;
+  position: relative;
+}
+.site-preview__hero--phone {
+  gap: 4px;
+  padding: 12px 8px 10px;
+}
+.site-preview__hero--phone .site-preview__line--title {
+  width: 80%;
+  height: 7px;
+}
+.site-preview__hero--phone .site-preview__line {
+  height: 4px;
+}
+.site-preview__hero--phone .site-preview__cta {
+  width: 36px;
+  height: 10px;
+}
+.site-preview__block {
+  height: 20px;
+  margin: 0 6px;
+  border-radius: 4px;
+  background: linear-gradient(#f1f7fd, #dcebf8);
+  box-shadow: inset 0 0 0 1px #c8dcef;
+}
+/* Botão flutuante de WhatsApp, como nos sites que eu entrego. */
+.site-preview__whatsapp {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #7dfca0, #25b54f);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .site-preview__phone {
+    animation: site-preview-float 6s ease-in-out infinite;
+  }
+}
+@keyframes site-preview-float {
+  50% {
+    translate: 0 -5px;
   }
 }
 

@@ -33,11 +33,12 @@ Portfólio pessoal de **Pedro Paulo de Lima**, desenvolvedor de sites e aplicati
 
 - **Tela de ligar:** o site abre "desligado". O botão de energia toca a animação de inicialização, revela a área de trabalho e abre o portfólio sozinho (com a música).
 - **Janela de verdade:** minimizar (encolhe até a barra de tarefas), fechar, reabrir pelo ícone e, no computador, arrastar pela barra de título.
-- **Barra de tarefas:** botão Iniciar, botão "Alternar entre janelas" (Flip 3D, no computador), botões das janelas abertas (com miniatura ao passar o mouse), idioma, volume e relógio que abre um calendário Aero funcional.
+- **Barra de tarefas:** botão Iniciar, botão "Alternar entre janelas" (Flip 3D, no computador), botões das janelas abertas (com miniatura ao passar o mouse), idioma, bateria (a do aparelho do visitante, em navegadores que informam), volume e relógio que abre um calendário Aero funcional.
 - **Desligar e reiniciar** pelo menu Iniciar, com as telas "Desligando..." e "Reiniciando...".
 - **Ícones da área de trabalho que funcionam:** a Lixeira mostra seu conteúdo; o **MSN** abre o Messenger e o "chamar a atenção" (a mão bate na tela, a janela treme e toca um "toc toc"); o **Media Player** toca vídeos na skin da cabeça verde, com anterior, próximo, pausa, minimizar e fechar; o **Clippy** comenta o que você está vendo e dá dicas; o **BonziBuddy** surfa pela tela até ser clicado. Tudo o que abre aparece na barra de tarefas.
 - **Segredos escondidos:** o site guarda easter eggs (referências ao Windows, ao MSN, aos anos 2000 e ao dono) e conta os achados no menu Iniciar, com notificações no estilo das conquistas do Xbox 360. Descubra!
 - **Som de fundo** em loop, a partir do momento em que o portfólio é aberto, com controle de volume na bandeja. Ele para ao fechar a janela, ao trocar de aba e ao minimizar o navegador, e se cala sozinho enquanto um vídeo ou uma prévia do Spotify toca.
+- **Sons do Windows 7** por todo o site: o clique ao trocar de página, minimizar e restaurar, o balão das janelas pop-up, o bipe ao ajustar o volume, a Lixeira, o desligar. O volume da bandeja é um mixer com dois controles, como no Windows 7: um para a música de fundo e outro para os efeitos.
 - **Acessível e responsivo:** navegação completa por teclado, leitores de tela, preferência por menos movimento, de 320 px a telas largas, em Chrome, Edge e Safari (testado com os motores Chromium e WebKit).
 
 ## Tecnologias
@@ -115,7 +116,7 @@ O site não usa cookies nem pede dados pessoais. Guarda no navegador só prefer�
 ## Créditos
 
 - Ícones de tecnologias: [Devicon](https://devicon.dev) (MIT) e [Simple Icons](https://simpleicons.org) (CC0). As marcas pertencem aos seus donos.
-- Logos e imagens do Windows, do Spotify, do MSN, do Windows Media Player, do Clippy, do BonziBuddy, do Club Penguin, do WhatsApp, do Facebook, dos jogos e dos demais programas da área de trabalho, assim como o escudo da Lixeira e a pintura _A Noite Estrelada_ (domínio público), são marcas e obras de terceiros, usadas apenas como referência visual e de homenagem, sem fins comerciais.
+- Logos e imagens do Windows, do Spotify, do MSN, do Windows Media Player, do Clippy, do BonziBuddy, do Club Penguin, do WhatsApp, do Facebook, dos jogos e dos demais programas da área de trabalho, assim como os sons do sistema do Windows 7, o escudo da Lixeira e a pintura _A Noite Estrelada_ (domínio público), são marcas e obras de terceiros, usadas apenas como referência visual e de homenagem, sem fins comerciais.
 - Fonte Frutiger e recursos do Aero UI Kit: veja [`aero-ui-kit/LEIA-ME.md`](aero-ui-kit/LEIA-ME.md).
 
 ## Autor

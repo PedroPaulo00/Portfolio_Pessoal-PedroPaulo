@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useI18n } from '../../i18n/I18n';
+import { playSystemSound } from '../../lib/systemSounds';
 import './bluescreen.css';
 
 /** Código de erro técnico (igual nas duas línguas). i18n-exempt */
@@ -13,6 +14,9 @@ const STOP = '*** STOP: 0x0000007B (0xDEADBEEF, 0x00000007, 0x1337C0DE, 0x000000
 export function BlueScreen({ onDone }: { readonly onDone: () => void }) {
   const { t } = useI18n();
   const ref = useRef<HTMLDivElement>(null);
+
+  // Só uma vez, ao aparecer (o efeito abaixo pode repetir se onDone mudar).
+  useEffect(() => playSystemSound('criticalStop'), []);
 
   useEffect(() => {
     ref.current?.focus();

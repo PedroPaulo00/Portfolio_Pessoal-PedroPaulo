@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useI18n } from '../../i18n/I18n';
 import { playEffect } from '../../lib/eggBus';
 import { playSadTrombone } from '../../lib/eggs';
+import { playSystemSound } from '../../lib/systemSounds';
 import type { DesktopIconContent } from '../../types/portfolio';
 import { Icon } from '../ui/Icon';
 
@@ -23,6 +24,7 @@ export function RecycleBin({ content }: { readonly content: DesktopIconContent }
         onClick={() => {
           if (moved) return;
           setMoved(true);
+          playSystemSound('recycle');
           playSadTrombone();
           playEffect('palestra');
         }}
