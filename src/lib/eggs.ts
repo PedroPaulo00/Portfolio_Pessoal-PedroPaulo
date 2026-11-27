@@ -179,3 +179,37 @@ export function playDrop(): void {
     osc.stop(t0 + start + 0.18);
   }
 }
+
+/**
+ * Gargalhada irritante (para quando o navegador não tem voz sintetizada):
+ * sílabas "rá" de serra com formante, cada uma um pouco mais aguda e esganiçada.
+ */
+export function playLaughSynth(): void {
+  const ctx = context();
+  if (!ctx) return;
+  const out = ctx.createGain();
+  out.gain.value = 0.22 * level();
+  out.connect(ctx.destination);
+  const formant = ctx.createBiquadFilter();
+  formant.type = 'bandpass';
+  formant.frequency.value = 1100;
+  formant.Q.value = 2.2;
+  formant.connect(out);
+  const start = ctx.currentTime + 0.02;
+  const syllables = 6 + Math.floor(Math.random() * 3);
+  for (let i = 0; i < syllables; i++) {
+    const at = start + i * 0.145;
+    const osc = ctx.createOscillator();
+    osc.type = 'sawtooth';
+    const pitch = 330 + i * 18 + Math.random() * 30;
+    osc.frequency.setValueAtTime(pitch * 1.25, at);
+    osc.frequency.exponentialRampToValueAtTime(pitch, at + 0.11);
+    const env = ctx.createGain();
+    env.gain.setValueAtTime(0, at);
+    env.gain.linearRampToValueAtTime(1, at + 0.015);
+    env.gain.exponentialRampToValueAtTime(0.001, at + 0.12);
+    osc.connect(env).connect(formant);
+    osc.start(at);
+    osc.stop(at + 0.13);
+  }
+}

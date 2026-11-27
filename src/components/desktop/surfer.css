@@ -108,3 +108,85 @@
     transform: scale(1.8);
   }
 }
+
+/* Balão de fala do Microsoft Agent: amarelo-claro, borda preta e a "cauda"
+   apontando para ele. Fica em cima (ou embaixo, perto do topo da tela) e
+   encosta na borda quando ele está perto dos lados. */
+.surfer__bubble {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 10px);
+  width: max-content;
+  max-width: min(240px, 70vw);
+  padding: 7px 10px;
+  font:
+    600 12px/1.35 Tahoma,
+    'Segoe UI',
+    sans-serif;
+  color: #000;
+  text-align: left;
+  background: #ffffe1;
+  border: 1px solid #000;
+  border-radius: 10px;
+  box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.25);
+  translate: -50% 0;
+  pointer-events: none;
+}
+.surfer__bubble::after {
+  content: '';
+  position: absolute;
+  left: calc(50% - 8px);
+  top: 100%;
+  width: 14px;
+  height: 12px;
+  background: #ffffe1;
+  border: 1px solid #000;
+  border-top: 0;
+  border-left: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+  translate: 0 -1px;
+}
+.surfer__bubble[data-v='below'] {
+  top: calc(100% + 6px);
+  bottom: auto;
+}
+.surfer__bubble[data-v='below']::after {
+  top: auto;
+  bottom: 100%;
+  border: 1px solid #000;
+  border-bottom: 0;
+  border-left: 0;
+  clip-path: polygon(0 100%, 100% 0, 100% 100%);
+  translate: 0 1px;
+}
+.surfer__bubble[data-h='start'] {
+  left: 0;
+  translate: 0 0;
+}
+.surfer__bubble[data-h='start']::after {
+  left: 24px;
+}
+.surfer__bubble[data-h='end'] {
+  left: auto;
+  right: 0;
+  translate: 0 0;
+}
+.surfer__bubble[data-h='end']::after {
+  left: auto;
+  right: 24px;
+}
+.surfer--leaving .surfer__bubble {
+  display: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .surfer__bubble-text {
+    display: block;
+    animation: surfer-say 260ms ease-out;
+  }
+}
+@keyframes surfer-say {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+}

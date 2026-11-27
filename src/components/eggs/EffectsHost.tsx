@@ -1,13 +1,14 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { useI18n } from '../../i18n/I18n';
 import reminder from '../../assets/projetos/aquanauta-lembrete.webp';
+import dvdLogo from '../../assets/desktop/dvd-logo.webp';
 import { endEffect, type ActiveEffect } from '../../lib/eggBus';
 import { playDrop } from '../../lib/eggs';
 import './eggs.css';
 
 /**
  * Os efeitos de tela dos easter eggs (carregados só quando algum roda): bolhas de
- * vidro (Konami), protetor de tela, neve, chuva "matrix", modo festa, emoticon
+ * vidro (Konami), protetor de tela do DVD, neve, chuva "matrix", modo festa, emoticon
  * gigante, balões e o chapéu de formatura. Todos são decorativos (aria-hidden),
  * não bloqueiam cliques e somem sozinhos.
  */
@@ -25,9 +26,9 @@ function Effect({ effect }: { readonly effect: ActiveEffect }) {
   const done = () => endEffect(effect.id);
   switch (effect.name) {
     case 'konami':
-      return <Canvas className="egg-canvas" duration={8} fadeOut={2} factory={bubbles('rise')} onDone={done} />;
+      return <Canvas className="egg-canvas" duration={8} fadeOut={2} factory={bubbles()} onDone={done} />;
     case 'screensaver':
-      return <Screensaver onDone={done} />;
+      return <DvdScreensaver onDone={done} />;
     case 'snow':
       return <Canvas className="egg-canvas" duration={15} fadeIn={1.2} fadeOut={3} factory={snow} onDone={done} />;
     case 'matrix':
@@ -137,39 +138,27 @@ function drawBubble(ctx: CanvasRenderingContext2D, b: Bubble) {
   ctx.fill();
 }
 
-/** Bolhas subindo (Código Konami) ou quicando devagar (protetor de tela). */
-function bubbles(mode: 'rise' | 'bounce', still = false): Factory {
+/** Bolhas de vidro subindo (Código Konami). */
+function bubbles(): Factory {
   return (ctx, width, height) => {
-    const list: Bubble[] = Array.from({ length: mode === 'rise' ? 46 : 22 }, () => {
-      const r = mode === 'rise' ? rand(18, 80) : rand(40, 130);
+    const list: Bubble[] = Array.from({ length: 46 }, () => {
+      const r = rand(18, 80);
       return {
         x: rand(r, width - r),
-        y: mode === 'rise' ? rand(height * 0.4, height + 200) : rand(r, height - r),
+        y: rand(height * 0.4, height + 200),
         r,
-        vx: mode === 'rise' ? 0 : rand(-60, 60),
-        vy: mode === 'rise' ? -rand(60, 170) : rand(-60, 60),
+        vx: 0,
+        vy: -rand(60, 170),
         hue: rand(0, 360),
         phase: rand(0, 6.28),
       };
     });
     return (t, dt) => {
-      const k = still ? 0 : 1;
       ctx.clearRect(0, 0, width, height);
-      if (mode === 'bounce') {
-        ctx.fillStyle = '#000';
-        ctx.fillRect(0, 0, width, height);
-      }
       for (const b of list) {
-        b.y += b.vy * dt * k;
-        b.x += (mode === 'rise' ? Math.sin(t * 1.4 + b.phase) * 28 : b.vx) * dt * k;
-        if (mode === 'bounce') {
-          if (b.x < b.r || b.x > width - b.r) b.vx *= -1;
-          if (b.y < b.r || b.y > height - b.r) b.vy *= -1;
-          b.x = Math.min(width - b.r, Math.max(b.r, b.x));
-          b.y = Math.min(height - b.r, Math.max(b.r, b.y));
-        } else if (b.y < -b.r * 2) {
-          b.y = height + b.r * 2;
-        }
+        b.y += b.vy * dt;
+        b.x += Math.sin(t * 1.4 + b.phase) * 28 * dt;
+        if (b.y < -b.r * 2) b.y = height + b.r * 2;
         drawBubble(ctx, b);
       }
     };
@@ -233,30 +222,110 @@ const matrix: Factory = (ctx, width, height) => {
 
 /* ---------------------------- protetor de tela -------------------------- */
 
-/** Bolhas do Windows 7 sobre o preto, até o visitante mexer no mouse, tocar ou teclar. */
-function Screensaver({ onDone }: { readonly onDone: () => void }) {
-  const still = useMemo(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches, []);
+/** Cores do logo, trocadas a cada batida na borda (como nos aparelhos de DVD). */
+const DVD_COLORS = ['#ff3131', '#ff8a00', '#ffe500', '#39ff3c', '#00e1ff', '#2f6dff', '#b44dff', '#ff4fd6', '#ffffff'];
+
+/**
+ * Protetor de tela do aparelho de DVD: o logo "DVD Video" atravessa a tela preta
+ * em diagonal, batendo nas bordas e mudando de cor a cada batida (e brilhando se
+ * acertar um canto em cheio). Some ao mexer o mouse, clicar, teclar ou, no
+ * celular, com um toque. Com "reduzir movimento", fica parado no meio, só
+ * trocando de cor.
+ */
+function DvdScreensaver({ onDone }: { readonly onDone: () => void }) {
+  const rootRef = useRef<HTMLDivElement>(null);
+  const logoRef = useRef<HTMLDivElement>(null);
+  const [leaving, setLeaving] = useState(false);
+
+  // Acordar: qualquer gesto. O toque que fecha não "vaza" para o que está embaixo
+  // (a camada preta continua por cima durante o sumiço e recebe o clique).
   useEffect(() => {
+    if (leaving) {
+      const timer = window.setTimeout(onDone, 320);
+      return () => window.clearTimeout(timer);
+    }
     const armedAt = Date.now() + 600; // ignora o movimento do próprio instante em que ele surge
     let moved = 0;
     const wake = (event: Event) => {
       if (Date.now() < armedAt) return;
-      if (event.type === 'pointermove' && (moved += 1) < 4) return; // tolera tremidinha do mouse
-      onDone();
+      if (event.type === 'pointermove' && (event as PointerEvent).pointerType === 'mouse' && (moved += 1) < 4) return;
+      if (event.type === 'pointermove' && (event as PointerEvent).pointerType !== 'mouse') return;
+      setLeaving(true);
     };
     const names = ['pointermove', 'pointerdown', 'keydown', 'wheel', 'touchstart'] as const;
-    names.forEach((name) => window.addEventListener(name, wake, { passive: true }));
-    return () => names.forEach((name) => window.removeEventListener(name, wake));
-  }, [onDone]);
+    names.forEach((name) => window.addEventListener(name, wake, { passive: true, capture: true }));
+    return () => names.forEach((name) => window.removeEventListener(name, wake, { capture: true }));
+  }, [leaving, onDone]);
+
+  useEffect(() => {
+    const root = rootRef.current;
+    const logo = logoRef.current;
+    if (!root || !logo) return;
+    let color = Math.floor(Math.random() * DVD_COLORS.length);
+    const paint = () => {
+      let next = color;
+      while (next === color) next = Math.floor(Math.random() * DVD_COLORS.length);
+      color = next;
+      logo.style.setProperty('--dvd-color', DVD_COLORS[color]!);
+    };
+    logo.style.setProperty('--dvd-color', DVD_COLORS[color]!);
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      logo.classList.add('dvd-saver__logo--still');
+      const timer = window.setInterval(paint, 2500);
+      return () => window.clearInterval(timer);
+    }
+
+    const bounds = () => ({ w: root.clientWidth - logo.offsetWidth, h: root.clientHeight - logo.offsetHeight });
+    let { w, h } = bounds();
+    let x = Math.random() * Math.max(0, w);
+    let y = Math.random() * Math.max(0, h);
+    // Velocidade proporcional à tela (devagar no celular, como na TV).
+    const speed = Math.min(190, Math.max(80, Math.min(root.clientWidth, root.clientHeight) * 0.2));
+    let vx = speed * (Math.random() < 0.5 ? -1 : 1);
+    let vy = speed * 0.78 * (Math.random() < 0.5 ? -1 : 1);
+    let last = performance.now();
+    let corner = 0;
+    let frame = 0;
+    const tick = (now: number) => {
+      const dt = Math.min(0.05, (now - last) / 1000);
+      last = now;
+      ({ w, h } = bounds());
+      x += vx * dt;
+      y += vy * dt;
+      let hitX = false;
+      let hitY = false;
+      if (x <= 0 || x >= w) {
+        vx = x <= 0 ? Math.abs(vx) : -Math.abs(vx);
+        x = Math.min(Math.max(0, x), Math.max(0, w));
+        hitX = true;
+      }
+      if (y <= 0 || y >= h) {
+        vy = y <= 0 ? Math.abs(vy) : -Math.abs(vy);
+        y = Math.min(Math.max(0, y), Math.max(0, h));
+        hitY = true;
+      }
+      if (hitX || hitY) paint();
+      // O momento mais esperado da história da TV: bater bem no canto.
+      if (hitX && hitY) {
+        logo.classList.add('is-corner');
+        window.clearTimeout(corner);
+        corner = window.setTimeout(() => logo.classList.remove('is-corner'), 1400);
+      }
+      logo.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.clearTimeout(corner);
+    };
+  }, []);
+
   return (
-    <Canvas
-      className="egg-canvas egg-canvas--screensaver"
-      duration={Infinity}
-      fadeIn={1.2}
-      fadeOut={1}
-      factory={bubbles('bounce', still)}
-      onDone={onDone}
-    />
+    <div ref={rootRef} className={`dvd-saver${leaving ? ' is-leaving' : ''}`}>
+      <div ref={logoRef} className="dvd-saver__logo" style={{ '--dvd-logo': `url(${dvdLogo})` } as CSSProperties} />
+    </div>
   );
 }
 

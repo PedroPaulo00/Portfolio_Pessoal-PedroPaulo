@@ -505,6 +505,16 @@ def flip3d_icon(size: int = 96) -> Image.Image:
     return icon.filter(ImageFilter.UnsharpMask(radius=1, percent=60, threshold=2))
 
 
+def dvd_logo(width: int = 440) -> Image.Image:
+    """Logo do DVD Video do protetor de tela: só a forma (branca, com a
+    transparência do original), para o site pintar de qualquer cor por máscara."""
+    logo = Image.open(SRC / "desktop" / "dvd_logo.png").convert("RGBA")
+    logo = logo.crop(logo.getchannel("A").getbbox())
+    white = Image.new("RGBA", logo.size, (255, 255, 255, 0))
+    white.putalpha(logo.getchannel("A"))
+    return white.resize((width, round(width * logo.height / logo.width)), Image.LANCZOS)
+
+
 def save(image: Image.Image, relative: str, **options) -> None:
     out = ROOT / relative
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -641,6 +651,8 @@ def main() -> None:
     save(logo_template(), "projetos/logos/template.png", optimize=True)
     # Ícone do Flip 3D (barra de tarefas).
     save(flip3d_icon(), "desktop/flip3d.png", optimize=True)
+    # Logo do DVD Video (protetor de tela), branco: a cor vem do CSS.
+    save(dvd_logo(), "desktop/dvd-logo.webp", format="WEBP", lossless=True, method=6)
     # Papel de parede "A Noite Estrelada" (easter egg: digitar "van gogh" na busca).
     save(Image.open(SRC / "projetos" / "logos" / "flordigital_vangogh.jpg").convert("RGB"),
          "desktop/noite-estrelada.webp", format="WEBP", quality=82, method=6)

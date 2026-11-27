@@ -207,7 +207,7 @@ export function DesktopIcons({ icons, windowOpen, onOpenWindow, poweredOn }: Des
             {icon.href ? (
               <IconLink icon={icon} href={icon.href} />
             ) : (
-              <IconButton icon={icon} onOpen={(button) => openIcon(icon, button)} />
+              <IconButton icon={icon} away={surfing?.icon.id === icon.id} onOpen={(button) => openIcon(icon, button)} />
             )}
           </li>
         ))}
@@ -391,15 +391,18 @@ function IconLink({ icon, href }: { readonly icon: DesktopIcon; readonly href: s
 
 function IconButton({
   icon,
+  away = false,
   onOpen,
 }: {
   readonly icon: DesktopIcon;
+  /** O personagem saiu do ícone (o Bonzi surfando): só o nome fica. */
+  readonly away?: boolean;
   readonly onOpen: (button: HTMLButtonElement) => void;
 }) {
   return (
     <button
       type="button"
-      className="desktop-icon desktop-icon--link"
+      className={`desktop-icon desktop-icon--link${away ? ' desktop-icon--away' : ''}`}
       aria-haspopup={icon.surf || icon.assistant ? undefined : 'dialog'}
       onClick={(event) => onOpen(event.currentTarget)}
     >

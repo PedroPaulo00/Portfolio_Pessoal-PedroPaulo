@@ -13,10 +13,47 @@
   height: 100%;
   opacity: 0;
 }
-/* Protetor de tela: cobre tudo e esconde o cursor, como o do Windows. */
-.egg-canvas--screensaver {
+/* Protetor de tela do DVD: preto por cima de tudo, sem cursor; o logo é uma
+   máscara (dvd-logo.webp, branco) pintada com a cor da vez (--dvd-color). */
+.dvd-saver {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #000;
   pointer-events: auto;
   cursor: none;
+  touch-action: none;
+  animation: dvd-in 900ms ease both;
+  transition: opacity 300ms ease;
+}
+.dvd-saver.is-leaving {
+  opacity: 0;
+}
+.dvd-saver__logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: clamp(110px, 26vmin, 290px);
+  aspect-ratio: 440 / 263;
+  background: var(--dvd-color, #fff);
+  -webkit-mask: var(--dvd-logo) center / contain no-repeat;
+  mask: var(--dvd-logo) center / contain no-repeat;
+  filter: drop-shadow(0 0 0 transparent);
+  will-change: transform;
+}
+.dvd-saver__logo--still {
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+}
+/* Acertou o canto: o logo brilha por um instante. */
+.dvd-saver__logo.is-corner {
+  filter: drop-shadow(0 0 14px var(--dvd-color)) drop-shadow(0 0 28px var(--dvd-color));
+}
+@keyframes dvd-in {
+  from {
+    opacity: 0;
+  }
 }
 
 /* Modo festa: luzes pulsando a 128 BPM (0,469 s por batida). */

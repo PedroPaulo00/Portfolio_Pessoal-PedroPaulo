@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useI18n } from '../../i18n/I18n';
+import { duckAmbient } from '../../lib/ambient';
+import { effectsGain } from '../../lib/effectsVolume';
+import { playLaughSynth } from '../../lib/eggs';
 import './surfer.css';
 
 interface SurferProps {
@@ -32,18 +35,29 @@ const ROUTE: readonly Spot[] = [
 ];
 
 const LEAVE_MS = 520;
+/** Pausa entre uma gargalhada e outra. */
+const GAP_MS = 2000;
+/** Duração da risada sintetizada (sem voz no navegador). */
+const SYNTH_LAUGH_MS = 1100;
+/** Uma fala de risada nunca passa disso (se o navegador não avisar o fim). */
+const MAX_LAUGH_MS = 4000;
 const easeInOut = (t: number) => 0.5 - Math.cos(Math.PI * t) / 2;
 
 /**
  * O Bonzi surfando pela tela: desce na barra de tarefas como se fosse uma onda,
  * sobe pelos cantos, cruza a área de trabalho e volta, até alguém clicar nele
  * (ou apertar Esc); aí ele some com um "puf". Fica acima da janela e da barra.
+ * Enquanto surfa, um balão em cima dele solta frases de "vírus" e ele dá
+ * gargalhadas irritantes sem parar (voz do navegador, no volume dos Efeitos),
+ * com a música do portfólio calada enquanto ele estiver na tela.
  * Com "reduzir movimento", não passeia: fica parado sobre a barra de tarefas.
  */
 export function Surfer({ image, alt, from, onGone, minimized = false }: SurferProps) {
   const { t } = useI18n();
   const buttonRef = useRef<HTMLButtonElement>(null);
   const bodyRef = useRef<HTMLSpanElement>(null);
+  const bubbleRef = useRef<HTMLSpanElement>(null);
+  const [line, setLine] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const gone = useRef(onGone);
   useEffect(() => {
@@ -64,9 +78,22 @@ export function Surfer({ image, alt, from, onGone, minimized = false }: SurferPr
     const rideY = () => window.innerHeight - taskbar() - size() * 0.85 + 8;
     const maxX = () => Math.max(0, window.innerWidth - size());
 
+    // O balão vai para baixo dele perto do topo e encosta na borda perto dos lados.
+    let bubbleSpot = '';
     const place = (x: number, y: number, tilt: number, facing: number) => {
       button.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
       body.style.transform = `rotate(${tilt.toFixed(2)}deg) scaleX(${facing})`;
+      const bubble = bubbleRef.current;
+      if (!bubble) return;
+      const s = size();
+      const vertical = y < Math.min(150, bubble.offsetHeight + 24) ? 'below' : 'above';
+      const horizontal = x + s / 2 < 130 ? 'start' : x + s / 2 > window.innerWidth - 130 ? 'end' : 'center';
+      const spot = `${vertical} ${horizontal}`;
+      if (spot !== bubbleSpot) {
+        bubbleSpot = spot;
+        bubble.dataset.v = vertical;
+        bubble.dataset.h = horizontal;
+      }
     };
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -146,6 +173,67 @@ export function Surfer({ image, alt, from, onGone, minimized = false }: SurferPr
     return () => cancelAnimationFrame(frame);
   }, [from, leaving, minimized]);
 
+  // Frases de vírus no balão, trocando a cada poucos segundos (ordem embaralhada).
+  const lines = t.bonzi.lines;
+  const order = useRef<number[]>([]);
+  useEffect(() => {
+    if (leaving || minimized) return;
+    const timer = window.setInterval(() => {
+      if (order.current.length === 0) {
+        order.current = lines.map((_, i) => i).sort(() => Math.random() - 0.5);
+      }
+      setLine(order.current.pop() ?? 0);
+    }, 4200);
+    return () => window.clearInterval(timer);
+  }, [leaving, minimized, lines]);
+
+  // Gargalhadas sem parar: uma termina, 2 segundos de pausa, vem a próxima.
+  // Enquanto ele surfa, a música do portfólio se cala (e volta quando ele sai).
+  const laughs = t.bonzi.laughs;
+  const lang = t.bonzi.lang;
+  useEffect(() => {
+    if (leaving || minimized) return;
+    duckAmbient('bonzi', true);
+    const speech =
+      'speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined' ? window.speechSynthesis : null;
+    let timer = 0;
+    let alive = true;
+    const schedule = (ms: number) => {
+      window.clearTimeout(timer);
+      if (alive) timer = window.setTimeout(laugh, ms);
+    };
+    function laugh() {
+      const gain = effectsGain();
+      // No mudo dos Efeitos, fica quieto, mas continua conferindo (pode ser religado).
+      if (gain <= 0) return schedule(GAP_MS);
+      if (!speech) {
+        playLaughSynth();
+        return schedule(SYNTH_LAUGH_MS + GAP_MS);
+      }
+      const utterance = new SpeechSynthesisUtterance(laughs[Math.floor(Math.random() * laughs.length)]);
+      utterance.lang = lang;
+      // Bem agudo e acelerado: a voz robótica e esganiçada do Bonzi.
+      utterance.pitch = 1.7 + Math.random() * 0.3;
+      utterance.rate = 1.15 + Math.random() * 0.25;
+      utterance.volume = Math.min(1, 0.35 + gain);
+      const voice = speech.getVoices().find((v) => v.lang.replace('_', '-').startsWith(lang.slice(0, 2)));
+      if (voice) utterance.voice = voice;
+      utterance.onend = () => schedule(GAP_MS);
+      utterance.onerror = () => schedule(GAP_MS);
+      speech.cancel();
+      speech.speak(utterance);
+      // Garantia: alguns navegadores não avisam o fim da fala.
+      schedule(MAX_LAUGH_MS + GAP_MS);
+    }
+    schedule(500);
+    return () => {
+      alive = false;
+      window.clearTimeout(timer);
+      speech?.cancel();
+      duckAmbient('bonzi', false);
+    };
+  }, [leaving, minimized, laughs, lang]);
+
   // Clique (ou Esc): para o passeio e some.
   const leave = () => setLeaving(true);
   useEffect(() => {
@@ -171,6 +259,11 @@ export function Surfer({ image, alt, from, onGone, minimized = false }: SurferPr
       onClick={leave}
       disabled={leaving}
     >
+      <span ref={bubbleRef} className="surfer__bubble" data-v="above" data-h="center" aria-hidden="true">
+        <span key={line} className="surfer__bubble-text">
+          {lines[line]}
+        </span>
+      </span>
       <span ref={bodyRef} className="surfer__body">
         <img className="surfer__image" src={image} alt="" draggable={false} />
       </span>

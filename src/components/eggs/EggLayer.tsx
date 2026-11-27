@@ -5,16 +5,16 @@ import { playEffect, useEffects } from '../../lib/eggBus';
 const EffectsHost = lazy(() => import('./EffectsHost'));
 
 const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight'];
-/** Parado por tanto tempo: aparece o protetor de tela de bolhas. */
-const IDLE_MS = 120_000;
-/** Parado por tanto tempo: o Aquanauta lembra de beber água. */
-const REMINDER_MS = 60_000;
+/** Parado por tanto tempo: aparece o protetor de tela do DVD. */
+const IDLE_MS = 30_000;
+/** Parado por tanto tempo (antes do protetor): o Aquanauta lembra de beber água. */
+const REMINDER_MS = 20_000;
 const SWIPE_MIN = 40;
 
 /**
  * Camada dos easter eggs de tela: escuta os gatilhos globais (Código Konami no
  * teclado, ou no celular deslizar a mesma sequência e tocar duas vezes; ficar
- * parado por 2 minutos; o aniversário do dono) e mostra os efeitos pedidos.
+ * parado por 30 segundos; o aniversário do dono) e mostra os efeitos pedidos.
  */
 export function EggLayer({ active }: { readonly active: boolean }) {
   const effects = useEffects();
@@ -73,7 +73,8 @@ export function EggLayer({ active }: { readonly active: boolean }) {
     };
   }, [active]);
 
-  // Protetor de tela: 2 minutos sem mexer em nada.
+  // Protetor de tela: 30 segundos sem mexer o mouse, clicar, tocar ou teclar.
+  // Não aparece com um vídeo ou uma música com som tocando (como no Windows).
   useEffect(() => {
     if (!active) return;
     let timer = 0;
@@ -81,8 +82,14 @@ export function EggLayer({ active }: { readonly active: boolean }) {
     const arm = () => {
       window.clearTimeout(timer);
       window.clearTimeout(reminder);
-      timer = window.setTimeout(() => playEffect('screensaver'), IDLE_MS);
-      // 1 minuto parado: o Aquanauta lembra de beber água (uma vez por visita).
+      timer = window.setTimeout(function show() {
+        const watching = [...document.querySelectorAll<HTMLMediaElement>('video, audio')].some(
+          (media) => !media.paused && !media.muted && !media.ended,
+        );
+        if (watching) timer = window.setTimeout(show, IDLE_MS);
+        else playEffect('screensaver');
+      }, IDLE_MS);
+      // 20 segundos parado: o Aquanauta lembra de beber água (uma vez por visita).
       reminder = window.setTimeout(() => {
         try {
           if (sessionStorage.getItem('portfolio-aero:aquanauta') === '1') return;
