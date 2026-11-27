@@ -5,7 +5,7 @@
  *
  * Para um easter egg avisar que foi achado: `unlockAchievement('konami')`.
  * Textos (título e dica de cada um) ficam em src/i18n/ui.ts → `achievements`.
- * A 30ª conquista ("collector") vem sozinha quando as outras 29 foram achadas.
+ * A 27ª conquista ("collector") vem sozinha quando as outras 26 foram achadas.
  */
 import { useSyncExternalStore } from 'react';
 import { effectsPrefs } from './effectsVolume';
@@ -15,8 +15,6 @@ export const SECRET_IDS = [
   'bsod',
   'flip3d',
   'aeroshake',
-  'solitaire',
-  'minesweeper',
   'screensaver',
   'nudge',
   'clippyAngry',
@@ -79,7 +77,7 @@ export function unlockAchievement(id: AchievementId): void {
   save();
   emit();
   playUnlockSound();
-  // Todos os 29 segredos achados: a conquista final aparece logo depois.
+  // Todos os 26 segredos achados: a conquista final aparece logo depois.
   if (id !== 'collector' && SECRET_IDS.every((secret) => unlocked.has(secret))) {
     window.setTimeout(() => unlockAchievement('collector'), 1500);
   }

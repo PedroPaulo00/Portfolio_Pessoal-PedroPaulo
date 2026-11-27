@@ -42,7 +42,7 @@ Em `profile`, troque `name`, `role` e `tagline`. O nome aparece no título da ja
 
 ### Easter eggs e conquistas
 
-O site tem 28 segredos escondidos e uma 29ª conquista ("Colecionador", por achar todos). Cada um achado mostra uma notificação no estilo do Xbox 360 e entra no contador "X de 29 segredos" do menu Iniciar (salvo no navegador do visitante, em `portfolio-aero:achievements`). A lista, o som e a contagem ficam em `src/lib/achievements.ts`; os textos (nome e dica de cada um) em `src/i18n/ui.ts` → `achievements`. Para um segredo avisar que foi achado: `unlockAchievement('id')`. Para zerar o seu progresso de teste: apague essa chave no armazenamento local do navegador.
+O site tem 26 segredos escondidos e uma 27ª conquista ("Colecionador", por achar todos). Cada um achado mostra uma notificação no estilo do Xbox 360 e entra no contador "X de 27 segredos" do menu Iniciar (salvo no navegador do visitante, em `portfolio-aero:achievements`). A lista, o som e a contagem ficam em `src/lib/achievements.ts`; os textos (nome e dica de cada um) em `src/i18n/ui.ts` → `achievements`. Para um segredo avisar que foi achado: `unlockAchievement('id')`. Para zerar o seu progresso de teste: apague essa chave no armazenamento local do navegador.
 
 Segredos já ativos (não conte para os visitantes!):
 

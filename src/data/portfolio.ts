@@ -64,8 +64,8 @@ export const portfolio: PortfolioData<'source'> = {
       en: 'Web & App Developer | Computer Science Undergraduate',
     },
     tagline: {
-      pt: 'Estudo Ciência da Computação na UNICENTRO e crio sites e aplicativos. Gosto muito de fazer sites e landing pages para profissionais e pequenos negócios, como consultórios médicos e lojas: páginas bonitas, rápidas e fáceis de usar no celular, que apresentem bem o seu trabalho. Também desenvolvo aplicativos com identidade visual própria, como o Aquanauta e o FoldAero, e este portfólio é um exemplo do cuidado que coloco em cada projeto.',
-      en: 'I’m studying Computer Science at UNICENTRO and I build websites and apps. I especially enjoy making websites and landing pages for professionals and small businesses, like medical practices and shops: good-looking, fast pages that are easy to use on a phone and present your work well. I also build apps with their own visual identity, like Aquanauta and FoldAero, and this portfolio is an example of the care I put into every project.',
+      pt: 'Estudo Ciência da Computação na UNICENTRO e crio sites e aplicativos. O que mais gosto de fazer são sites e landing pages para profissionais e pequenos negócios, como consultórios e lojas: páginas bonitas, rápidas e fáceis de usar no celular, que mostrem bem o seu trabalho. Também faço aplicativos com visual próprio, como o Aquanauta e o FoldAero. E este portfólio dá uma boa ideia do capricho que coloco em cada projeto.',
+      en: 'I’m studying Computer Science at UNICENTRO and I build websites and apps. What I enjoy most is making websites and landing pages for professionals and small businesses, like clinics and shops: good-looking, fast pages that are easy to use on a phone and show your work well. I also make apps with their own look, like Aquanauta and FoldAero. And this portfolio gives you a good idea of the care I put into every project.',
     },
     logo: { src: logo, alt: { pt: '', en: '' } },
     photo: { src: photo, alt: { pt: 'Foto de Pedro Paulo de Lima', en: 'Photo of Pedro Paulo de Lima' } },
@@ -134,8 +134,8 @@ export const portfolio: PortfolioData<'source'> = {
       name: { pt: 'Aquanauta (TCC)', en: 'Aquanauta (Undergraduate thesis)' },
       category: 'academico',
       summary: {
-        pt: 'Aplicativo desktop de bem-estar digital que criei no meu TCC para incentivar hábitos saudáveis em quem passa muito tempo no computador. Reúne monitoramento de atividade, ciclos Pomodoro e lembretes de hidratação, alongamento, descanso dos olhos e organização da rotina.',
-        en: 'A digital well-being desktop app built for my undergraduate thesis to encourage healthy habits during long computer sessions. It combines activity monitoring, Pomodoro cycles and reminders for hydration, stretching, eye rest and daily routine.',
+        pt: 'Aplicativo para computador que criei no meu TCC para ajudar quem passa o dia na frente da tela a cuidar da saúde. Ele acompanha o tempo de uso, tem ciclos Pomodoro, lembra a hora de beber água, alongar e descansar os olhos, e ainda tem uma agenda para organizar a rotina.',
+        en: 'A desktop app I built for my undergraduate thesis to help people who spend the whole day in front of a screen take care of their health. It tracks screen time, runs Pomodoro cycles, reminds you to drink water, stretch and rest your eyes, and has a planner for your routine.',
       },
       stack: ['Electron', 'JavaScript', 'HTML5', 'CSS3', 'Node.js', 'localStorage'],
       status: 'concluido',
@@ -174,8 +174,8 @@ export const portfolio: PortfolioData<'source'> = {
         },
       ],
       details: {
-        pt: 'Projeto de TCC em Ciência da Computação na UNICENTRO, desenvolvido com arquitetura Electron e módulos JavaScript independentes. Integra monitoramento de atividade, notificações contextuais, Pomodoro configurável, agenda, controle de medicamentos e mascote interativa.\n\nA interface usa gradientes, transparências e animações inspirados no Frutiger Aero e no Windows Vista/7. Os dados ficam guardados no próprio computador, sem precisar de internet.\n\nFui desenvolvendo aos poucos, com testes manuais e uma avaliação heurística feita por mim, baseada nas dez heurísticas de Nielsen. Os testes com usuários reais ficam para uma próxima etapa.',
-        en: 'Undergraduate thesis project in Computer Science at UNICENTRO, built on an Electron architecture with independent JavaScript modules. It brings together activity monitoring, contextual notifications, a configurable Pomodoro timer, a planner, medication tracking and an interactive mascot.\n\nThe interface uses gradients, transparency and animations inspired by Frutiger Aero and Windows Vista/7. All data is stored locally, so no internet connection is needed.\n\nI built it step by step, with manual testing and a heuristic evaluation I ran myself, based on Nielsen’s ten heuristics. Testing with real users is left for a next stage.',
+        pt: 'Projeto de TCC em Ciência da Computação na UNICENTRO, feito em Electron, com o código dividido em módulos JavaScript independentes. Tem monitoramento de atividade, notificações que aparecem na hora certa, Pomodoro configurável, agenda, controle de medicamentos e um mascote interativo.\n\nA interface usa gradientes, transparências e animações inspirados no Frutiger Aero e no Windows Vista/7. Os dados ficam guardados no próprio computador, sem precisar de internet.\n\nFui construindo aos poucos, testando à mão e fazendo eu mesmo uma avaliação com base nas dez heurísticas de Nielsen. Os testes com usuários de verdade ficam para uma próxima etapa.',
+        en: 'Undergraduate thesis project in Computer Science at UNICENTRO, built with Electron and split into independent JavaScript modules. It has activity monitoring, notifications that show up at the right moment, a configurable Pomodoro timer, a planner, medication tracking and an interactive mascot.\n\nThe interface uses gradients, transparency and animations inspired by Frutiger Aero and Windows Vista/7. All data is stored locally, so no internet connection is needed.\n\nI built it step by step, with manual testing and a heuristic evaluation I ran myself, based on Nielsen’s ten heuristics. Testing with real users is left for a next stage.',
       },
     },
     {
@@ -185,8 +185,8 @@ export const portfolio: PortfolioData<'source'> = {
       name: { pt: 'SISTRAFA (Estágio-Pesquisa)', en: 'SISTRAFA (Research internship)' },
       category: 'academico',
       summary: {
-        pt: 'Aplicação web progressiva (PWA) do meu estágio-pesquisa para apoiar policiais e bombeiros no atendimento a ocorrências com fauna silvestre: triagem de risco passo a passo, orientações de manejo justificadas, registro fotográfico e relatório em PDF, tudo funcionando sem internet.',
-        en: 'A progressive web app (PWA) from my research internship that supports police officers and firefighters handling wildlife incidents: step-by-step risk triage, justified handling guidance, photo records and a PDF report, all working offline.',
+        pt: 'App web (PWA) que fiz no meu estágio-pesquisa para ajudar policiais e bombeiros a atender ocorrências com animais silvestres: avaliação de risco passo a passo, orientações de manejo explicando o porquê de cada uma, fotos e relatório em PDF, tudo funcionando sem internet.',
+        en: 'A web app (PWA) I built during my research internship to help police officers and firefighters handle wildlife incidents: step-by-step risk assessment, handling guidance that explains the reason for each step, photos and a PDF report, all working offline.',
       },
       stack: [
         'HTML5',
@@ -245,7 +245,7 @@ export const portfolio: PortfolioData<'source'> = {
         },
       ],
       details: {
-        pt: 'Estágio-pesquisa do curso de Ciência da Computação da UNICENTRO, em parceria com o Laboratório de Anatomia Patológica Veterinária. Ocorrências com animais silvestres costumam ser atendidas por agentes sem formação em manejo de fauna, muitas vezes em locais sem conexão.\n\nO SISTRAFA organiza o atendimento em oito etapas, com perguntas condicionais apresentadas uma por vez, um checklist baseado em protocolo de atuação policial e 22 regras que geram orientações acompanhadas de justificativa. Permite cadastrar animais individuais ou em lotes, registrar fotografias com metadados Exif, código SHA-256 e histórico de alterações (preservando o arquivo original), consultar um guia de 29 espécies complementado pela API do iNaturalist e gerar o relatório em PDF no próprio aparelho.\n\nFoi feito em HTML, CSS e JavaScript puros, sem servidor de dados, com Service Worker, localStorage e IndexedDB para funcionar sem internet.\n\nA avaliação usou testes automatizados no Chrome, Edge e Firefox (persistência, uso sem conexão, relatórios, leiaute em oito tamanhos de tela e contraste); a validação do conteúdo por especialistas e os testes em campo são as próximas etapas. O trabalho resultou em um artigo científico.',
+        pt: 'Estágio-pesquisa do curso de Ciência da Computação da UNICENTRO, em parceria com o Laboratório de Anatomia Patológica Veterinária. Ocorrências com animais silvestres costumam ser atendidas por agentes sem formação em manejo de fauna, muitas vezes em locais sem conexão.\n\nO SISTRAFA divide o atendimento em oito etapas, com uma pergunta por vez (as próximas dependem da resposta), um checklist baseado em protocolo de atuação policial e 22 regras que geram orientações, cada uma com a sua justificativa. Dá para cadastrar animais individuais ou em lotes, registrar fotografias com metadados Exif, código SHA-256 e histórico de alterações (preservando o arquivo original), consultar um guia de 29 espécies complementado pela API do iNaturalist e gerar o relatório em PDF no próprio aparelho.\n\nFiz tudo em HTML, CSS e JavaScript puros, sem servidor de dados, com Service Worker, localStorage e IndexedDB para funcionar sem internet.\n\nPara avaliar, usei testes automatizados no Chrome, no Edge e no Firefox (dados salvos, uso sem conexão, relatórios, layout em oito tamanhos de tela e contraste). Os próximos passos são a revisão do conteúdo por especialistas e os testes em campo. O trabalho virou um artigo científico.',
         en: 'Research internship in the Computer Science program at UNICENTRO, in partnership with the Veterinary Pathology Laboratory. Wildlife incidents are often handled by officers with no training in animal handling, frequently in places without a connection.\n\nSISTRAFA organizes each incident into eight steps, with conditional questions shown one at a time, a checklist based on a police field protocol and 22 rules that produce guidance together with its justification. It records individual animals or batches, stores photos with Exif metadata, a SHA-256 hash and a change history (keeping the original file), includes a guide to 29 species complemented by the iNaturalist API, and generates the PDF report on the device.\n\nIt is built with plain HTML, CSS and JavaScript, with no data server, using a Service Worker, localStorage and IndexedDB to work offline.\n\nEvaluation used automated tests in Chrome, Edge and Firefox (persistence, offline use, reports, layout at eight screen sizes and contrast); content validation by specialists and field testing are the next steps. The work resulted in a scientific paper.',
       },
     },
@@ -256,8 +256,8 @@ export const portfolio: PortfolioData<'source'> = {
       name: 'Diara (PET-Saúde Digital - GT04)',
       category: 'academico',
       summary: {
-        pt: 'Aplicativo para monitoramento e controle da glicose e do diabetes, desenvolvido em equipe no PET-Saúde Digital (GT 04). Reúne o registro de medições, refeições e medicamentos, gráficos e lembretes para acompanhar o tratamento no dia a dia.',
-        en: 'An app for monitoring and managing blood glucose and diabetes, built as a team in the PET-Saúde Digital program (GT 04). It brings together glucose readings, meals and medication, charts and reminders to follow the treatment day to day.',
+        pt: 'Aplicativo para monitoramento e controle da glicose e do diabetes, desenvolvido em equipe no PET-Saúde Digital (GT 04). Dá para registrar medições, refeições e medicamentos, ver gráficos e receber lembretes para acompanhar o tratamento no dia a dia.',
+        en: 'An app for monitoring and managing blood glucose and diabetes, built as a team in the PET-Saúde Digital program (GT 04). You can log glucose readings, meals and medication, see charts and get reminders to keep up with the treatment day to day.',
       },
       stack: [
         'Flutter',
@@ -281,8 +281,8 @@ export const portfolio: PortfolioData<'source'> = {
       name: 'FoldAero',
       category: 'pessoal',
       summary: {
-        pt: 'Galeria de fotos, vídeos e GIFs para Android e iOS, com interface inspirada nos Windows XP, Vista e 7. O projeto busca unir organização de mídia, privacidade local e uma experiência visual nostálgica.',
-        en: 'A photo, video and GIF gallery for Android and iOS, with an interface inspired by Windows XP, Vista and 7. The project combines media organization, local privacy and a nostalgic visual experience.',
+        pt: 'Galeria de fotos, vídeos e GIFs para Android e iOS, com interface inspirada nos Windows XP, Vista e 7. Tudo fica guardado só no celular, bem organizado e com aquele visual nostálgico.',
+        en: 'A photo, video and GIF gallery for Android and iOS, with an interface inspired by Windows XP, Vista and 7. Everything stays on your phone, neatly organized and with that nostalgic look.',
       },
       stack: [
         'JavaScript',
@@ -296,8 +296,8 @@ export const portfolio: PortfolioData<'source'> = {
       status: 'em-andamento',
       repositoryUrl: 'https://github.com/PedroPaulo00/FoldAero',
       details: {
-        pt: 'Primeiro aplicativo da AquariusFresh Lab, projeto independente de desenvolvimento de software. O app organiza mídias armazenadas no próprio dispositivo, sem enviá-las para servidores. Usa o Capacitor para combinar interface web e recursos nativos: leitura da galeria, criação de miniaturas, abertura de vídeos, renomeação e exclusão com confirmação do sistema.\n\nO maior desafio é conciliar as diferenças entre Android e iOS numa interface responsiva, funcional e inspirada no Frutiger Aero.',
-        en: 'The first app from AquariusFresh Lab, an independent software development project. The app organizes media stored on the device itself, without uploading it to servers. It uses Capacitor to combine a web interface with native features: reading the gallery, generating thumbnails, opening videos, and renaming and deleting with system confirmation.\n\nThe biggest challenge is reconciling the differences between Android and iOS in a responsive, functional interface inspired by Frutiger Aero.',
+        pt: 'Primeiro aplicativo da AquariusFresh Lab, projeto independente de desenvolvimento de software. O app organiza mídias armazenadas no próprio dispositivo, sem enviá-las para servidores. Usa o Capacitor para combinar interface web e recursos nativos: leitura da galeria, criação de miniaturas, abertura de vídeos, renomeação e exclusão com confirmação do sistema.\n\nO mais difícil tem sido lidar com as diferenças entre o Android e o iOS sem perder o visual Frutiger Aero.',
+        en: 'The first app from AquariusFresh Lab, an independent software development project. The app organizes media stored on the device itself, without uploading it to servers. It uses Capacitor to combine a web interface with native features: reading the gallery, generating thumbnails, opening videos, and renaming and deleting with system confirmation.\n\nThe hardest part has been dealing with the differences between Android and iOS without losing the Frutiger Aero look.',
       },
     },
     {
@@ -349,12 +349,12 @@ export const portfolio: PortfolioData<'source'> = {
   about: {
     paragraphs: [
       {
-        pt: 'Meu interesse por tecnologia começou na infância e ganhou força com o exemplo da minha irmã, doutora e professora de Ciência da Computação. Durante a graduação na UNICENTRO, passei por várias áreas da Computação e me identifiquei mais com a criação de sites, o desenvolvimento de aplicativos e o design de interfaces. No TCC, criei o Aquanauta, um aplicativo desktop de bem-estar digital com monitoramento de atividade, lembretes, organização da rotina e uma interface inspirada no Frutiger Aero.',
+        pt: 'Meu interesse por tecnologia começou na infância e ganhou força com o exemplo da minha irmã, doutora e professora de Ciência da Computação. Na graduação, na UNICENTRO, passei por várias áreas da Computação e acabei me encontrando na criação de sites, de aplicativos e no design de interfaces. No TCC, criei o Aquanauta, um aplicativo desktop de bem-estar digital com monitoramento de atividade, lembretes, organização da rotina e uma interface inspirada no Frutiger Aero.',
         en: 'My interest in technology started in childhood and grew with the example of my sister, who has a PhD and teaches Computer Science. During my degree at UNICENTRO I tried out different areas of computing and connected most with building websites, developing apps and interface design. For my thesis I built Aquanauta, a digital well-being desktop app with activity monitoring, reminders, routine planning and a Frutiger Aero-inspired interface.',
       },
       {
-        pt: 'Costumo trabalhar por etapas: planejo a estrutura, construo funcionalidade por funcionalidade, testo e vou refinando até o resultado ficar consistente. Dou valor a código organizado e fácil de manter, à responsividade, a uma interface bem cuidada e a decisões técnicas que resolvam problemas reais. Também uso ferramentas de IA como apoio, sempre me preocupando em entender, revisar e validar o que elas sugerem. Num site, penso em quem vai visitar: a informação certa logo de cara, um visual que combine com o negócio e um caminho fácil até o contato, seja pelo WhatsApp, por um agendamento ou pelo endereço no mapa.',
-        en: 'I like to work in steps: I plan the structure, build feature by feature, then test and refine until the result feels consistent. I care about clean, maintainable code, responsiveness, a well-crafted interface and technical decisions that solve real problems. I also use AI tools as support, always making sure I understand, review and validate what they suggest. On a website, I think about the visitor: the right information up front, a look that fits the business and an easy path to getting in touch, whether by WhatsApp, a booking or the address on a map.',
+        pt: 'Costumo trabalhar por partes: planejo a estrutura, construo uma coisa de cada vez, testo e vou ajustando até ficar do jeito certo. Gosto de código organizado, fácil de mexer depois, e de interfaces caprichadas que funcionem em qualquer tela. Uso ferramentas de IA no dia a dia, mas sempre reviso e entendo o que elas sugerem antes de usar. Num site, penso em quem vai visitar: a informação certa logo de cara, um visual que combine com o negócio e um caminho fácil até o contato, seja pelo WhatsApp, por um agendamento ou pelo endereço no mapa.',
+        en: 'I like to work in parts: I plan the structure, build one thing at a time, test it and keep adjusting until it feels right. I like organized code that’s easy to change later, and careful interfaces that work on any screen. I use AI tools every day, but I always review and understand what they suggest before using it. On a website, I think about the visitor: the right information up front, a look that fits the business and an easy path to getting in touch, whether by WhatsApp, a booking or the address on a map.',
       },
       {
         pt: 'Fora do código, minha maior paixão é a música: ela está comigo em quase tudo o que faço, inclusive enquanto programo. Por isso este portfólio tem uma seção com o que ando ouvindo no Spotify.',
@@ -618,8 +618,8 @@ export const portfolio: PortfolioData<'source'> = {
 
   contact: {
     intro: {
-      pt: 'Precisa de um site ou de uma landing page para o seu consultório, loja ou negócio? Faço páginas sob medida, bonitas, rápidas e pensadas para o celular. Também tenho interesse em oportunidades e parcerias em desenvolvimento de sites e aplicativos. Me chame para conversar sobre a sua ideia!',
-      en: 'Need a website or a landing page for your practice, shop or business? I build custom pages that look good, load fast and are designed for phones. I’m also interested in opportunities and collaborations in website and app development. Reach out to talk about your idea!',
+      pt: 'Precisa de um site ou de uma landing page para o seu consultório, loja ou negócio? Faço páginas sob medida, bonitas, rápidas e pensadas para o celular. Também estou aberto a oportunidades de trabalho e parcerias com sites e aplicativos. Me chame para conversar sobre a sua ideia!',
+      en: 'Need a website or a landing page for your practice, shop or business? I build custom pages that look good, load fast and are designed for phones. I’m also open to job opportunities and partnerships on websites and apps. Reach out to talk about your idea!',
     },
     email: 'pppedro95@gmail.com',
     secondaryEmail: 'pedropaulo0720@outlook.com',
@@ -648,8 +648,8 @@ export const portfolio: PortfolioData<'source'> = {
     },
     title: { pt: 'Apresentação do meu TCC', en: 'Presenting my thesis' },
     text: {
-      pt: 'Apresentando o Aquanauta, um aplicativo de bem-estar digital que cuida da saúde de quem passa muito tempo no computador, no curso de Ciência da Computação da UNICENTRO.',
-      en: 'Presenting Aquanauta, a digital well-being app that looks after the health of people who spend long hours at the computer, in the Computer Science program at UNICENTRO.',
+      pt: 'O dia em que apresentei o Aquanauta no curso de Ciência da Computação da UNICENTRO: um aplicativo que ajuda quem passa muito tempo no computador a cuidar da saúde.',
+      en: 'The day I presented Aquanauta in the Computer Science program at UNICENTRO: an app that helps people who spend long hours at the computer take care of their health.',
     },
   },
 
@@ -743,7 +743,7 @@ export const portfolio: PortfolioData<'source'> = {
   // Política de privacidade (rota #privacidade). Revise se algo mudar no site
   // (ex.: um formulário de contato ou outra ferramenta de estatísticas).
   privacy: {
-    updated: '2026-11-23',
+    updated: '2026-11-26',
     intro: {
       pt: 'Este portfólio foi feito para ser visitado sem que você precise entregar dados pessoais. Esta página explica o que é guardado, por quem e por quê, de acordo com a Lei Geral de Proteção de Dados (LGPD).',
       en: 'This portfolio is designed so you can visit it without handing over personal data. This page explains what is stored, by whom and why, in line with Brazil’s General Data Protection Law (LGPD).',
@@ -753,8 +753,8 @@ export const portfolio: PortfolioData<'source'> = {
         title: { pt: 'O que fica no seu navegador', en: 'What stays in your browser' },
         paragraphs: [
           {
-            pt: 'O site guarda no armazenamento local do seu navegador apenas preferências: tema, modo do vidro, idioma, volume do som de fundo e o histórico de navegação entre as seções. Esses dados não saem do seu aparelho, e você pode apagá-los limpando os dados do site no navegador. Não usamos cookies.',
-            en: 'The site keeps only preferences in your browser’s local storage: theme, glass mode, language, background sound volume and the navigation history between sections. This data never leaves your device, and you can delete it by clearing the site data in your browser. We do not use cookies.',
+            pt: 'O site guarda no seu navegador só preferências e diversão: tema, modo do vidro, idioma, volume da música e dos efeitos, o histórico de navegação entre as seções e os segredos que você já achou. Nada disso sai do seu aparelho, e você pode apagar tudo limpando os dados do site no navegador. Não uso cookies.',
+            en: 'The site keeps only preferences and fun stuff in your browser: theme, glass mode, language, music and effects volume, the navigation history between sections and the secrets you have found. None of it leaves your device, and you can delete it all by clearing the site data in your browser. I do not use cookies.',
           },
         ],
       },
@@ -762,8 +762,8 @@ export const portfolio: PortfolioData<'source'> = {
         title: { pt: 'Estatísticas de visitas', en: 'Visit statistics' },
         paragraphs: [
           {
-            pt: 'Usamos o Vercel Web Analytics para contar visitas e saber quais seções são vistas. Ele não usa cookies, não identifica você e não acompanha sua navegação em outros sites: registra, de forma agregada, a seção visitada, o país, o tipo de navegador e de aparelho e o site de onde você veio.',
-            en: 'We use Vercel Web Analytics to count visits and see which sections are viewed. It uses no cookies, does not identify you and does not follow you across other sites: it records, in aggregate, the section visited, the country, the browser and device type, and the referring site.',
+            pt: 'Uso o Vercel Web Analytics para contar visitas e saber quais seções são mais vistas. Ele não usa cookies, não identifica você e não acompanha sua navegação em outros sites: registra, de forma agregada, a seção visitada, o país, o tipo de navegador e de aparelho e o site de onde você veio.',
+            en: 'I use Vercel Web Analytics to count visits and see which sections get the most views. It uses no cookies, does not identify you and does not follow you across other sites: it records, in aggregate, the section visited, the country, the browser and device type, and the referring site.',
           },
           {
             pt: 'O contador de visitas da página inicial guarda apenas o total. Para não contar a mesma pessoa várias vezes, o servidor guarda por até 6 horas um código gerado a partir do endereço IP (um resumo irreversível, não o endereço em si), que depois é apagado automaticamente. O banco de dados desse contador fica na Upstash.',
